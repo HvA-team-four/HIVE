@@ -6,4 +6,3 @@
 * Run ```vagrant up```. This will start the virtual machine, first setup will take a while.
 * Run ```vagrant ssh```. This way you'll get into the virtual machine.
 * Run ```python3.6 crawler/main.py``` Just to see is everything is working correctly. 
-* Toine Lambalk
