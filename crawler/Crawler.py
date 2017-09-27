@@ -1,5 +1,4 @@
 import urllib
-#import urllib.request
 import socks
 import socket
 from bs4 import BeautifulSoup
