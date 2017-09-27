@@ -10,15 +10,6 @@ sudo apt-get update -y
 
 sudo apt-get install tor deb.torproject.org-keyring -y
 
-sudo apt-get install python3-stem -y
-sudo pip3 install requests
-sudo pip3 install bs4
-sudo pip3 install PySocks
-
-sudo apt-get install software-properties-common -y
-sudo add-apt-repository cloud-archive:mitaka -y
-sudo apt-get update -y && apt-get dist-upgrade -y
-sudo apt-get install python3-pymysql -y
 
 
 
