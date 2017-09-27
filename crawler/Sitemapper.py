@@ -4,7 +4,7 @@ import requests
 import time
 
 # Open database connection
-db = pymysql.connect("localhost","root","password","naomi")
+db = pymysql.connect("localhost","root","password","hive")
 
 # prepare a cursor object using cursor() method
 cursor = db.cursor()
