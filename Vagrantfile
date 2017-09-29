@@ -4,7 +4,7 @@ Vagrant.configure("2") do |config|
     config.vm.network "private_network", ip: "192.168.33.10"
     config.vm.network "forwarded_port", guest: 3306, host: 3306
     config.vm.hostname = "scotchbox"
-    config.vm.synced_folder "./crawler", "/home/vagrant/crawler", :mount_options => ["dmode=777", "fmode=666"]
+    config.vm.synced_folder ".", "/home/vagrant/hive", :mount_options => ["dmode=777", "fmode=666"]
     
     # Optional NFS. Make sure to remove other synced_folder line too
     #config.vm.synced_folder ".", "/var/www", :nfs => { :mount_options => ["dmode=777","fmode=666"] }
@@ -31,6 +31,18 @@ Vagrant.configure("2") do |config|
     config.vm.provision :shell do |sh|
         sh.privileged = true # this means it runs as 'root'
         sh.path = "tools/install_r.sh"
+    end
+	
+	# - install TOR
+    config.vm.provision :shell do |sh|
+        sh.privileged = true # this means it runs as 'root'
+        sh.path = "tools/install_tor.sh"
+    end
+	
+	# - install packages
+    config.vm.provision :shell do |sh|
+        sh.privileged = true # this means it runs as 'root'
+        sh.path = "tools/install_packages.sh"
     end
 
 end
