@@ -2,7 +2,6 @@ beautifulsoup4==4.6.0
 bs4==0.0.1
 chardet==2.2.1
 colorama==0.2.5
-command-not-found==0.3
 html5lib==0.999
 language-selector==0.1
 pony==0.7.2
