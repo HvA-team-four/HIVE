@@ -26,14 +26,13 @@ class Url(db.Entity):
         int,
         auto=True
     )
-    url = Required(
-        str, 256
-    )
+    url = Required(str, 256)
     content = Optional(lambda: Content)
     date_added = Required(datetime)
     date_scraped = Optional(datetime)
+    date_scanned = Optional(datetime)
     priority_scrape = Optional(bool)
-    priority_discover = Optional(bool)
+    priority_scan = Optional(bool)
 
 
 class Content(db.Entity):
