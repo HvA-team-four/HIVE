@@ -3,3 +3,4 @@ pymysql
 bs4
 pytest
 pysocks
+pony.orm
