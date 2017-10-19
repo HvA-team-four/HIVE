@@ -12,7 +12,6 @@ RequirePackage <- function (function_name){
   }
 }
 RequirePackage("shiny") #Loading Shiny package
-RequirePackage("rPython") #Loading Python package
 
 # User Interface: The user interface contains all input- and output controls which are rendered by the server function.
 ui <- fluidPage(
@@ -30,7 +29,8 @@ ui <- fluidPage(
              navbarMenu("Settings",
                         tabPanel("Status"
                         ),
-                        tabPanel("Keywords"
+                        tabPanel("Keywords",
+                                 tableOutput("keywordtable")
                         ),
                         tabPanel("Help"
                         )
@@ -40,6 +40,9 @@ ui <- fluidPage(
 
 # Server: The server function contains functions to render the in- and output elements. 
 server <- function(input, output, session){
+
+  
+  
   # Home TAB
   output$application_image <- renderImage({
       return(list(
@@ -51,7 +54,4 @@ server <- function(input, output, session){
   }, deleteFile = FALSE)
 }
   
-  
-
-# Loading application
-shinyApp(ui = ui, server = server)
+shinyApp(server = server, ui = ui, options = list(port = 8080))
