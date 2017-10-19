@@ -40,7 +40,8 @@ def urlformat(baseurl, arrayurl):
             if len(url) < 256:
                 if url.startswith('/'): # Check if URL is a relative URL
                     appendedurl = baseurl + url # Add the URL if the URL is a relative
-                    urlArray.append(appendedurl) # Add the URL to the urlArray
+                    if appendedurl.startswith('https://') or appendedurl.startswith('http://'):
+                        urlArray.append(appendedurl) # Add the URL to the urlArray
                 else:
                     urlArray.append(url) # Add the URL to the urlArray
 

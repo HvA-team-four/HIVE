@@ -34,50 +34,39 @@ def save_url(url):
             url=url,
             date_added=datetime.now()
         )
-        print("URL added to database", str(url))
+        print("Add:", str(url))
         commit()
     else:
-        print("URL already present in database", str(url))
-
-@db_session
-def get_url_list():
-    return select(p for p in Url if p.date_scanned == None).limit(5)
-
+        print("Skipped:", str(url))
 
 @db_session
 def start_scout():
     while True:
-        print("Checking URLs")
-        urls = get_url_list()
-        print(urls.show())
-        print(len(urls))
+        urls = select(p for p in Url if p.date_scanned == None).random(5)
+
         if len(urls) == 0:
             print("No URLs to be crawled, waiting for 60 seconds.")
             sleep(60)
             continue
 
         for url in urls:
-            data = content_crawler(url.url)
-            filtered_urls = filterurls(data)
-            print(filtered_urls)
-            formatted_urls = urlformat(url.url, filtered_urls) # Turn the content in a list of URLs
-            print(formatted_urls)
-            for formatted_url in formatted_urls:
-                save_url(formatted_url)
+            try:
+                data = content_crawler(url.url)
 
-            url.date_scanned = datetime.now()
-            commit()
+                filtered_urls = filterurls(data)
 
-@db_session
-def retrieve():
-    delete(p for p in Url if p.url == "youtube.com")
-    print("Adding URL to DB")
-    #print(result.show())
+                formatted_urls = urlformat(url.url, filtered_urls) # Turn the content in a list of URLs
 
+                for formatted_url in formatted_urls:
+                    save_url(formatted_url)
 
-#retrieve()
-start_scout()
+                url.date_scanned = datetime.now()
+                commit()
+                break
 
+            except(ValueError, NameError, TypeError):
+                url.date_scanned = datetime.now()
+                pass
 
-          # if __name__ == "__main__":
-            #     start_scout()
+if __name__ == "__main__":
+    start_scout()
