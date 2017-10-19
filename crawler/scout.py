@@ -23,7 +23,7 @@ from functions import *
 from models import *
 from datetime import datetime
 from time import sleep
-
+import contentcrawl
 
 
 @db_session
@@ -53,8 +53,8 @@ def start_scout():
             continue
 
         for url in urls:
-
-            formatted_urls = urlformat(url.url, ["google.nl", "youtube.com", "python.com"])  #filterurls(data)) # Turn the content in a list of URLs
+            data = contentcrawl.content_crawler(url)
+            formatted_urls = urlformat(url.url, filterurls(data))  #filterurls(data)) # Turn the content in a list of URLs
             for formatted_url in formatted_urls:
                 save_url(formatted_url)
 
