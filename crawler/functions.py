@@ -8,7 +8,7 @@ import urllib.request
 import urllib.error
 import urllib
 import logging
-import socket
+from models import *
 
 # Perform DNS resolution through the socket to translate the DNS names to IP addresses
 def getaddrinfo(*args):
@@ -36,12 +36,13 @@ def urlformat(baseurl, arrayurl):
     urlArray = [] # Creating an empty array
 
     for url in arrayurl: # Loop through arrayurl
-        
-        if url.startswith('/'): # Check if URL is a relative URL
-            appendedurl = baseurl + url # Add the URL if the URL is a relative
-            urlArray.append(appendedurl) # Add the URL to the urlArray
-        else:
-            urlArray.append(url) # Add the URL to the urlArray
+        if isinstance(url, str):
+            if len(url) < 256:
+                if url.startswith('/'): # Check if URL is a relative URL
+                    appendedurl = baseurl + url # Add the URL if the URL is a relative
+                    urlArray.append(appendedurl) # Add the URL to the urlArray
+                else:
+                    urlArray.append(url) # Add the URL to the urlArray
 
     return urlArray # Return the urlArray
 
@@ -60,8 +61,8 @@ def content_crawler(url):
 
     webcontent = None
 
-    print("Crawling URL:" + url)
-    logging.info('Trying to open ' + url)
+    print("Crawling URL:" + str(url))
+    logging.info('Trying to open ' + str(url))
 
     # request to onion site, open url and read contents
     try:
