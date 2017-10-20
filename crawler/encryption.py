@@ -18,15 +18,15 @@ def hive_encrypt(message):
 
     unencrypted_message = message.encode('utf-8')
     encrypted_message = encryption_key.encrypt(unencrypted_message)
+    undecoded_message = encrypted_message.decode('utf-8')
 
-    return encrypted_message
+    return undecoded_message
 
 def hive_decrypt(message):
     encryption_key = what_is_the_encryption_key()
 
-    encrypted_message = encryption_key.decrypt(message)
+    undecoded_message = message.encode('utf-8')
+    encrypted_message = encryption_key.decrypt(undecoded_message)
     decrypted_message = encrypted_message.decode('utf-8')
 
     return decrypted_message
-
-hive_encrypt("Toine")

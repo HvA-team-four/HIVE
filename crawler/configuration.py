@@ -2,7 +2,7 @@ import configparser
 
 def configuration_get(section, key):
     Config = configparser.ConfigParser()
-    Config.read("configuration.ini")
+    Config.read("configuration/configuration.ini")
     try:
         configuration_value = Config.get(section, key)
         return configuration_value
@@ -12,8 +12,8 @@ def configuration_get(section, key):
 
 def configuration_set(section, key, value):
     Config = configparser.ConfigParser()
-    Config.read("configuration.ini")
-    ConfigFile = open("configuration.ini", 'w')
+    Config.read("configuration/configuration.ini")
+    ConfigFile = open("configuration/configuration.ini", 'w')
     try:
         Config.set(section, key, value)
 
