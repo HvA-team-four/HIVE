@@ -9,7 +9,6 @@ db.bind(
     db='scotchbox'
 )
 
-
 class Keyword(db.Entity):
     id = PrimaryKey(
         int,
@@ -25,7 +24,7 @@ class Url(db.Entity):
         int,
         auto=True
     )
-    url = Required(str)
+    url = Required(str, 500)
     content = Optional(lambda: Content)
     date_added = Required(datetime)
     date_scraped = Optional(datetime)
@@ -52,5 +51,5 @@ class Search(db.Entity):
     query = Required(str)
     date_searched = Required(datetime)
 
-sql_debug(True)
+#sql_debug(True) - Debugging currently turned off.
 db.generate_mapping(create_tables=True)
