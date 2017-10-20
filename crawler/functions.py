@@ -10,6 +10,16 @@ import urllib
 import logging
 from models import *
 
+
+# The setup_logfile function can be used to setup a log file
+def setup_logfile(name):
+    # Setting up logging
+    logging.basicConfig(filename='logs/' + str(name) + '.log', level=logging.DEBUG,
+                        format='%(asctime)s %(levelname)s %(message)s', datefmt='%H:%M:%S')
+    logging.info('\n----------------------------------------------------------------------------------------'
+                 '\n Logging started')
+
+
 # Perform DNS resolution through the socket to translate the DNS names to IP addresses
 def getaddrinfo(*args):
     return [(socket.AF_INET, socket.SOCK_STREAM, 6, '', (args[0], args[1]))]
@@ -47,22 +57,13 @@ def urlformat(baseurl, arrayurl):
 
     return urlArray # Return the urlArray
 
-# The setup_logfile function can be used to setup a log file
-def setup_logfile(name):
-    # Setting up logging
-    logging.basicConfig(filename=str(name) + '.log', level=logging.DEBUG,
-                        format='%(asctime)s %(levelname)s %(message)s', datefmt='%H:%M:%S')
-    logging.info('\n----------------------------------------------------------------------------------------'
-                 '\n Logging started')
 
 # The content_crawler function can be used to crawl content from a specified URL provided as input-parameter.
 def content_crawler(url):
     # crawls the content
-    setup_logfile("content")
-
     webcontent = None
 
-    print("Crawling URL:" + str(url))
+    print("Crawling: " + str(url))
     logging.info('Trying to open ' + str(url))
 
     # request to onion site, open url and read contents
@@ -74,4 +75,11 @@ def content_crawler(url):
     except socket.timeout:
         print("timeout")
         logging.error('Socket timed out, unable to retrieve data from URL: ' + url)
+    except ValueError as error:
+        print('Incorrect URL: ' + url)
+        logging.error('An ValueError occurred, maybe url is formatted incorrectly. URL: ' + url + 'error message:'
+                      + str(error))
+    except Exception as error:
+        print("Unexpected error occurred when crawling URL: " + url)
+        logging.error('Unexpected error occurred when crawling URL: ' + url + 'error message:' + str(error))
     return webcontent
