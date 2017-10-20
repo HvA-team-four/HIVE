@@ -1,17 +1,17 @@
 # Importing packets and modules.
 from cryptography.fernet import Fernet
-import configuration
+import functions
 
 
 # This function retrieves the encryption key.
 def what_is_the_encryption_key():
-    if (configuration.configuration_get("database", "key") == "not set"):
+    if (functions.configuration_get("database", "key") == "not set"):
         encryption_key = Fernet.generate_key()
         encryption_key = encryption_key.decode('utf-8')
-        configuration.configuration_set("database", "key", encryption_key)
+        functions.configuration_set("database", "key", encryption_key)
         print("Encryption key generated.")
 
-    key = configuration.configuration_get("database", "key").encode('utf-8')
+    key = functions.configuration_get("database", "key").encode('utf-8')
     hive = Fernet(key)
     return hive
 

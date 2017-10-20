@@ -20,7 +20,7 @@
 
 # Import necessary packets and modules
 from functions import *
-from models import *
+from models im port *
 from datetime import datetime
 from time import sleep
 from pony.orm import *
