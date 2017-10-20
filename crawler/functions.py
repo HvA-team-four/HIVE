@@ -8,7 +8,17 @@ import urllib.request
 import urllib.error
 import urllib
 import logging
-import socket
+from models import *
+
+
+# The setup_logfile function can be used to setup a log file
+def setup_logfile(name):
+    # Setting up logging
+    logging.basicConfig(filename='logs/' + str(name) + '.log', level=logging.DEBUG,
+                        format='%(asctime)s %(levelname)s %(message)s', datefmt='%H:%M:%S')
+    logging.info('\n----------------------------------------------------------------------------------------'
+                 '\n Logging started')
+
 
 # Perform DNS resolution through the socket to translate the DNS names to IP addresses
 def getaddrinfo(*args):
@@ -36,32 +46,25 @@ def urlformat(baseurl, arrayurl):
     urlArray = [] # Creating an empty array
 
     for url in arrayurl: # Loop through arrayurl
-        
-        if url.startswith('/'): # Check if URL is a relative URL
-            appendedurl = baseurl + url # Add the URL if the URL is a relative
-            urlArray.append(appendedurl) # Add the URL to the urlArray
-        else:
-            urlArray.append(url) # Add the URL to the urlArray
+        if isinstance(url, str):
+            if len(url) < 256:
+                if url.startswith('/'): # Check if URL is a relative URL
+                    appendedurl = baseurl + url # Add the URL if the URL is a relative
+                    if appendedurl.startswith('https://') or appendedurl.startswith('http://'):
+                        urlArray.append(appendedurl) # Add the URL to the urlArray
+                else:
+                    urlArray.append(url) # Add the URL to the urlArray
 
     return urlArray # Return the urlArray
 
-# The setup_logfile function can be used to setup a log file
-def setup_logfile(name):
-    # Setting up logging
-    logging.basicConfig(filename=str(name) + '.log', level=logging.DEBUG,
-                        format='%(asctime)s %(levelname)s %(message)s', datefmt='%H:%M:%S')
-    logging.info('\n----------------------------------------------------------------------------------------'
-                 '\n Logging started')
 
 # The content_crawler function can be used to crawl content from a specified URL provided as input-parameter.
 def content_crawler(url):
     # crawls the content
-    setup_logfile("content")
-
     webcontent = None
 
-    print("Crawling URL:" + url)
-    logging.info('Trying to open ' + url)
+    print("Crawling: " + str(url))
+    logging.info('Trying to open ' + str(url))
 
     # request to onion site, open url and read contents
     try:
@@ -72,4 +75,11 @@ def content_crawler(url):
     except socket.timeout:
         print("timeout")
         logging.error('Socket timed out, unable to retrieve data from URL: ' + url)
+    except ValueError as error:
+        print('Incorrect URL: ' + url)
+        logging.error('An ValueError occurred, maybe url is formatted incorrectly. URL: ' + url + 'error message:'
+                      + str(error))
+    except Exception as error:
+        print("Unexpected error occurred when crawling URL: " + url)
+        logging.error('Unexpected error occurred when crawling URL: ' + url + 'error message:' + str(error))
     return webcontent

@@ -20,20 +20,18 @@ class Keyword(db.Entity):
     )
     content = Set(lambda: Content)
 
-
 class Url(db.Entity):
     id = PrimaryKey(
         int,
         auto=True
     )
-    url = Required(str, 256)
+    url = Required(str)
     content = Optional(lambda: Content)
     date_added = Required(datetime)
     date_scraped = Optional(datetime)
     date_scanned = Optional(datetime)
     priority_scrape = Optional(bool)
     priority_scan = Optional(bool)
-
 
 class Content(db.Entity):
     id = PrimaryKey(
@@ -46,7 +44,6 @@ class Content(db.Entity):
     content_raw = Required(LongStr)
     content_raw_hash = Required(str)
 
-
 class Search(db.Entity):
     int = PrimaryKey(
         int,
@@ -54,7 +51,6 @@ class Search(db.Entity):
     )
     query = Required(str)
     date_searched = Required(datetime)
-
 
 sql_debug(True)
 db.generate_mapping(create_tables=True)

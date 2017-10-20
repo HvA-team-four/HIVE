@@ -23,7 +23,8 @@ from functions import *
 from models import *
 from datetime import datetime
 from time import sleep
-import contentcrawl
+from pony.orm import *
+
 
 
 @db_session
@@ -34,35 +35,41 @@ def save_url(url):
             url=url,
             date_added=datetime.now()
         )
+        print("Add:", str(url))
         commit()
-
-@db_session
-def get_url_list():
-    return select(p for p in Url if p.date_scanned == None).limit(5)
-
+    else:
+        print("Skipped:", str(url))
 
 @db_session
 def start_scout():
+    setup_logfile("scout")
     while True:
-        urls = get_url_list()
-        print(urls.show())
-        print(len(urls))
+        urls = select(p for p in Url if p.date_scanned == None).random(5)
+
         if len(urls) == 0:
+            print("No URLs to be crawled, waiting for 60 seconds.")
             sleep(60)
-            print("Waiting ")
             continue
 
         for url in urls:
-            data = contentcrawl.content_crawler(url)
-            formatted_urls = urlformat(url.url, filterurls(data))  #filterurls(data)) # Turn the content in a list of URLs
-            for formatted_url in formatted_urls:
-                save_url(formatted_url)
+            try:
+                data = content_crawler(url.url)
 
-            url.date_scanned = datetime.now()
-            commit()
+                filtered_urls = filterurls(data)
 
+                formatted_urls = urlformat(url.url, filtered_urls) # Turn the content in a list of URLs
 
-start_scout()
+                for formatted_url in formatted_urls:
+                    save_url(formatted_url)
 
-            # if __name__ == "__main__":
-            #     start_scout()
+                url.date_scanned = datetime.now()
+                commit()
+                break
+
+            except(ValueError, NameError, TypeError)as error:
+                logging.error('An error occurred in scout.py' + error)
+                url.date_scanned = datetime.now()
+                pass
+
+if __name__ == "__main__":
+    start_scout()
