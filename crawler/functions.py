@@ -8,12 +8,19 @@ import urllib.request
 import urllib.error
 import urllib
 import logging
+import os
 from models import *
 
 
 # The setup_logfile function can be used to setup a log file
 def setup_logfile(name):
     # Setting up logging
+    if not os.path.exists("logs/"):
+        try:
+            os.makedirs("logs/")
+        except OSError as error:
+            logging.error("Error creating logs directory" + str(error))
+
     logging.basicConfig(filename='logs/' + str(name) + '.log', level=logging.DEBUG,
                         format='%(asctime)s %(levelname)s %(message)s', datefmt='%H:%M:%S')
     logging.info('\n----------------------------------------------------------------------------------------'
@@ -44,22 +51,24 @@ def filterurls(content):
 def urlformat(baseurl, arrayurl):
     baseurl = baseurl.rstrip('//') # Strip the slash from the URL of the baseurl
     urlArray = [] # Creating an empty array
-
+    word = ".onion"
     for url in arrayurl: # Loop through arrayurl
         if isinstance(url, str):
             if len(url) < 256:
                 if url.startswith('/'): # Check if URL is a relative URL
                     appendedurl = baseurl + url # Add the URL if the URL is a relative
-                    if appendedurl.startswith('https://') or appendedurl.startswith('http://'):
+                    if appendedurl.startswith('https://') or appendedurl.startswith('http://') and word in appendedurl:
                         urlArray.append(appendedurl) # Add the URL to the urlArray
                 else:
-                    urlArray.append(url) # Add the URL to the urlArray
+                    if word in url:
+                        urlArray.append(url) # Add the URL to the urlArray
 
     return urlArray # Return the urlArray
 
 
 # The content_crawler function can be used to crawl content from a specified URL provided as input-parameter.
 def content_crawler(url):
+    connect_to_tor()
     # crawls the content
     webcontent = None
 

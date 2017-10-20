@@ -75,7 +75,8 @@ def start_scout():
                 commit()
                 break
 
-            except(ValueError, NameError, TypeError) as error:
+
+            except(ValueError, NameError, TypeError)as error:
                 logging.error('An error occurred in scout.py' + str(error))
                 url.date_scanned = datetime.now()
                 url.url = encryption.hive_encrypt(url.url)
