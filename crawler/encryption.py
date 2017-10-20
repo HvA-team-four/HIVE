@@ -1,7 +1,9 @@
+# Importing packets and modules.
 from cryptography.fernet import Fernet
 import configuration
 
 
+# This function retrieves the encryption key.
 def what_is_the_encryption_key():
     if (configuration.configuration_get("database", "key") == "not set"):
         encryption_key = Fernet.generate_key()
@@ -13,6 +15,8 @@ def what_is_the_encryption_key():
     hive = Fernet(key)
     return hive
 
+
+# HIVE Encrypt: Call function and define a message as input parameter. The function returns the message encrypted.
 def hive_encrypt(message):
     encryption_key = what_is_the_encryption_key()
 
@@ -22,6 +26,8 @@ def hive_encrypt(message):
 
     return undecoded_message
 
+
+# HIVE Decrypt: Call function and define a message as input parameter. The function returns the message decrypted.
 def hive_decrypt(message):
     encryption_key = what_is_the_encryption_key()
 

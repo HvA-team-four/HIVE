@@ -80,6 +80,3 @@ def start_scout():
                 url.date_scanned = datetime.now()
                 url.url = encryption.hive_encrypt(url.url)
                 pass
-
-if __name__ == "__main__":
-    start_scout()
