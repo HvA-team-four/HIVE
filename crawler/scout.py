@@ -67,7 +67,7 @@ def start_scout():
                 break
 
             except(ValueError, NameError, TypeError)as error:
-                logging.error('An error occurred in scout.py' + error)
+                logging.error('An error occurred in scout.py' + str(error))
                 url.date_scanned = datetime.now()
                 pass
 
