@@ -34,16 +34,17 @@ def filterurls(content):
 def urlformat(baseurl, arrayurl):
     baseurl = baseurl.rstrip('//') # Strip the slash from the URL of the baseurl
     urlArray = [] # Creating an empty array
-
+    word = ".onion"
     for url in arrayurl: # Loop through arrayurl
         if isinstance(url, str):
             if len(url) < 256:
                 if url.startswith('/'): # Check if URL is a relative URL
                     appendedurl = baseurl + url # Add the URL if the URL is a relative
-                    if appendedurl.startswith('https://') or appendedurl.startswith('http://'):
+                    if appendedurl.startswith('https://') or appendedurl.startswith('http://') and word in appendedurl:
                         urlArray.append(appendedurl) # Add the URL to the urlArray
                 else:
-                    urlArray.append(url) # Add the URL to the urlArray
+                    if word in url:
+                        urlArray.append(url) # Add the URL to the urlArray
 
     return urlArray # Return the urlArray
 
@@ -57,6 +58,7 @@ def setup_logfile(name):
 
 # The content_crawler function can be used to crawl content from a specified URL provided as input-parameter.
 def content_crawler(url):
+    connect_to_tor()
     # crawls the content
     setup_logfile("content")
 
