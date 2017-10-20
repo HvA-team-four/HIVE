@@ -8,12 +8,19 @@ import urllib.request
 import urllib.error
 import urllib
 import logging
+import os
 from models import *
 
 
 # The setup_logfile function can be used to setup a log file
 def setup_logfile(name):
     # Setting up logging
+    if not os.path.exists("logs/"):
+        try:
+            os.makedirs("logs/")
+        except OSError as error:
+            logging.error("Error creating logs directory" + str(error))
+
     logging.basicConfig(filename='logs/' + str(name) + '.log', level=logging.DEBUG,
                         format='%(asctime)s %(levelname)s %(message)s', datefmt='%H:%M:%S')
     logging.info('\n----------------------------------------------------------------------------------------'
