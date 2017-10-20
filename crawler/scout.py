@@ -26,6 +26,7 @@ from time import sleep
 from pony.orm import *
 
 
+
 @db_session
 def save_url(url):
     result = select(p for p in Url if p.url == url).count()
@@ -41,6 +42,7 @@ def save_url(url):
 
 @db_session
 def start_scout():
+    setup_logfile("scout")
     while True:
         urls = select(p for p in Url if p.date_scanned == None).random(5)
 
@@ -64,7 +66,8 @@ def start_scout():
                 commit()
                 break
 
-            except(ValueError, NameError, TypeError):
+            except(ValueError, NameError, TypeError)as error:
+                logging.error('An error occurred in scout.py' + error)
                 url.date_scanned = datetime.now()
                 pass
 
