@@ -1,8 +1,8 @@
 # HIVE Framework - This file contains all functions, classes and methods that can be used by the application.
 
 # Import packets
-import socks
 import socket
+import socks
 from bs4 import *
 import urllib.request
 import urllib.error
@@ -10,7 +10,7 @@ import urllib
 import logging
 import os
 import configparser
-from models import *
+
 
 
 # The setup_logfile function can be used to setup a log file
