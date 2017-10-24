@@ -4,7 +4,7 @@ bs4
 pytest
 pysocks
 pony
-cryptography
+#cryptography
 dash
 dash-renderer
 dash-html-components

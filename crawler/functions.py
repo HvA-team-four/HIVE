@@ -19,36 +19,6 @@ def connect_to_tor():
     socket.getaddrinfo = getaddrinfo
 
 
-# The filterurls function can be used to filter URLs from a string input.
-def filterurls(content):
-    soup = BeautifulSoup(content, "html5lib") # Clean the content
-    urlArray = []   # Creating an empty array
-
-    for link in soup.find_all('a'):    # For loop which finds all URLs from the input parameter
-        urlArray.append(link.get('href'))   # Add the URLs to an array
-
-    return urlArray # Returns the urlArray variable
-
-
-# The urlformat function can be used to format URLs for uniform storage. Output is an array.
-def urlformat(baseurl, arrayurl):
-    baseurl = baseurl.rstrip('//') # Strip the slash from the URL of the baseurl
-    urlArray = [] # Creating an empty array
-    word = ".onion"
-    for url in arrayurl: # Loop through arrayurl
-        if isinstance(url, str):
-            if len(url) < 256:
-                if url.startswith('/'): # Check if URL is a relative URL
-                    appendedurl = baseurl + url # Add the URL if the URL is a relative
-                    if appendedurl.startswith('https://') or appendedurl.startswith('http://') and word in appendedurl:
-                        urlArray.append(appendedurl) # Add the URL to the urlArray
-                else:
-                    if word in url:
-                        urlArray.append(url) # Add the URL to the urlArray
-
-    return urlArray # Return the urlArray
-
-
 # The content_crawler function can be used to crawl content from a specified URL provided as input-parameter.
 def content_crawler(url):
     connect_to_tor()

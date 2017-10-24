@@ -1,10 +1,10 @@
 from utilities import log
+from utilities.url_util import format_url, get_urls_from_content
 from functions import *
 from models import *
 from datetime import datetime
 from time import sleep
 from pony.orm import *
-import encryption
 
 
 @db_session
@@ -15,10 +15,7 @@ def save_url(url):
             url=url,
             date_added=datetime.now()
         )
-        print("Add:", str(url))
         commit()
-    else:
-        print("Skipped:", str(url))
 
 
 @db_session
@@ -26,8 +23,10 @@ def get_urls():
     return select(u for u in Url if u.date_scanned is None).random(5)
 
 
-def crawl_url(url):
-    decrypted_url = encryption.hive_decrypt(url.url)
+@db_session
+def update_url(url):
+    url.date_scanned = datetime.now()
+    url.priority_scan = False
 
 
 @db_session
@@ -42,24 +41,18 @@ def start_scout():
 
         for url in urls:
             try:
-                url.url = encryption.hive_decrypt(url.url)
+                # url.url = encryption.hive_decrypt(url.url)
                 data = content_crawler(url.url)
 
-                filtered_urls = filterurls(data)
+                filtered_urls = get_urls_from_content(data)
+                for filtered_url in filtered_urls:
+                    formatted_url = format_url(url.url, filtered_url)
+                    save_url(formatted_url)
 
-                formatted_urls = urlformat(url.url, filtered_urls) # Turn the content in a list of URLs
-
-                for formatted_url in formatted_urls:
-                    print("Adding", str(formatted_url))
-                    save_url(encryption.hive_encrypt(formatted_url))
-
-                url.date_scanned = datetime.now()
-                url.url = encryption.hive_encrypt(url.url)
-                commit()
-                break
-
-            except(ValueError, NameError, TypeError)as error:
+            except(ValueError, NameError, TypeError) as error:
                 log.error(str(error))
-                url.date_scanned = datetime.now()
-                url.url = encryption.hive_encrypt(url.url)
-                pass
+            finally:
+                update_url(url)
+
+
+start_scout()
