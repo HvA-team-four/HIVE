@@ -1,2 +1,8 @@
 .logo{
     display: none;}
+
+h3{
+    color: red !important;
+}
+
+#page-content{background-color: green;}
