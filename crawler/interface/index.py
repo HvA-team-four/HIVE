@@ -16,6 +16,12 @@ app.layout = html.Div([
     html.Div(id='page-content')
 ])
 
+my_css_url = "https://raw.githubusercontent.com/HvA-team-four/HIVE/DashInterface/crawler/interface/assets/hive.css"
+app.css.append_css({
+    "external_url": my_css_url
+
+})
+
 @app.callback(Output('page-content', 'children'),
               [Input('url', 'pathname')])
 def display_page(pathname):
@@ -25,6 +31,7 @@ def display_page(pathname):
         return search.layout
     else:
         return start.layout
+
 
 if __name__ == '__main__':
     app.run_server(debug=True, host='0.0.0.0')
