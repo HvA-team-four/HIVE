@@ -54,6 +54,3 @@ def start_scout():
                 log.error(str(error))
             finally:
                 update_url(url)
-
-
-start_scout()
