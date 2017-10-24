@@ -47,7 +47,8 @@ def start_scout():
                 filtered_urls = get_urls_from_content(data)
                 for filtered_url in filtered_urls:
                     formatted_url = format_url(url.url, filtered_url)
-                    save_url(formatted_url)
+                    if formatted_url is not None:
+                        save_url(formatted_url)
 
             except(ValueError, NameError, TypeError) as error:
                 log.error(str(error))

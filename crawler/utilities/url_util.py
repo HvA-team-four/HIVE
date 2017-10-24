@@ -1,5 +1,5 @@
 from bs4 import BeautifulSoup
-from urllib.parse import urlparse
+from urllib.parse import urlparse, urljoin
 
 
 def get_urls_from_content(content):
@@ -13,10 +13,14 @@ def get_urls_from_content(content):
 
 
 def format_url(base_url, other_url):
-    parsed_base_url = urlparse(base_url)
+    other_url = other_url.rstrip("//")
     parsed_other_url = urlparse(other_url)
+    result = None
 
-    if parsed_other_url.netloc is None:
-        parsed_other_url._replace(netloc=parsed_base_url.netloc)
-
-    return parsed_other_url.geturl()
+    try:
+        if parsed_other_url.netloc == "" and parsed_other_url.path[0] == "/":
+            result = urljoin(base_url, other_url).geturl()
+        elif parsed_other_url.netloc != "":
+            result = other_url
+    finally:
+        return result
