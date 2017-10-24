@@ -1,6 +1,5 @@
 import socket
 import socks
-from bs4 import *
 import urllib.request
 import urllib.error
 import urllib
