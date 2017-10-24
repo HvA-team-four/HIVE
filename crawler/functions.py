@@ -1,6 +1,3 @@
-# HIVE Framework - This file contains all functions, classes and methods that can be used by the application.
-
-# Import packets
 import socket
 import socks
 from bs4 import *
@@ -13,19 +10,7 @@ import configparser
 
 
 
-# The setup_logfile function can be used to setup a log file
-def setup_logfile(name):
-    # Setting up logging
-    if not os.path.exists("logs/"):
-        try:
-            os.makedirs("logs/")
-        except OSError as error:
-            logging.error("Error creating logs directory" + str(error))
 
-    logging.basicConfig(filename='logs/' + str(name) + '.log', level=logging.DEBUG,
-                        format='%(asctime)s %(levelname)s %(message)s', datefmt='%H:%M:%S')
-    logging.info('\n----------------------------------------------------------------------------------------'
-                 '\n Logging started')
 
 # Perform DNS resolution through the socket to translate the DNS names to IP addresses
 def getaddrinfo(*args):
@@ -64,6 +49,7 @@ def urlformat(baseurl, arrayurl):
                         urlArray.append(url) # Add the URL to the urlArray
 
     return urlArray # Return the urlArray
+
 
 # The content_crawler function can be used to crawl content from a specified URL provided as input-parameter.
 def content_crawler(url):
@@ -120,32 +106,3 @@ def configuration_set(section, key, value):
 
     Config.write(ConfigFile)
     ConfigFile.close()
-
-
-
-
-
-
-
-
-
-
-
-    # from cryptography.fernet import Fernet
-    #
-    # key = Fernet.generate_key()
-    # hive = Fernet(key)
-    #
-    #
-    # text = "Toine Lambalk how are you"
-    # message = text.encode('utf-8')
-    #
-    # encrypted = hive.encrypt(message)
-    #
-    # message = hive.decrypt(encrypted)
-    #
-    # test = message.decode('utf-8')
-    # print(test)
-    #
-    #
-    # print(key)
