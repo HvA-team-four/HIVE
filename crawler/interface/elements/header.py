@@ -1,6 +1,7 @@
 import dash_html_components as html
 import base64
 
+
 hive_header = html.Div(
     className='header',
     children=html.Div(
