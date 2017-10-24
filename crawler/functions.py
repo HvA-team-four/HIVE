@@ -5,22 +5,19 @@ import urllib.request
 import urllib.error
 import urllib
 import logging
-import os
-import configparser
-
-
-
 
 
 # Perform DNS resolution through the socket to translate the DNS names to IP addresses
 def getaddrinfo(*args):
     return [(socket.AF_INET, socket.SOCK_STREAM, 6, '', (args[0], args[1]))]
 
+
 # Setup the Tor proxy, the socket and perform the dns resolution to translates the domain name into a IPV4 address
 def connect_to_tor():
     socks.set_default_proxy(socks.SOCKS5, "127.0.0.1", 9050)
     socket.socket = socks.socksocket
     socket.getaddrinfo = getaddrinfo
+
 
 # The filterurls function can be used to filter URLs from a string input.
 def filterurls(content):
@@ -31,6 +28,7 @@ def filterurls(content):
         urlArray.append(link.get('href'))   # Add the URLs to an array
 
     return urlArray # Returns the urlArray variable
+
 
 # The urlformat function can be used to format URLs for uniform storage. Output is an array.
 def urlformat(baseurl, arrayurl):
@@ -78,31 +76,3 @@ def content_crawler(url):
         logging.error('Unexpected error occurred when crawling URL: ' + url + 'error message:' + str(error))
     return webcontent
 
-####################################################
-# Configuration Functions
-####################################################
-# Configuration_get function, please provide a section- and key name and the function returns the value.
-def configuration_get(section, key):
-    Config = configparser.ConfigParser()
-    Config.read("configuration/configuration.ini")
-    try:
-        configuration_value = Config.get(section, key)
-        return configuration_value
-
-    except(ValueError, NameError):
-        print("Something went wrong with retrieving the value.")
-
-
-# Configuration_set function, please provide a section-, key- and value-name and the function sets this value in the file.
-def configuration_set(section, key, value):
-    Config = configparser.ConfigParser()
-    Config.read("configuration/configuration.ini")
-    ConfigFile = open("configuration/configuration.ini", 'w')
-    try:
-        Config.set(section, key, value)
-
-    except(configparser.NoSectionError, configparser.NoOptionError):
-        print("This option or section does not exist.")
-
-    Config.write(ConfigFile)
-    ConfigFile.close()

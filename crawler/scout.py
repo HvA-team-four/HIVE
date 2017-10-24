@@ -1,3 +1,4 @@
+from utilities import log
 from functions import *
 from models import *
 from datetime import datetime
@@ -31,8 +32,6 @@ def crawl_url(url):
 
 @db_session
 def start_scout():
-    setup_logfile("scout")
-
     while True:
         urls = get_urls()
 
@@ -60,7 +59,7 @@ def start_scout():
                 break
 
             except(ValueError, NameError, TypeError)as error:
-                logging.error('An error occurred in scout.py' + str(error))
+                log.error(str(error))
                 url.date_scanned = datetime.now()
                 url.url = encryption.hive_encrypt(url.url)
                 pass
