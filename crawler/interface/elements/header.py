@@ -9,13 +9,14 @@ hive_header = html.Div(
         style={'height': '100%'},
         children=[
             html.Img(
-                src="https://lh3.googleusercontent.com/Ybh2Nnp3tz7A1hZgE96cNjAATd7kR7Fa9_A4ErsHMz8Pd7aYnUbstj7h4mqGXz398a9wkMtJ2XWOImk=w1686-h1302",
+                src="https://herke-my.sharepoint.com/personal/t_lambalk_herke_nl/Documents/HIVE/Images/HIVE.png?slrid=6714269e-8031-4000-938d-c9e3003f7c2c",
                 className="logo"
             ),
 
             html.Div(className="links", children=[
-                html.A('pricing', className="link", href="/pages/start"),
-                html.A('workshops', className="link", href="/pages/search")
+                html.A('Start', className="link", href="/pages/start"),
+                html.A('Search', className="link", href="/pages/search"),
+                html.A('Statistics', className="link", href="/pages/statistics")
             ])
         ]
     )
