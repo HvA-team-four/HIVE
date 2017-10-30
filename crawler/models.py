@@ -56,5 +56,5 @@ class Search(db.Entity):
     date_searched = Required(datetime)
 
 
-# sql_debug(True)
+#sql_debug(True)
 db.generate_mapping(create_tables=True)

@@ -1,7 +1,8 @@
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_table_experiments as dt
+from crawler.models import *
 
 # Load pages
 from app import app
@@ -17,7 +18,45 @@ app.layout = html.Div([
     dcc.Location(id='url', refresh = False),
     html.Div(id='page-content'),
     html.Div(dt.DataTable(rows=[{}]), style={'display': 'none'}),
+
 ])
+
+@app.callback(
+    Output('output-container-button', 'children'),
+    [Input('button', 'n_clicks')],
+    [State('input-box', 'value')])
+def update_output(n_clicks, value):
+    with db_session:
+        result = select(p for p in Url if p.url == value).count()
+
+    if not value:
+        return html.Div('Please insert a value in the input field.',id='negative-warning')
+    elif result != 0:
+        return html.Div('URL already exists in database',id='negative-warning')
+    else:
+        try:
+            with db_session:
+                url_object = Url(
+                    url=value,
+                    date_added=datetime.now(),
+                    priority_scrape=True,
+                    priority_scan=True
+                )
+                commit()
+            return html.Div('URL: {} has been added to the database.'.format(value), id='positive-warning')
+
+        except:
+            return html.Div('An unexpected error occurred', id='negative-warning')
+
+
+
+
+
+
+
+
+
+
 
 
 @app.callback(Output('page-content', 'children'),
