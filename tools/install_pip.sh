@@ -1,3 +1,4 @@
 #!/usr/bin/env bash
 
-sudo apt-get install python3-pip -y
+wget https://bootstrap.pypa.io/get-pip.py
+sudo python3.6 get-pip.py
