@@ -13,6 +13,7 @@ def get_urls_from_content(content):
 
 
 def format_url(base_url, other_url):
+
     other_url = other_url.rstrip("//")
     parsed_other_url = urlparse(other_url)
     result = None

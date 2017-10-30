@@ -16,7 +16,7 @@ hive_header = html.Div(
             html.Div(className="links", children=[
                 html.A('Start', className="link", href="/pages/start"),
                 html.A('Search', className="link", href="/pages/search"),
-                html.A('Statistics', className="link", href="/pages/statistics")
+                html.A('Settings', className="link", href="/pages/settings")
             ])
         ]
     )
