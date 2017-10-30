@@ -27,12 +27,6 @@ Vagrant.configure("2") do |config|
         sh.privileged = true # this means it runs as 'root'
         sh.path = "tools/install_pip.sh"
     end
-
-    # - install R
-    config.vm.provision :shell do |sh|
-        sh.privileged = true # this means it runs as 'root'
-        sh.path = "tools/install_r.sh"
-    end
 	
 	# - install TOR
     config.vm.provision :shell do |sh|
