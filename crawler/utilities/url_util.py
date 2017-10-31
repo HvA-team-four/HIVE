@@ -7,7 +7,8 @@ def get_urls_from_content(content):
     urls = []
 
     for link in soup.find_all('a'):
-        urls.append(link.get('href'))
+        if link.get('href') is not None:
+            urls.append(link.get('href'))
 
     return urls
 
