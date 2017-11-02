@@ -1,6 +1,4 @@
 import dash_html_components as html
-import base64
-
 
 hive_header = html.Div(
     className='header',
@@ -16,7 +14,7 @@ hive_header = html.Div(
             html.Div(className="links", children=[
                 html.A('Start', className="link", href="/pages/start"),
                 html.A('Search', className="link", href="/pages/search"),
-                html.A('Settings', className="link", href="/pages/settings")
+                html.A('URL Settings', className="link", href="/pages/urlsettings")
             ])
         ]
     )

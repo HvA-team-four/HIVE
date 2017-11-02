@@ -31,11 +31,12 @@ def update_url(url):
 
 @db_session
 def start_scout():
+    log.debug('scout has been started')
     while True:
         urls = get_urls()
-
         if len(urls) == 0:
             print("No URLs to be crawled, waiting for 60 seconds.")
+            log.info('No URLs to be crawled, waiting for 60 seconds.')
             sleep(60)
             continue
 

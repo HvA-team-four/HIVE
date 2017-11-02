@@ -8,7 +8,7 @@ from crawler.models import *
 from app import app
 from interface.pages import start
 from interface.pages import search
-from interface.pages import settings
+from interface.pages import urlsettings
 from interface.pages import about
 
 # Load elements
@@ -66,8 +66,8 @@ def display_page(pathname):
         return start.layout
     elif pathname == '/pages/search':
         return search.layout
-    elif pathname == '/pages/settings':
-        return settings.layout
+    elif pathname == '/pages/urlsettings':
+        return urlsettings.layout
     elif pathname == '/pages/about':
         return about.layout
     else:
