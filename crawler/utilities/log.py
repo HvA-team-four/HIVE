@@ -1,3 +1,16 @@
+"""
+In order to use the logging functionality you need to import the following if its not already imported:
+from utilities import log
+
+In order to write to log use the following format:
+log.<loglevel>('Message to write in logfile')
+The <loglevel> should be one of following levels: info, warning, debug, error, critical.
+
+depending on the level of logging that we have set certain messages will or will not appear in the file. For instance,
+if we change the logging level to "error" only messages of level error and above will be added to the logfile. For now
+the "debug" level shows all messages in the logfile.
+"""
+
 from os import path, makedirs
 import logging
 
