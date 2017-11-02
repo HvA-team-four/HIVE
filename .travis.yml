@@ -7,4 +7,3 @@ addons:
     organization: "four" # the key of the org you chose at step #3
 script:
   - sonar-scanner
-  - pytest

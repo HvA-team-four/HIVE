@@ -14,15 +14,8 @@ def get_urls_from_content(content):
 
 
 def format_url(base_url, other_url):
-
-    other_url = other_url.rstrip("//")
-    parsed_other_url = urlparse(other_url)
-    result = None
-
-    try:
-        if parsed_other_url.netloc == "" and parsed_other_url.path[0] == "/":
-            result = urljoin(base_url, other_url).geturl()
-        elif parsed_other_url.netloc != "":
-            result = other_url
-    finally:
-        return result
+    joined_url = urljoin(base_url, other_url)
+    parsed_url = urlparse(joined_url)
+    if parsed_url.scheme == "http" or "https":
+        return urljoin(base_url, other_url)
+    return None
