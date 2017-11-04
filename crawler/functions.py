@@ -20,7 +20,7 @@ def connect_to_tor():
 
 # The content_crawler function can be used to crawl content from a specified URL provided as input-parameter.
 def content_crawler(url):
-    connect_to_tor()
+    #connect_to_tor()
     # crawls the content
     webcontent = None
 
