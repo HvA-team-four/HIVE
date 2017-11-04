@@ -100,9 +100,19 @@ layout = html.Div([
             id = 'keyword-table')
     ),
 
+    html.Button('Set active',
+                id      = 'keyword_set_active',
+                style    ={'marginTop': 20,
+                           'float' : 'left'}),
+
+html.Div(id     = 'activate_warning'),
+
     html.Button('Set inactive',
                 id      = 'keyword_set_inactive',
-                style   = {'marginTop': 20}),
+                style   = {'marginTop' : 20,
+                           'marginLeft' : 20,
+                            'float' : 'left'}),
 
     html.Div(id     = 'inactivate_warning')
-])
+], style = {'overflow' : 'auto',
+            'paddingBottom' : 22})

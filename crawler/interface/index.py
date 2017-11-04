@@ -13,6 +13,7 @@ from interface.pages import urlsettings
 from interface.pages import about
 from interface.pages import settings
 from interface.pages import keywordsettings
+import time
 
 # Load elements
 from interface.elements import header
@@ -123,6 +124,39 @@ def reload_table(n_clicks):
                        ignore_index=True)
 
     return df.to_dict('records')
+
+# Changing the status of a Keyword to active
+@app.callback(
+    Output('activate_warning', 'children'),
+    [Input('keyword_set_active', 'n_clicks')],
+    [State('keyword-table', 'selected_row_indices')])
+@db_session
+def insert_url(n_clicks, selected_row_indices):
+    try:
+        if 'df' not in globals():
+            return html.Div('Please load the keyword table first.',
+                            id='negative-warning')
+
+        elif not selected_row_indices:
+            return html.Div('Please select a keyword.',
+                            id='negative-warning')
+
+        else:
+            records = df.iloc[selected_row_indices].Keyword
+
+            for record in records:
+                results = select(p for p in Keyword if p.keyword == record)
+
+                for result in results:
+                    result.active = True
+                    commit()
+
+            return html.Div('The selected records are set active.',
+                            id='positive-warning')
+
+    except:
+        return html.Div('An unexpected error occurred.',
+                        id='negative-warning')
 
 # Changing the status of a Keyword to inactive
 @app.callback(
