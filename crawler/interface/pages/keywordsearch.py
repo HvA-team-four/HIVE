@@ -37,7 +37,7 @@ layout = html.Div([
         )
     ]),
 
-    html.Button('Refresh statistics',
+    html.Button('Reload keywords',
                         id          = 'refresh-keyword-list',
                         className   = 'refresh_button')
 

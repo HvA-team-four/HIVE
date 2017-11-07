@@ -42,7 +42,6 @@ app.layout = html.Div([
 ])
 
 
-
 #######################################
 #################   Keyword Search Page
 #######################################
@@ -51,7 +50,6 @@ app.layout = html.Div([
     [Input('refresh-keyword-list', 'n_clicks')])
 def refresh_keyword_list(n_clicks):
     return keywordsearch.load_keywords()
-
 
 #######################################
 ###############   Keyword Settings Page
@@ -89,11 +87,11 @@ def insert_keyword(n_clicks, value):
 
     if not value:
         return html.Div('Please insert a value in the input field.',
-                        id='negative-warning')
+                        id='negative_warning')
 
     elif result != 0:
-        return html.Div('URL already exists in database',
-                        id='negative-warning')
+        return html.Div('Keyword already exists in database',
+                        id='negative_warning')
 
     else:
         try:
@@ -105,11 +103,11 @@ def insert_keyword(n_clicks, value):
                 commit()
 
             return html.Div('Keyword: {} has been added to the database.'.format(value),
-                            id='positive-warning')
+                            id='positive_warning')
 
         except:
             return html.Div('An unexpected error occurred',
-                            id='negative-warning')
+                            id='negative_warning')
 
 # Loading the Keyword table from the database
 @app.callback(
@@ -148,11 +146,11 @@ def insert_url(n_clicks, selected_row_indices):
     try:
         if 'df' not in globals():
             return html.Div('Please load the keyword table first.',
-                            id='negative-warning')
+                            id='negative_warning')
 
         elif not selected_row_indices:
             return html.Div('Please select a keyword.',
-                            id='negative-warning')
+                            id='negative_warning')
 
         else:
             records = df.iloc[selected_row_indices].Keyword
@@ -165,12 +163,12 @@ def insert_url(n_clicks, selected_row_indices):
                     commit()
 
             return html.Div('The selected records are set active.',
-                            id='positive-warning')
+                            id='positive_warning')
 
 
     except:
         return html.Div('An unexpected error occurred.',
-                        id='negative-warning')
+                        id='negative_warning')
 
 # Changing the status of a Keyword to inactive
 @app.callback(
@@ -182,11 +180,11 @@ def insert_url(n_clicks, selected_row_indices):
     try:
         if 'df' not in globals():
             return html.Div('Please load the keyword table first.',
-                            id='negative-warning')
+                            id='negative_warning')
 
         elif not selected_row_indices:
             return html.Div('Please select a keyword.',
-                            id='negative-warning')
+                            id='negative_warning')
 
         else:
             records = df.iloc[selected_row_indices].Keyword
@@ -199,10 +197,10 @@ def insert_url(n_clicks, selected_row_indices):
                     commit()
 
             return html.Div('The selected records are set inactive.',
-                            id='positive-warning')
+                            id='positive_warning')
     except:
         return html.Div('An unexpected error occurred.',
-                        id='negative-warning')
+                        id='negative_warning')
 
 
 #######################################
@@ -241,11 +239,11 @@ def insert_url(n_clicks, value):
 
     if not value:
         return html.Div('Please insert a value in the input field.',
-                        id='negative-warning')
+                        id='negative_warning')
 
     elif result != 0:
         return html.Div('URL already exists in database',
-                        id='negative-warning')
+                        id='negative_warning')
     else:
         try:
             with db_session:
@@ -258,11 +256,11 @@ def insert_url(n_clicks, value):
                 commit()
 
             return html.Div('URL: {} has been added to the database.'.format(value),
-                            id='positive-warning')
+                            id='positive_warning')
 
         except:
             return html.Div('An unexpected error occurred',
-                            id='negative-warning')
+                            id='negative_warning')
 
 # Loading the URL table from the database
 @app.callback(
@@ -328,15 +326,6 @@ def display_page(pathname):
 
     else:
         return start.layout
-
-
-
-
-
-
-
-
-
 
 
 
