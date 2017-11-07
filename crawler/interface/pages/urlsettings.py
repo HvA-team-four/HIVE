@@ -72,7 +72,7 @@ layout = html.Div([
 
         html.Button('Refresh statistics',
                     id          = 'refresh-url-statistics',
-                    className   = 'refresh_statistics')
+                    className   = 'refresh_button')
     ], className    = 'statisticsRow'),
 
     html.Button('Load table',

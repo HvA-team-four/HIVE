@@ -4,4 +4,9 @@ import dash_core_components as dcc
 
 layout = html.Div([
     html.H3('Search'),
+     
+
+
+
+
 ])

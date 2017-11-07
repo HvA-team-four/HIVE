@@ -19,6 +19,10 @@ hive_header = html.Div(className='header',
                                                        className="link",
                                                        href="/pages/search")
                                                 ),
+                                        html.Li(html.A('Keyword',
+                                                       className="link",
+                                                       href="/pages/keywordsearch")
+                                                ),
                                         html.Li(html.A('Settings',
                                                        href="/pages/settings")
                                                 )

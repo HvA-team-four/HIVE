@@ -64,7 +64,7 @@ layout = html.Div([
 
         html.Button('Refresh statistics',
                     id          = 'refresh-keyword-statistics',
-                    className   = 'refresh_statistics')
+                    className   = 'refresh_button')
     ], className    = 'statisticsRow'),
 
     html.Button('Load table',
@@ -114,5 +114,4 @@ html.Div(id     = 'activate_warning'),
                             'float' : 'left'}),
 
     html.Div(id     = 'inactivate_warning')
-], style = {'overflow' : 'auto',
-            'paddingBottom' : 22})
+], style = {'paddingBottom' : 55})

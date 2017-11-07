@@ -9,10 +9,12 @@ import pandas as pd
 # Load pages
 from interface.pages import start
 from interface.pages import search
-from interface.pages import urlsettings
+from interface.pages import keywordsearch
 from interface.pages import about
 from interface.pages import settings
 from interface.pages import keywordsettings
+from interface.pages import urlsettings
+
 import time
 
 # Load elements
@@ -38,6 +40,17 @@ app.layout = html.Div([
         dt.DataTable(rows=[{}]),
         style={'display': 'none'}),
 ])
+
+
+
+#######################################
+#################   Keyword Search Page
+#######################################
+@app.callback(
+    Output('keywordList', 'options'),
+    [Input('refresh-keyword-list', 'n_clicks')])
+def refresh_keyword_list(n_clicks):
+    return keywordsearch.load_keywords()
 
 
 #######################################
@@ -153,6 +166,7 @@ def insert_url(n_clicks, selected_row_indices):
 
             return html.Div('The selected records are set active.',
                             id='positive-warning')
+
 
     except:
         return html.Div('An unexpected error occurred.',
@@ -297,8 +311,12 @@ def reload_table(n_clicks):
 def display_page(pathname):
     if pathname == '/pages/start':
         return start.layout
+
+
     elif pathname == '/pages/search':
         return search.layout
+    elif pathname == '/pages/keywordsearch':
+        return keywordsearch.layout
     elif pathname == '/pages/settings':
         return settings.layout
     elif pathname == '/pages/urlsettings':
@@ -307,6 +325,7 @@ def display_page(pathname):
         return keywordsettings.layout
     elif pathname == '/pages/about':
         return about.layout
+
     else:
         return start.layout
 
