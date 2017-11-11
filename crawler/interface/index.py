@@ -1,27 +1,26 @@
 import dash
-from dash.dependencies import Input, Output, State
 import dash_core_components as dcc
 import dash_html_components as html
 import dash_table_experiments as dt
-from crawler.models import *
 import pandas as pd
+from dash.dependencies import Input, Output, State
 
-# Load pages
-from interface.pages import start
-from interface.pages import search
-from interface.pages import keywordsearch
-from interface.pages import about
-from interface.pages import settings
-from interface.pages import keywordsettings
-from interface.pages import urlsettings
-
-import time
+from crawler.models import *
+from crawler.utilities import config
 
 # Load elements
 from interface.elements import header
+from interface.pages import about
+from interface.pages import keywordsearch
+from interface.pages import search
+from interface.pages import settings
+# Load pages
+from interface.pages import start
+from interface.pages import urlsettings
+from interface.pages import keywordsettings
 
 app = dash.Dash()
-app.css.append_css({'external_url': 'https://herke-my.sharepoint.com/personal/t_lambalk_herke_nl/_layouts/15/guestaccess.aspx?docid=1a328c2860b4b4e66b806b1b92ff5a8b2&authkey=ASrYUvcKKW1vlc60Pe1O3Cc'})
+app.css.append_css({'external_url': config.configuration_get("styling", "css")})
 app.css.append_css({'external_url': 'https://codepen.io/chriddyp/pen/bWLwgP.css'})
 server = app.server
 app.config.supress_callback_exceptions = True
@@ -201,7 +200,6 @@ def insert_url(n_clicks, selected_row_indices):
     except:
         return html.Div('An unexpected error occurred.',
                         id='negative_warning')
-
 
 #######################################
 ###################   URL Settings Page

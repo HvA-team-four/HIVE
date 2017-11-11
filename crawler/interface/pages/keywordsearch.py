@@ -20,15 +20,17 @@ def load_keywords():
 
 layout = html.Div([
     html.H3('Keyword Search',
-            style={'text-align':'center'}),
+            style={'text-align':'center',
+                   'marginTop': 50}),
 
     html.P('Please use the dropdown-bar below to select the keywords you want to search the database for.',
            style={'width':380,
                   'marginLeft':'auto',
                   'marginRight':'auto',
                   'textAlign':'center',
-                  'marginBottom':10}),
+                  'marginBottom':30}),
 
+    html.Div([
     html.Div([
         dcc.Dropdown(
             options=load_keywords(),
@@ -37,20 +39,19 @@ layout = html.Div([
         )
     ]),
     html.Br(),
+        html.Button('Reload keywords',
+                    id='refresh-keyword-list',
+                    className='refresh_button',
+                    style={'paddingLeft': 10,
+                           'paddingRight': 10}),
     dcc.DatePickerRange(
         id='keyword_date_picker',
         start_date_placeholder_text='Start date',
         end_date_placeholder_text='End date'
     ),
+    html.Button('Search', id='keyword_search')
 
-    html.Button('Search',
-                        id          = 'keyword_search'),
-
-    html.Button('Reload keywords',
-                        id          = 'refresh-keyword-list',
-                        className   = 'refresh_button')
-
-
+    ], style={'width':700, 'marginLeft':'auto', 'marginRight':'auto'})
 
 
 
