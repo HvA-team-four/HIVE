@@ -319,6 +319,8 @@ def display_page(pathname):
         return urlsettings.layout
     elif pathname == '/pages/keywordsettings':
         return keywordsettings.layout
+    elif pathname == '/pages/configsettings':
+        return configsettings.layout
     elif pathname == '/pages/about':
         return about.layout
 

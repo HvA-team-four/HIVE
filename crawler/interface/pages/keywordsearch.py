@@ -39,17 +39,17 @@ layout = html.Div([
         )
     ]),
     html.Br(),
-        html.Button('Reload keywords',
-                    id='refresh-keyword-list',
-                    className='refresh_button',
-                    style={'paddingLeft': 10,
-                           'paddingRight': 10}),
     dcc.DatePickerRange(
         id='keyword_date_picker',
         start_date_placeholder_text='Start date',
         end_date_placeholder_text='End date'
     ),
-    html.Button('Search', id='keyword_search')
+html.Button('Search', id='keyword_search'),
+    html.Button('Reload keywords',
+                        id          = 'refresh-keyword-list',
+                        className   = 'refresh_button',
+                        style       = {'paddingLeft' : 10,
+                                       'paddingRight' : 10})
 
     ], style={'width':700, 'marginLeft':'auto', 'marginRight':'auto'})
 
