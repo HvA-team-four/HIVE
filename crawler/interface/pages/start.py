@@ -1,8 +1,4 @@
-from dash.dependencies import  Input, Output
 import dash_html_components as html
-import dash_core_components as dcc
-
-from interface import app
 
 layout = html.Div(style={'textAlign' : 'center'}, children=[
     html.Img(
@@ -13,4 +9,4 @@ layout = html.Div(style={'textAlign' : 'center'}, children=[
         "Welcome at HIVE. HIVE is a Dark Web Crawler which can be used to crawl the Dark Web and store content in a encrypted database."
     ]),
     html.A('View about page', className="", href="/pages/about")
-    ])
+])

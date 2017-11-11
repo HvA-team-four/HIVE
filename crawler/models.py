@@ -18,6 +18,7 @@ class Keyword(db.Entity):
     keyword = Required(
         str, 45
     )
+    active = Required(bool)
     content = Set(lambda: Content)
 
 
