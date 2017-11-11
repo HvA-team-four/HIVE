@@ -3,6 +3,7 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash_table_experiments as dt
 import pandas as pd
+import time
 from dash.dependencies import Input, Output, State
 
 from crawler.models import *
