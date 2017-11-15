@@ -20,8 +20,7 @@ def save_url(url):
 
 @db_session
 def get_urls():
-    return select(u for u in Url if u.date_scanned is None).random(5)
-
+    return select(u for u in Url if u.date_scanned is None).order_by(desc(Url.priority_scan))
 
 @db_session
 def update_url(url):
