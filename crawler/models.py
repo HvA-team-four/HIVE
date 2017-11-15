@@ -6,8 +6,7 @@ db.bind(
     provider='mysql',
     user='root',
     passwd='root',
-    db='scotchbox',
-    charset='utf8mb4'
+    db='scotchbox'
 )
 
 

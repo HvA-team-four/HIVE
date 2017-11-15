@@ -15,6 +15,7 @@ def get_urls():
 @db_session
 def save_content(url_id, cleaned, raw, hashed):
     url = select(u for u in Url if u.id == url_id).get()
+    raw_string = raw.decode('utf-8')
     content_object = Content(
         url=url,
         content=cleaned,
