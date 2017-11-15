@@ -13,3 +13,4 @@ html5lib
 flask
 dash_table_experiments
 plotly
+pandas
