@@ -6,7 +6,8 @@ db.bind(
     provider='mysql',
     user='root',
     passwd='root',
-    db='scotchbox'
+    db='scotchbox',
+    charset='utf8mb4'
 )
 
 
@@ -27,7 +28,7 @@ class Url(db.Entity):
         auto=True
     )
     url = Required(str, 500)
-    content = Optional(lambda: Content)
+    content = Set(lambda: Content)
     date_added = Required(datetime)
     date_scraped = Optional(datetime)
     date_scanned = Optional(datetime)
