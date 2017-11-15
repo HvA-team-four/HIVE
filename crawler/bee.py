@@ -25,6 +25,12 @@ def save_content(url_id, cleaned, raw, hashed):
     commit()
 
 
+@db_session
+def update_url(url):
+    url.date_scraped = datetime.now()
+    url.priority_scrape = False
+
+
 def clean_me(html):  # clean the html, css and javascript tags
     soup = BeautifulSoup(html,
                          "html5lib")  # BeatuifulSoup library to clean it and use the html5lib parser to parse it
@@ -38,7 +44,7 @@ def hash_content(content):
     hex_dig = hash_object.hexdigest()
     return (hex_dig)
 
-
+@db_session
 def start_bee():
     while True:
         urls = get_urls()
@@ -62,3 +68,5 @@ def start_bee():
 
             except(ValueError, NameError, TypeError) as error:
                 log.error(str(error))
+            finally:
+                update_url(url)

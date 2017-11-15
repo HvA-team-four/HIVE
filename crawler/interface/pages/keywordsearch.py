@@ -1,5 +1,4 @@
 from interface.index import *
-from dash.dependencies import  Input, Output
 import dash_html_components as html
 import dash_core_components as dcc
 
@@ -31,13 +30,11 @@ layout = html.Div([
                   'marginBottom':30}),
 
     html.Div([
-    html.Div([
         dcc.Dropdown(
             options=load_keywords(),
             multi=True,
             id='keywordList',
-        )
-    ]),
+        ),
     html.Br(),
     dcc.DatePickerRange(
         id='keyword_date_picker',
