@@ -7,6 +7,11 @@ CONFIGURATION_FILE_PATH = path.abspath(path.join(path.abspath(__file__), "..", "
 config = ConfigParser()
 config.read(CONFIGURATION_FILE_PATH)
 
+def check_configuration():
+    CONFIGURATION_FILE_PATH = path.abspath(path.join(path.abspath(__file__), "..", "..", "..", "configuration.ini"))
+
+    config = ConfigParser()
+    return(config.read(CONFIGURATION_FILE_PATH))
 
 def configuration_get(section, key):
     try:

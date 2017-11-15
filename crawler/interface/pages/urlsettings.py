@@ -5,17 +5,17 @@ def load_statistics(statistic):
     if statistic == 'total':
         return select(p for p in Url).count()
 
-    elif statistic == 'scanned':
-        total = select(p for p in Url).count()
-        scanned = select(p for p in Url if p.date_scanned is not None).count()
-        percentage = int(scanned/total*100)
-        return '{}%'.format(percentage)
+    # elif statistic == 'scanned':
+        # total = select(p for p in Url).count()
+        # scanned = select(p for p in Url if p.date_scanned is not None).count()
+        # percentage = int(scanned/total*100)
+        # return '{}%'.format(percentage)
 
-    elif statistic == 'scraped':
-        total = select(p for p in Url).count()
-        scraped = select(p for p in Url if p.date_scraped is not None).count()
-        percentage = int(scraped/total*100)
-        return '{}%'.format(percentage)
+    # elif statistic == 'scraped':
+        # total = select(p for p in Url).count()
+        # scraped = select(p for p in Url if p.date_scraped is not None).count()
+        # percentage = int(scraped/total*100)
+        # return '{}%'.format(percentage)
 
 
 df = pd.DataFrame(columns=['URL',
@@ -105,3 +105,4 @@ layout = html.Div([
             id          = 'url-table')
     ),
 ])
+
