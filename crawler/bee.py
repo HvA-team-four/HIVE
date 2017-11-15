@@ -15,7 +15,6 @@ def get_urls():
 @db_session
 def save_content(url_id, cleaned, raw, hashed):
     url = select(u for u in Url if u.id == url_id).get()
-    raw_string = raw.decode('utf-8')
     content_object = Content(
         url=url,
         content=cleaned,
@@ -31,9 +30,8 @@ def update_url(url):
     url.priority_scrape = False
 
 
-def clean_me(html):  # clean the html, css and javascript tags
-    soup = BeautifulSoup(html,
-                         "html5lib")  # BeatuifulSoup library to clean it and use the html5lib parser to parse it
+def clean_html(html):  # clean the html, css and javascript tags
+    soup = BeautifulSoup(html, "html5lib")  # BeatuifulSoup library to clean and use the html5lib parser to parse it
     for s in soup(['script', 'style']):  # select the tags that must removed
         s.decompose()
     return ' '.join(soup.stripped_strings)  # remove white spaces
@@ -42,7 +40,7 @@ def clean_me(html):  # clean the html, css and javascript tags
 def hash_content(content):
     hash_object = hashlib.sha256(content)
     hex_dig = hash_object.hexdigest()
-    return (hex_dig)
+    return hex_dig
 
 @db_session
 def start_bee():
@@ -56,15 +54,13 @@ def start_bee():
 
         for url in urls:
             try:
-                # url.url = encryption.hive_decrypt(url.url)
-                data = content_crawler(url.url)
+                content = content_crawler(url.url)
 
-                hashed = hash_content(data)
+                content_hashed = hash_content(content)
 
-                cleaned = clean_me(data)  # cleans the content
+                cleaned = clean_html(content)
 
-                #if cleaned is not None:
-                save_content(url.id, cleaned, data, hashed)
+                save_content(url.id, cleaned, content, content_hashed)
 
             except(ValueError, NameError, TypeError) as error:
                 log.error(str(error))
