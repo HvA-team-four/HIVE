@@ -13,14 +13,29 @@ def get_urls():
 
 
 @db_session
-def save_content(url_id, cleaned, raw, hashed):
+def get_keywords():
+    return select(k for k in Keyword if k.active)
+
+
+def filter_keywords(content):
+    keywords = get_keywords()
+    keywords_in_content = []
+    for k in keywords:
+        if k.keyword in content:
+            keywords_in_content.append(k)
+
+    return keywords_in_content
+
+@db_session
+def save_content(url_id, cleaned, raw, hashed, keywords):
     url = select(u for u in Url if u.id == url_id).get()
     raw_string = raw.decode('utf-8')
     content_object = Content(
         url=url,
         content=cleaned,
         content_raw=raw_string,
-        content_raw_hash=hashed
+        content_raw_hash=hashed,
+        keyword=keywords
     )
     commit()
 
@@ -59,9 +74,11 @@ def start_bee():
 
                 content_hashed = hash_content(content)
 
-                cleaned = clean_html(content)
+                content_cleaned = clean_html(content)
 
-                save_content(url.id, cleaned, content, content_hashed)
+                keywords = filter_keywords(content_cleaned)
+
+                save_content(url.id, content_cleaned, content, content_hashed, keywords)
 
             except(ValueError, NameError, TypeError) as error:
                 log.error(str(error))
