@@ -42,14 +42,97 @@ app.layout = html.Div([
 ])
 
 
-#######################################
-#################   Keyword Search Page
-#######################################
+
 @app.callback(
     Output('keywordList', 'options'),
     [Input('refresh-keyword-list', 'n_clicks')])
 def refresh_keyword_list(n_clicks):
     return keywordsearch.load_keywords()
+
+
+
+@app.callback(
+    Output('keyword_search_results', 'children'),
+    [Input('keyword_search', 'n_clicks')],
+    [State('keywordList', 'value')])
+def display_results(n_clicks, values):
+    df = pd.DataFrame(columns=['id',
+                               'Domain',
+                               'Keywords',
+                               'Last Scraped Date',
+                               'Content',
+                               'Link'])
+
+    df = df.append({'id': 1,
+                    'Domain': 'asdfasdfkjalsdk.onion',
+                    'Keywords': ['Hello', 'Twenty'],
+                    'Last Scraped Date': '11-12-2017',
+                    'Content': 'Hi how are you doing, Hi how are you doing Hi how are you doing Hi how are you doing Hi how are you doing Hi how are you doing Hi how are you doing Hi how are you doing ',
+                    'Link':'/pages/href'},
+                   ignore_index=True)
+    df = df.append({'id': 2,
+                    'Domain': 'asdfasdfkjaasdadfasfasdfasdfasdfasdflsdk.onion',
+                    'Keywords': ['Hello', 'Twenty'],
+                    'Last Scraped Date': '11-12-2017',
+                    'Content': 'Hi how are you doing, Hi how are you doing Hi how are you doing Hi how are you doing Hi how are you doing Hi how are you doing Hi how are you doing Hi how are you doing '},
+                   ignore_index=True)
+
+
+    results = html.Div([
+                html.H4("Results"),
+                html.Table(
+
+                    [html.Tr([html.Th(col) for col in df.columns], className="tableHeader")] +
+
+                    # [html.Tr([
+                    #     html.Td([html.A(df.iloc[i][col])], className="tableData") for col in df.columns
+                    # ], className="tableRow") for i in range(len(df))]
+
+                    [html.Tr([
+                        html.Td(df.iloc[i]['id'], className="tableData")
+                        ]) for i in range(len(df))]
+
+
+
+
+
+
+
+
+
+
+                )
+            ])
+
+    return results
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 #######################################
 ###############   Keyword Settings Page
@@ -304,12 +387,11 @@ def reload_table(n_clicks):
 #######################################
 @app.callback(
     Output('page-content', 'children'),
-    [Input('url', 'pathname')])
+    [Input('url', 'pathname')]
+)
 def display_page(pathname):
-    if pathname == '/pages/start':
+    if (pathname == '/pages/start') or (pathname == None) or (pathname == '/') :
         return start.layout
-
-
     elif pathname == '/pages/search':
         return search.layout
     elif pathname == '/pages/keywordsearch':
@@ -320,15 +402,11 @@ def display_page(pathname):
         return urlsettings.layout
     elif pathname == '/pages/keywordsettings':
         return keywordsettings.layout
-    elif pathname == '/pages/configsettings':
-        return configsettings.layout
     elif pathname == '/pages/about':
         return about.layout
-
     else:
+        print(pathname)
         return start.layout
-
-
 
 
 ######################################################################
