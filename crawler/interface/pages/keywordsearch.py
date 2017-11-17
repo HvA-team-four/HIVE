@@ -21,6 +21,7 @@ layout = html.Div([
     html.H3('Keyword Search',
             style={'text-align':'center',
                    'marginTop': 50}),
+
     html.P('Please use the dropdown-bar below to select the keywords you want to search the database for.',
            style={'width':380,
                   'marginLeft':'auto',
@@ -40,16 +41,15 @@ layout = html.Div([
         start_date_placeholder_text='Start date',
         end_date_placeholder_text='End date'
     ),
-html.Button('Search', id='keyword_search'),
-    html.Button('Reload keywords',
-                        id          = 'refresh-keyword-list',
-                        className   = 'refresh_button',
-                        style       = {'paddingLeft' : 10,
-                                       'paddingRight' : 10})
 
-    ], style={'width':700, 'marginLeft':'auto', 'marginRight':'auto'}),
+    html.Button('Search', id='keyword_search'),
+        html.Button('Reload keywords',
+                            id          = 'refresh-keyword-list',
+                            className   = 'refresh_button',
+                            style       = {'paddingLeft' : 10,
+                                           'paddingRight' : 10})
 
-html.Div(id='keyword_search_results')
+        ], style={'width':700, 'marginLeft':'auto', 'marginRight':'auto'}),
 
-
+    html.Div(id='keyword_search_results')
 ])

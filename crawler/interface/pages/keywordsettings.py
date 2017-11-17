@@ -5,14 +5,14 @@ def load_statistics(statistic):
     if statistic == 'total':
         return select(p for p in Keyword).count()
 
-    # elif statistic == 'active':
-    #     total = select(p for p in Keyword).count()
-    #     active = select(p for p in Keyword if p.active == True ).count()
-    #     percentage = int(active/total*100)
-    #     return '{}%'.format(percentage)
-    #
-    # elif statistic == 'other':
-    #     return '...'
+    elif statistic == 'active':
+        total = select(p for p in Keyword).count()
+        active = select(p for p in Keyword if p.active == True ).count()
+        percentage = int(active/total*100)
+        return '{}%'.format(percentage)
+
+    elif statistic == 'other':
+        return '...'
 
 
 df = pd.DataFrame(columns=['Keyword', 'Status'])
