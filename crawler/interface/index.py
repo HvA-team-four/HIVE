@@ -274,7 +274,7 @@ def insert_url(n_clicks, selected_row_indices):
 # StatisticsBox one shows the total amount of urls in the database, this function is located in the urlsettings.py file.
 @app.callback(
     Output('UrlStatisticsBox1', 'children'),
-    [Input('refresh-statistics', 'n_clicks')])
+    [Input('refresh-url-statistics', 'n_clicks')])
 def refresh_url_statistics(n_clicks):
     return urlsettings.load_statistics('total') # Parameter total indicates the total amount of keywords
 
@@ -282,7 +282,7 @@ def refresh_url_statistics(n_clicks):
 # StatisticsBox two shows the scanned amount of keywords in the database, this function is located in the urlsettings.py file.
 @app.callback(
     Output('UrlStatisticsBox2', 'children'),
-    [Input('refresh-statistics', 'n_clicks')])
+    [Input('refresh-url-statistics', 'n_clicks')])
 def refresh_url_statistics(n_clicks):
     return urlsettings.load_statistics('scanned') # Parameter scanned indicates the scanned amount of keywords
 
@@ -290,7 +290,7 @@ def refresh_url_statistics(n_clicks):
 # StatisticsBox three shows the scraped amount of keywords in the database, this function is located in the urlsettings.py file.
 @app.callback(
     Output('UrlStatisticsBox3', 'children'),
-    [Input('refresh-statistics', 'n_clicks')])
+    [Input('refresh-url-statistics', 'n_clicks')])
 def refresh_url_statistics(n_clicks):
     return urlsettings.load_statistics('scraped') # Parameter scraped indicates the total scraped of keywords
 
