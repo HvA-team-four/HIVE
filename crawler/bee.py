@@ -4,7 +4,7 @@ from time import sleep
 from bs4 import BeautifulSoup
 from pony.orm import *
 
-from models import *
+from utilities.models import *
 from utilities import log
 from utilities.tor import connect_to_tor
 from utilities.website import get_content_from_url
@@ -62,7 +62,7 @@ def hash_content(content):
     hex_dig = hash_object.hexdigest()
     return hex_dig
 
-
+@db_session
 def start_bee():
     log.debug("Bee has been started")
     while True:
@@ -91,5 +91,4 @@ def start_bee():
 
 
 if __name__ == '__main__':
-    connect_to_tor()
     start_bee()

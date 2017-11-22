@@ -1,5 +1,5 @@
 from time import sleep
-from models import *
+from utilities.models import *
 from utilities import log
 from utilities.tor import connect_to_tor
 from utilities.url_util import format_url, get_urls_from_content
