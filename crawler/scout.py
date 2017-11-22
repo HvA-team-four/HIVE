@@ -1,6 +1,7 @@
 from utilities import log
 from utilities.url_util import format_url, get_urls_from_content
-from functions import *
+from utilities.content import get_content_from_url
+from utilities.tor import connect_to_tor
 from models import *
 from datetime import datetime
 from time import sleep
@@ -42,7 +43,7 @@ def start_scout():
         for url in urls:
             try:
                 # url.url = encryption.hive_decrypt(url.url)
-                data = content_crawler(url.url)
+                data = get_content_from_url(url.url)
 
                 filtered_urls = get_urls_from_content(data)
                 for filtered_url in filtered_urls:
@@ -54,3 +55,8 @@ def start_scout():
                 log.error(str(error))
             finally:
                 update_url(url)
+
+
+if __name__ == '__main__':
+    connect_to_tor()
+    start_scout()
