@@ -1,11 +1,13 @@
-from models import *
-from utilities.content import get_content_from_url
-from utilities.tor import connect_to_tor
-from utilities import log
-from time import sleep
-from pony.orm import *
-from bs4 import BeautifulSoup
 import hashlib
+from time import sleep
+
+from bs4 import BeautifulSoup
+from pony.orm import *
+
+from models import *
+from utilities import log
+from utilities.tor import connect_to_tor
+from utilities.website import get_content_from_url
 
 
 @db_session

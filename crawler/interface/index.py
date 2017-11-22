@@ -6,18 +6,17 @@ import dash_table_experiments as dt
 import pandas as pd
 from dash.dependencies import Input, Output, State
 
-from crawler.models import *
 from crawler.utilities import config
-
 # Load elements and pages
 from interface.elements import header
 from interface.pages import about
 from interface.pages import keywordsearch
+from interface.pages import keywordsettings
 from interface.pages import search
 from interface.pages import settings
 from interface.pages import start
 from interface.pages import urlsettings
-from interface.pages import keywordsettings
+from models import *
 
 app = dash.Dash() # Setting up Dash application
 app.css.append_css({'external_url': config.configuration_get("styling", "css")}) # Appending a custom css which is defined in the configuration file, the css file needs to be hosted externally

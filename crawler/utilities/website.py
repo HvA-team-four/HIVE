@@ -11,7 +11,6 @@ def get_content_from_url(url):
     webcontent = None
 
     print("Crawling: " + str(url))
-    log.info('Trying to open ' + str(url))
 
     # request to onion site, open url and read contents
     try:
@@ -25,9 +24,9 @@ def get_content_from_url(url):
     except ValueError as error:
         print('Incorrect URL: ' + url)
         log.error('An ValueError occurred, maybe url is formatted incorrectly. URL: ' + url + 'error message:'
-                      + str(error))
+                  + str(error))
     except Exception as error:
         print("Unexpected error occurred when crawling URL: " + url)
         log.error('Unexpected error occurred when crawling URL: ' + url + 'error message:' + str(error))
-    return webcontent
 
+    return webcontent

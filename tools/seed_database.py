@@ -1,13 +1,14 @@
-from models import *
-from pony.orm import *
 from datetime import datetime
+
+from pony.orm import *
+
+from models import *
+
 
 @db_session
 def seed_database_url():
     urls = [
-        "https://reddit.com",
-        "https://youtube.com",
-        "https://nu.nl"
+        "https://thehiddenwiki.org/"
     ]
     for u in urls:
         url = Url(
