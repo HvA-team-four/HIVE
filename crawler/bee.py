@@ -58,11 +58,11 @@ def hash_content(content):
     hex_dig = hash_object.hexdigest()
     return hex_dig
 
-@db_session
+
 def start_bee():
+    log.debug("Bee has been started")
     while True:
         urls = get_urls()
-
         if len(urls) == 0:
             print("No URLs to be crawled, waiting for 60 seconds.")
             sleep(60)
@@ -84,3 +84,6 @@ def start_bee():
                 log.error(str(error))
             finally:
                 update_url(url)
+
+if __name__ == '__main__':
+    start_bee()
