@@ -1,10 +1,13 @@
-from utilities import log
-from functions import *
-from models import *
-from time import sleep
-from pony.orm import *
-from bs4 import BeautifulSoup
 import hashlib
+from time import sleep
+
+from bs4 import BeautifulSoup
+from pony.orm import *
+
+from models import *
+from utilities import log
+from utilities.tor import connect_to_tor
+from utilities.website import get_content_from_url
 
 
 @db_session
@@ -25,6 +28,7 @@ def filter_keywords(content):
             keywords_in_content.append(k)
 
     return keywords_in_content
+
 
 @db_session
 def save_content(url_id, cleaned, raw, hashed, keywords):
@@ -70,7 +74,7 @@ def start_bee():
 
         for url in urls:
             try:
-                content = content_crawler(url.url)
+                content = get_content_from_url(url.url)
 
                 content_hashed = hash_content(content)
 
@@ -85,5 +89,7 @@ def start_bee():
             finally:
                 update_url(url)
 
+
 if __name__ == '__main__':
+    connect_to_tor()
     start_bee()
