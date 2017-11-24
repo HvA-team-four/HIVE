@@ -17,7 +17,7 @@ from interface.pages import search
 from interface.pages import settings
 from interface.pages import start
 from interface.pages import urlsettings
-from models import *
+from crawler.utilities.models import *
 
 app = dash.Dash() # Setting up Dash application
 app.css.append_css({'external_url': config.configuration_get("styling", "css")}) # Appending a custom css which is defined in the configuration file, the css file needs to be hosted externally

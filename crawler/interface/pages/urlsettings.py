@@ -1,4 +1,5 @@
 from interface.index import *
+from crawler.utilities.models import *
 
 @db_session
 def load_statistics(statistic):
