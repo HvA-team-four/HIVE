@@ -1,4 +1,4 @@
-# All packages are loaded here. 
+# All packages are loaded here.
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -14,7 +14,6 @@ from interface.pages import keywordsettings
 from interface.pages import search
 from interface.pages import settings
 from interface.pages import start
-from interface.pages import userguide
 from interface.pages import urlsettings
 from interface.pages import blocksettings
 from crawler.utilities.models import *
@@ -22,10 +21,12 @@ from crawler.utilities.models import *
 app = dash.Dash() # Setting up Dash application
 app.title = 'HIVE - A Dark Web Crawler' # Defining the application title
 app.css.append_css({'external_url': config.configuration_get("styling", "css")}) # Appending a custom css which is defined in the configuration file, the css file needs to be hosted externally
-app.css.append_css({'external_url': 'https://codepen.io/chriddyp/pen/bWLwgP.css'}) # This is a default css file made available for Dash via codepen
+app.css.append_css({'external_url': 'https://codepen.io/chriddyp/pen/bWLwgP.c}) # This is a default css file made available for Dash via codepen
 app.config.supress_callback_exceptions = True
 
 server = app.server # Setting up the application server variable
+
+app.title = 'HIVE - A Dark Web Crawler' # Defining the application title
 
 app.layout = html.Div([ # App layout, this is the basic of the application. The content of the 'page-content' section will differ based on the page you are visiting.
     header.hive_header, # Loading the header from the HIVE file
@@ -57,49 +58,31 @@ def refresh_keyword_list(n_clicks):
 # Callback for searching data by keyword
 @app.callback(Output('keyword_search_results', 'children'), [Input('keyword_search', 'n_clicks')], [State('keywordList', 'value'), State('keyword_date_picker', 'start_date'), State('keyword_date_picker', 'end_date')])
 def display_results(n_clicks, values, start_date, end_date):
-    print(values)
-    print(type(values))
-    print(start_date)
-    print(type(start_date))
-    print(end_date)
-    print(type(end_date))
     global df
-    df = pd.DataFrame(columns=['id',
-                               'Domain',
-                               'Keywords',
-                               'Last Scraped Date',
-                               'Content',
-                               'Link'])
 
-
-    df = df.append({'id': 1,
-                    'Domain': 'asdfasdfkjaasdadfasfasdfasdfasdfasdflsdk.onion',
-                    'Keywords': ['Hello', 'Twenty'],
-                    'Last Scraped Date': '11-12-2017',
-                    'Content': 'Hi how are you doing, Hi how are you doing Hi how are you doing Hi how are you doing Hi how are you doing Hi how are you doing Hi how are you doing Hi how are you doing ',
-                    'Link': '/pages/results$1'},
-                   ignore_index=True)
-
+    df = keyword_search(values) 
 
     results = html.Div([
-                html.Div([
-                html.H4("Results"),
-                html.P("The following table displays all the search results which were retrieved based on your search query.", style={"width" : 370,
-                                                                                                                                      "marginBottom" : 15}),
-                html.Table(
+        html.Div([
+            html.H4("Results"),
+            html.P(
+                "The following table displays all the search results which were retrieved based on your search query.",
+                style={"width": 370,
+                       "marginBottom": 15}),
+            html.Table(
 
-                    [html.Tr([html.Th(col) for col in df.columns], className="tableHeader")] +
+                [html.Tr([html.Th(col) for col in df.columns], className="tableHeader")] +
 
-                    [html.Tr([
-                        html.Td(df.iloc[i]['id'], className="tableData"),
-                        html.Td(df.iloc[i]['Domain'], className="tableData"),
-                        html.Td(", ".join(df.iloc[i]['Keywords']), className="tableData"),
-                        html.Td(df.iloc[i]['Last Scraped Date'], className="tableData"),
-                        html.Td(df.iloc[i]['Content'][:75] + (df.iloc[i]['Content'][75:] and '...'), className="tableData"),
-                        html.Td([html.A("Details", href=df.iloc[i]['Link'])], className="tableData")
-                        ]) for i in range(len(df))]
-                )], className="content")
-            ], className="results_section")
+                [html.Tr([
+                    html.Td(df.iloc[i]['id'], className="tableData"),
+                    html.Td(df.iloc[i]['Domain'], className="tableData"),
+                    html.Td(", ".join(df.iloc[i]['Keywords']), className="tableData"),
+                    html.Td(df.iloc[i]['Last Scraped Date'], className="tableData"),
+                    html.Td(df.iloc[i]['Content'][:75] + (df.iloc[i]['Content'][75:] and '...'), className="tableData"),
+                    html.Td([html.A("Details", href=df.iloc[i]['Link'])], className="tableData")
+                ]) for i in range(len(df))]
+            )], className="content")
+    ], className="results_section")
 
     return results
 
@@ -175,7 +158,7 @@ def reload_table(n_clicks):
                         'Status': status},
                        ignore_index=True) # Add the record to a dataframe which can then be displayed in the table
 
-    return df.to_dict('records') # Return each record in the dataframe as a dictionary. 
+    return df.to_dict('records') # Return each record in the dataframe as a dictionary.
 
 # Callback for turning KEYWORDS ACTIVE
 @app.callback(Output('activate_warning', 'children'), [Input('keyword_set_active', 'n_clicks')], [State('keyword-table', 'selected_row_indices')])
@@ -324,6 +307,7 @@ def reload_table(n_clicks):
 
     return df.to_dict('records') # Return each record in the dataframe as a dictionary.
 
+
 # Callback used for displaying an controlling the USER GUIDE tabs
 @app.callback(Output('tab-output', 'children'), [Input('tabs', 'value')])
 def display_content(value):
@@ -437,9 +421,6 @@ def display_page(pathname):
     elif pathname == '/pages/about': # If the page is equal to about
         return about.layout # Return the about page
 
-    elif pathname.startswith('/pages/userguide'): # If the page is equal to about
-        return userguide.layout # Return the about page
-
     elif pathname.startswith('/pages/results'): # If the detailed results page is retrieved with an ID (therefore .startswith())
         try:
             index       = int(pathname.split('$',1)[1])
@@ -492,6 +473,29 @@ def display_page(pathname):
 
     else: # Else
         return start.layout # Return the search page
+
+
+@db_session
+def keyword_search(keywords):
+    df_id = 0
+    dataframe = pd.DataFrame(columns=['id',
+                                      'Domain',
+                                      'Keywords',
+                                      'Last Scraped Date',
+                                      'Content',
+                                      'Link'])
+    for keyword in keywords:
+        content_objects = select(c for c in Content if keyword in c.keyword.keyword)[:]
+        for content in content_objects:
+            dataframe = dataframe.append({'id': content.id,
+                                          'Domain': content.url.url,
+                                          'Keywords': content.keyword.keyword,
+                                          'Last Scraped Date': content.url.date_scraped,
+                                          'Content': content.content,
+                                          'Link': '/pages/results$' + str(df_id)},
+                                         ignore_index=True)
+            df_id = df_id + 1
+        return dataframe
 
 # Application starting command
 if __name__ == '__main__':
