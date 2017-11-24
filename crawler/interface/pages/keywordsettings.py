@@ -18,7 +18,6 @@ def load_statistics(statistic):
     elif statistic == 'other':
         return '...'
 
-
 df = pd.DataFrame(columns=['Keyword', 'Status'])
 
 df = df.append({'Keyword': 'No data loaded'},
