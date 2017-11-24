@@ -16,6 +16,7 @@ from interface.pages import keywordsettings
 from interface.pages import search
 from interface.pages import settings
 from interface.pages import start
+from interface.pages import userguide
 from interface.pages import urlsettings
 from crawler.utilities.models import *
 
@@ -398,6 +399,79 @@ def reload_table(n_clicks):
 
     return df.to_dict('records') # Return each record in the dataframe as a dictionary.
 
+
+@app.callback(Output('tab-output', 'children'), [Input('tabs', 'value')])
+def display_content(value):
+    if value == 1:
+        return html.Div([
+            dcc.Markdown(
+            ''' ##### Start
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam eros, 
+            lobortis a libero eu, porttitor fermentum magna. Quisque sit amet magna 
+            et sem dapibus ullamcorper nec quis libero. Donec aliquam diam ac purus
+            vehicula ultrices. Etiam tristique nunc eu massa congue pellentesque. 
+            Donec dapibus risus vel mauris lacinia, sit amet pellentesque dui consequat. 
+            Fusce hendrerit id leo et rutrum. 
+            Quisque id neque at felis porta commodo id malesuada ligula. Praesent 
+            laoreet finibus nulla nec lacinia.
+            '''
+            ),
+        ])
+
+    elif value == 2:
+        return html.Div([
+            dcc.Markdown(
+            ''' ##### Purpose
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam eros, 
+            lobortis a libero eu, porttitor fermentum magna. Quisque sit amet magna 
+            et sem dapibus ullamcorper nec quis libero. Donec aliquam diam ac purus
+            vehicula ultrices. Etiam tristique nunc eu massa congue pellentesque. 
+            Donec dapibus risus vel mauris lacinia, sit amet pellentesque dui consequat. 
+            Fusce hendrerit id leo et rutrum. 
+            Quisque id neque at felis porta commodo id malesuada ligula. Praesent 
+            laoreet finibus nulla nec lacinia.
+            '''
+            ),
+        ])
+
+    elif value == 3:
+        return html.Div([
+            dcc.Markdown(
+            ''' ##### Settings
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam eros, 
+            lobortis a libero eu, porttitor fermentum magna. Quisque sit amet magna 
+            et sem dapibus ullamcorper nec quis libero. Donec aliquam diam ac purus
+            vehicula ultrices. Etiam tristique nunc eu massa congue pellentesque. 
+            Donec dapibus risus vel mauris lacinia, sit amet pellentesque dui consequat. 
+            Fusce hendrerit id leo et rutrum. 
+            Quisque id neque at felis porta commodo id malesuada ligula. Praesent 
+            laoreet finibus nulla nec lacinia.
+            '''
+            ),
+        ])
+
+    elif value == 4:
+        return html.Div([
+            dcc.Markdown(
+            ''' ##### Keyword Search
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam eros, 
+            lobortis a libero eu, porttitor fermentum magna. Quisque sit amet magna 
+            et sem dapibus ullamcorper nec quis libero. Donec aliquam diam ac purus
+            vehicula ultrices. Etiam tristique nunc eu massa congue pellentesque. 
+            Donec dapibus risus vel mauris lacinia, sit amet pellentesque dui consequat. 
+            Fusce hendrerit id leo et rutrum. 
+            Quisque id neque at felis porta commodo id malesuada ligula. Praesent 
+            laoreet finibus nulla nec lacinia.
+            '''
+            ),
+        ])
+
+    else:
+        return html.Div([
+            "An unexpected error occurred."
+        ])
+
+
 ###################################################################################
 # App callbacks used for displaying the right page                                #
 ###################################################################################
@@ -427,6 +501,9 @@ def display_page(pathname):
 
     elif pathname == '/pages/about': # If the page is equal to about
         return about.layout # Return the about page
+
+    elif pathname.startswith('/pages/userguide'): # If the page is equal to about
+        return userguide.layout # Return the about page
 
     elif pathname.startswith('/pages/results'): # If the detailed results page is retrieved with an ID (therefore .startswith())
         try:

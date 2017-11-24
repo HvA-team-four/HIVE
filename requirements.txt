@@ -14,3 +14,4 @@ flask
 dash_table_experiments
 plotly
 pandas
+dash-core-components==0.13.0-rc5

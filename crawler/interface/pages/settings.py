@@ -22,5 +22,14 @@ layout = html.Div([
                                     ),
         html.P("Keyword", className='settingTitle')
     ], href="keywordsettings", className='setting'),
+
+    html.A([
+            html.Img(
+                    src="https://herke-my.sharepoint.com/personal/t_lambalk_herke_nl/_layouts/15/guestaccess.aspx?docid=13156e54bd4ff47479b21803dea30991e&authkey=AddQVpwAP46MQBcfaNXDyQw&e=87f544e7861149c684a3439e60cecc82",
+                    className="settingIcon"
+                                        ),
+            html.P("User Guide", className='settingTitle')
+        ], href="userguide", className='setting'),
+
     ], className = 'hivesettings')
 ])
