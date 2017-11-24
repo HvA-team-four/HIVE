@@ -4,13 +4,14 @@ import dash_core_components as dcc
 import dash_html_components as html
 import dash_table_experiments as dt
 import pandas as pd
-from dash.dependencies import Input, Output, State
+from dash.dependencies import Input, Event, Output, State
 
 from crawler.models import *
 from crawler.utilities import config
 
 # Load elements and pages
 from interface.elements import header
+from interface.elements import termsofuse
 from interface.pages import about
 from interface.pages import keywordsearch
 from interface.pages import search
@@ -37,8 +38,39 @@ app.layout = html.Div([ # App layout, this is the basic of the application. The 
 
     html.Div( # This element is hidden but needs to be here to succesfully load the DataTables from other pages
         dt.DataTable(rows=[{}]),
-        style={'display': 'none'}), 
+        style={'display': 'none'}),
+
+    html.Div(children=[], id="TermsBoxArea"),
+    termsofuse.hive_bottombar
 ])
+
+# @app.callback(
+#     Output('TermsBoxArea', 'children'), # Warning box
+#     [Input('closeTerms', 'n_clicks')], # Submit button
+#     [State('TermsBoxArea', 'children')]
+# )
+# def close_termsbox(n_clicks, state):
+#     return None
+
+
+@app.callback(
+    Output('TermsBoxArea', 'children'), # Warning box
+    [dash.dependencies.Input('TermsButton', 'n_clicks')],
+    [State('TermsBoxArea', 'children')],
+    [Event('closeTerms', 'click')] # Submit button
+)
+def open_termsbox(n_clicks, state):
+    if state == None and n_clicks != 0:
+        return  termsofuse.hive_termsofuse
+    else:
+        return None
+
+# @app.callback(
+#     Output('output-container-keyword', 'children'), # Warning box
+#     [Input('keywordsubmit', 'n_clicks')], # Submit button
+#     [State('keyword-input-box', 'value')]) # Input field
+# @db_session # Initiating database session for entire function
+# def insert_keyword(n_clicks, value):
 
 ###################################################################################
 # App callbacks are functions which are executed when something happens on a page #
@@ -65,8 +97,11 @@ def refresh_keyword_list(n_clicks):
      State('keyword_date_picker', 'end_date')])
 def display_results(n_clicks, values, start_date, end_date):
     print(values)
+    print(type(values))
     print(start_date)
+    print(type(start_date))
     print(end_date)
+    print(type(end_date))
     global df
     df = pd.DataFrame(columns=['id',
                                'Domain',
@@ -112,7 +147,6 @@ def display_results(n_clicks, values, start_date, end_date):
             ], className="results_section")
 
     return results
-
 
 ###################################################################################
 # App callbacks used for the KEYWORD Settings page.                               #
@@ -447,6 +481,8 @@ def display_page(pathname):
 
     else: # Else
         return start.layout # Return the search page
+
+
 
 
 if __name__ == '__main__':

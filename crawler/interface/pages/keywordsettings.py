@@ -7,8 +7,11 @@ def load_statistics(statistic):
 
     elif statistic == 'active':
         total = select(p for p in Keyword).count()
-        active = select(p for p in Keyword if p.active == True ).count()
-        percentage = int(active/total*100)
+        if total != 0:
+            active = select(p for p in Keyword if p.active == True ).count()
+            percentage = int(active/total*100)
+        else:
+            percentage = 0
         return '{}%'.format(percentage)
 
     elif statistic == 'other':

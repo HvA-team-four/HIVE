@@ -7,14 +7,21 @@ def load_statistics(statistic):
 
     elif statistic == 'scanned':
         total = select(p for p in Url).count()
-        scanned = select(p for p in Url if p.date_scanned is not None).count()
-        percentage = int(scanned/total*100)
+        if total != 0:
+            scanned = select(p for p in Url if p.date_scanned is not None).count()
+            percentage = int(scanned/total*100)
+        else:
+            percentage = 0
+
         return '{}%'.format(percentage)
 
     elif statistic == 'scraped':
         total = select(p for p in Url).count()
-        scraped = select(p for p in Url if p.date_scraped is not None).count()
-        percentage = int(scraped/total*100)
+        if total != 0:
+            scraped = select(p for p in Url if p.date_scraped is not None).count()
+            percentage = int(scraped/total*100)
+        else:
+            percentage = 0
         return '{}%'.format(percentage)
 
 
