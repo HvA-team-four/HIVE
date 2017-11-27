@@ -20,13 +20,10 @@ from crawler.utilities.models import *
 
 app = dash.Dash() # Setting up Dash application
 app.title = 'HIVE - A Dark Web Crawler' # Defining the application title
+app.css.append_css({'external_url': 'https://codepen.io/chriddyp/pen/bWLwgP.css'}) # This is a default css file made available for Dash via codepen
 app.css.append_css({'external_url': config.configuration_get("styling", "css")}) # Appending a custom css which is defined in the configuration file, the css file needs to be hosted externally
-app.css.append_css({'external_url': 'https://codepen.io/chriddyp/pen/bWLwgP.c}) # This is a default css file made available for Dash via codepen
 app.config.supress_callback_exceptions = True
-
 server = app.server # Setting up the application server variable
-
-app.title = 'HIVE - A Dark Web Crawler' # Defining the application title
 
 app.layout = html.Div([ # App layout, this is the basic of the application. The content of the 'page-content' section will differ based on the page you are visiting.
     header.hive_header, # Loading the header from the HIVE file
@@ -59,7 +56,6 @@ def refresh_keyword_list(n_clicks):
 @app.callback(Output('keyword_search_results', 'children'), [Input('keyword_search', 'n_clicks')], [State('keywordList', 'value'), State('keyword_date_picker', 'start_date'), State('keyword_date_picker', 'end_date')])
 def display_results(n_clicks, values, start_date, end_date):
     global df
-
     df = keyword_search(values) 
 
     results = html.Div([
@@ -307,6 +303,19 @@ def reload_table(n_clicks):
 
     return df.to_dict('records') # Return each record in the dataframe as a dictionary.
 
+###################################################################################
+###################################################################################
+# CONTENT BLOCK SETTINGS
+###################################################################################
+###################################################################################
+
+
+
+###################################################################################
+###################################################################################
+# USER GUIDE
+###################################################################################
+###################################################################################
 
 # Callback used for displaying an controlling the USER GUIDE tabs
 @app.callback(Output('tab-output', 'children'), [Input('tabs', 'value')])
