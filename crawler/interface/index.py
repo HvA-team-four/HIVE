@@ -17,11 +17,12 @@ from interface.pages import start
 from interface.pages import urlsettings
 from interface.pages import blocksettings
 from crawler.utilities.models import *
+from datetime import datetime
 
 app = dash.Dash() # Setting up Dash application
 app.title = 'HIVE - A Dark Web Crawler' # Defining the application title
 app.css.append_css({'external_url': 'https://codepen.io/chriddyp/pen/bWLwgP.css'}) # This is a default css file made available for Dash via codepen
-app.css.append_css({'external_url': config.configuration_get("styling", "css")}) # Appending a custom css which is defined in the configuration file, the css file needs to be hosted externally
+app.css.append_css({'external_url': 'https://hive.airsweeper.nl/custom.css'}) # Appending a custom css which is defined in the configuration file, the css file needs to be hosted externally
 app.config.supress_callback_exceptions = True
 server = app.server # Setting up the application server variable
 
@@ -47,38 +48,51 @@ app.layout = html.Div([ # App layout, this is the basic of the application. The 
 ###################################################################################
 ###################################################################################
 
+
 # Callback for refreshing the list of selectable keywords
 @app.callback(Output('keywordList', 'options'), [Input('refresh-keyword-list', 'n_clicks')])
 def refresh_keyword_list(n_clicks):
     return keywordsearch.load_keywords()
 
+
 # Callback for searching data by keyword
 @app.callback(Output('keyword_search_results', 'children'), [Input('keyword_search', 'n_clicks')], [State('keywordList', 'value'), State('keyword_date_picker', 'start_date'), State('keyword_date_picker', 'end_date')])
 def display_results(n_clicks, values, start_date, end_date):
     global df
-    df = keyword_search(values) 
+    df = keywordsearch.keyword_search(values, start_date, end_date)
 
-    results = html.Div([
+    if df.empty:
+        results = html.Div([
         html.Div([
             html.H4("Results"),
             html.P(
-                "The following table displays all the search results which were retrieved based on your search query.",
+                "No results were found based on your keyword search",
                 style={"width": 370,
                        "marginBottom": 15}),
-            html.Table(
+            ], className="content")
+        ], className="results_section")
+    else:
+        results = html.Div([
+            html.Div([
+                html.H4("Results"),
+                html.P(
+                    "The following table displays all the search results which were retrieved based on your search query.",
+                    style={"width": 370,
+                           "marginBottom": 15}),
+                html.Table(
 
-                [html.Tr([html.Th(col) for col in df.columns], className="tableHeader")] +
+                    [html.Tr([html.Th(col) for col in df.columns], className="tableHeader")] +
 
-                [html.Tr([
-                    html.Td(df.iloc[i]['id'], className="tableData"),
-                    html.Td(df.iloc[i]['Domain'], className="tableData"),
-                    html.Td(", ".join(df.iloc[i]['Keywords']), className="tableData"),
-                    html.Td(df.iloc[i]['Last Scraped Date'], className="tableData"),
-                    html.Td(df.iloc[i]['Content'][:75] + (df.iloc[i]['Content'][75:] and '...'), className="tableData"),
-                    html.Td([html.A("Details", href=df.iloc[i]['Link'])], className="tableData")
-                ]) for i in range(len(df))]
-            )], className="content")
-    ], className="results_section")
+                    [html.Tr([
+                        html.Td(df.iloc[i]['id'], className="tableData"),
+                        html.Td(df.iloc[i]['Domain'], className="tableData"),
+                        html.Td(", ".join(df.iloc[i]['Keywords']), className="tableData"),
+                        html.Td(df.iloc[i]['Last Scraped Date'], className="tableData"),
+                        html.Td(df.iloc[i]['Content'][:75] + (df.iloc[i]['Content'][75:] and '...'), className="tableData"),
+                        html.Td([html.A("Details", href=df.iloc[i]['Link'])], className="tableData")
+                    ]) for i in range(len(df))]
+                )], className="content")
+        ], className="results_section")
 
     return results
 
@@ -483,28 +497,6 @@ def display_page(pathname):
     else: # Else
         return start.layout # Return the search page
 
-
-@db_session
-def keyword_search(keywords):
-    df_id = 0
-    dataframe = pd.DataFrame(columns=['id',
-                                      'Domain',
-                                      'Keywords',
-                                      'Last Scraped Date',
-                                      'Content',
-                                      'Link'])
-    for keyword in keywords:
-        content_objects = select(c for c in Content if keyword in c.keyword.keyword)[:]
-        for content in content_objects:
-            dataframe = dataframe.append({'id': content.id,
-                                          'Domain': content.url.url,
-                                          'Keywords': content.keyword.keyword,
-                                          'Last Scraped Date': content.url.date_scraped,
-                                          'Content': content.content,
-                                          'Link': '/pages/results$' + str(df_id)},
-                                         ignore_index=True)
-            df_id = df_id + 1
-        return dataframe
 
 # Application starting command
 if __name__ == '__main__':

@@ -18,6 +18,49 @@ def load_keywords():
     return df.to_dict('records')
 
 
+@db_session
+def keyword_search(keywords, start_date, end_date):
+    # df_id is used to increment a dataframe number for the details link
+    df_id = 0
+
+    # Check if start_date is entered, if not set the time to the minimal possible time
+    if start_date is None:
+        dt_start_date = datetime.min
+    else:
+        dt_start_date = datetime.strptime(start_date, '%Y-%m-%d')
+
+    # check if end_date is entered, if not set the time is set to now
+    if end_date is None:
+        dt_end_date = datetime.now()
+    else:
+        dt_end_date = datetime.strptime(end_date, '%Y-%m-%d')
+
+    dataframe = pd.DataFrame(columns=['id',
+                                      'Domain',
+                                      'Keywords',
+                                      'Last Scraped Date',
+                                      'Content',
+                                      'Link'])
+    if keywords is None:
+        return dataframe
+
+    for keyword in keywords:
+        content_objects = select(c for c in Content
+                                 if keyword in c.keyword.keyword
+                                 and c.url.date_scraped >= dt_start_date
+                                 and c.url.date_scraped <= dt_end_date
+                                 )[:]
+        for content in content_objects:
+            dataframe = dataframe.append({'id': content.id,
+                                          'Domain': content.url.url,
+                                          'Keywords': content.keyword.keyword,
+                                          'Last Scraped Date': content.url.date_scraped,
+                                          'Content': content.content,
+                                          'Link': '/pages/results$' + str(df_id)},
+                                         ignore_index=True)
+            df_id = df_id + 1
+    return dataframe
+
 layout = html.Div([
     html.H3('Keyword Search',
             style={'text-align':'center',
