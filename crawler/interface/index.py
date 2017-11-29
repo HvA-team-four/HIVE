@@ -5,9 +5,7 @@ import dash_html_components as html
 import dash_table_experiments as dt
 import pandas as pd
 from dash.dependencies import Input, Event, Output, State
-
 from crawler.utilities import config
-# Load elements and pages
 from interface.elements import header
 from interface.elements import termsofuse
 from interface.pages import about
@@ -17,16 +15,16 @@ from interface.pages import search
 from interface.pages import settings
 from interface.pages import start
 from interface.pages import urlsettings
+from interface.pages import blocksettings
 from crawler.utilities.models import *
 
 app = dash.Dash() # Setting up Dash application
-app.css.append_css({'external_url': 'https://hive.airsweeper.nl/custom.css'}) # Appending a custom css which is defined in the configuration file, the css file needs to be hosted externally
-app.css.append_css({'external_url': 'https://codepen.io/chriddyp/pen/bWLwgP.css'}) # This is a default css file made available for Dash via codepen
-server = app.server # Setting up the application server variable
-app.config.supress_callback_exceptions = True
-
-
 app.title = 'HIVE - A Dark Web Crawler' # Defining the application title
+app.css.append_css({'external_url': 'https://codepen.io/chriddyp/pen/bWLwgP.css'}) # This is a default css file made available for Dash via codepen
+app.css.append_css({'external_url': config.configuration_get("styling", "css")}) # Appending a custom css which is defined in the configuration file, the css file needs to be hosted externally
+app.config.supress_callback_exceptions = True
+server = app.server # Setting up the application server variable
+
 app.layout = html.Div([ # App layout, this is the basic of the application. The content of the 'page-content' section will differ based on the page you are visiting.
     header.hive_header, # Loading the header from the HIVE file
 
@@ -43,60 +41,22 @@ app.layout = html.Div([ # App layout, this is the basic of the application. The 
     termsofuse.hive_bottombar
 ])
 
-# @app.callback(
-#     Output('TermsBoxArea', 'children'), # Warning box
-#     [Input('closeTerms', 'n_clicks')], # Submit button
-#     [State('TermsBoxArea', 'children')]
-# )
-# def close_termsbox(n_clicks, state):
-#     return None
-
-
-@app.callback(
-    Output('TermsBoxArea', 'children'), # Warning box
-    [dash.dependencies.Input('TermsButton', 'n_clicks')],
-    [State('TermsBoxArea', 'children')],
-    [Event('closeTerms', 'click')] # Submit button
-)
-def open_termsbox(n_clicks, state):
-    if state == None and n_clicks != 0:
-        return  termsofuse.hive_termsofuse
-    else:
-        return None
-
-# @app.callback(
-#     Output('output-container-keyword', 'children'), # Warning box
-#     [Input('keywordsubmit', 'n_clicks')], # Submit button
-#     [State('keyword-input-box', 'value')]) # Input field
-# @db_session # Initiating database session for entire function
-# def insert_keyword(n_clicks, value):
-
 ###################################################################################
-# App callbacks are functions which are executed when something happens on a page #
-# This index.py file contains all the app callbacks, callbacks don't work when    #
-# they are on the actual page file, because only the lay-out is loaded from       #
-# these files.                                                                    #
+###################################################################################
+# KEYWORD SEARCH
+###################################################################################
 ###################################################################################
 
-###################################################################################
-# App callbacks used for the KEYWORD Search page                                  #
-###################################################################################
-
-@app.callback(
-    Output('keywordList', 'options'),
-    [Input('refresh-keyword-list', 'n_clicks')])
+# Callback for refreshing the list of selectable keywords
+@app.callback(Output('keywordList', 'options'), [Input('refresh-keyword-list', 'n_clicks')])
 def refresh_keyword_list(n_clicks):
     return keywordsearch.load_keywords()
 
-@app.callback(
-    Output('keyword_search_results', 'children'),
-    [Input('keyword_search', 'n_clicks')],
-    [State('keywordList', 'value'),
-     State('keyword_date_picker', 'start_date'),
-     State('keyword_date_picker', 'end_date')])
+# Callback for searching data by keyword
+@app.callback(Output('keyword_search_results', 'children'), [Input('keyword_search', 'n_clicks')], [State('keywordList', 'value'), State('keyword_date_picker', 'start_date'), State('keyword_date_picker', 'end_date')])
 def display_results(n_clicks, values, start_date, end_date):
     global df
-    df = keyword_search(values)
+    df = keyword_search(values) 
 
     results = html.Div([
         html.Div([
@@ -123,39 +83,29 @@ def display_results(n_clicks, values, start_date, end_date):
     return results
 
 ###################################################################################
-# App callbacks used for the KEYWORD Settings page.                               #
+###################################################################################
+# KEYWORD SETTINGS
+###################################################################################
 ###################################################################################
 
-# Loading the value of StatisticsBox one
-# StatisticsBox one shows the total amount of keywords in the database, this function is located in the keywordsettings.py file.
-@app.callback(
-    Output('KeywordStatisticsBox1', 'children'),
-    [Input('refresh-keyword-statistics', 'n_clicks')])
+# Loading the value of StatisticsBox one - total amount of KEYWORDS
+@app.callback(Output('KeywordStatisticsBox1', 'children'), [Input('refresh-keyword-statistics', 'n_clicks')])
 def refresh_keyword_statistics(n_clicks):
     return keywordsettings.load_statistics('total') # Parameter total indicates the total amount of keywords
 
-# Loading the value of StatisticsBox two
-# StatisticsBox two shows the active amount of keywords in the database, this function is located in the keywordsettings.py file.
-@app.callback(
-    Output('KeywordStatisticsBox2', 'children'),
-    [Input('refresh-keyword-statistics', 'n_clicks')])
+# Loading the value of StatisticsBox two - total amount of active KEYWORDS
+@app.callback(Output('KeywordStatisticsBox2', 'children'), [Input('refresh-keyword-statistics', 'n_clicks')])
 def refresh_keyword_statistics(n_clicks):
     return keywordsettings.load_statistics('active') # Parameter active indicates the active amount of keywords
 
-# Loading the value of StatisticsBox three
-# StatisticsBox three shows no information yet, change the function in the keywordsettings.py file to result usefull information.
-@app.callback(
-    Output('KeywordStatisticsBox3', 'children'),
-    [Input('refresh-keyword-statistics', 'n_clicks')])
+# Loading the value of StatisticsBox three - no information yet
+@app.callback(Output('KeywordStatisticsBox3', 'children'), [Input('refresh-keyword-statistics', 'n_clicks')])
 def refresh_keyword_statistics(n_clicks):
     return keywordsettings.load_statistics('other') # Parameter other returns no usefull information yet
 
-# Callback which is triggered when the submit button is clicked. The value in the keyword-input-box is added to the DB.
-@app.callback(
-    Output('output-container-keyword', 'children'), # Warning box
-    [Input('keywordsubmit', 'n_clicks')], # Submit button
-    [State('keyword-input-box', 'value')]) # Input field
-@db_session # Initiating database session for entire function
+# Callback for adding KEYWORDS to the database
+@app.callback(Output('output-container-keyword', 'children'), [Input('keywordsubmit', 'n_clicks')], [State('keyword-input-box', 'value')])
+@db_session
 def insert_keyword(n_clicks, value):
     result = select(p for p in Keyword if p.keyword == value).count() # Retrieving the amount of keywords in the database
 
@@ -182,11 +132,9 @@ def insert_keyword(n_clicks, value):
             return html.Div('An unexpected error occurred', # Output warning message
                             id='negative_warning') # Negative style (red)
 
-# Loading the Keyword table from the database, loads all active and inactive keywords
-@app.callback(
-    Output('keyword-table', 'rows'), # Output is the rows of the table which displays the keywords
-    [Input('reload-button', 'n_clicks')]) # Function is triggered by the Load table button
-@db_session # Initiating database session for entire function
+# Callback used for loading the KEYWORD table on the KEYWORD Settings page
+@app.callback(Output('keyword-table', 'rows'), [Input('reload-button', 'n_clicks')])
+@db_session
 def reload_table(n_clicks):
     results = select(p for p in Keyword)[:] # Retrieving all keywords from the database
 
@@ -208,12 +156,9 @@ def reload_table(n_clicks):
 
     return df.to_dict('records') # Return each record in the dataframe as a dictionary.
 
-# Changing the status of a Keyword to active for selected keywords
-@app.callback(
-    Output('activate_warning', 'children'), # Output displays the message succesfull/unsuccesfull
-    [Input('keyword_set_active', 'n_clicks')], # The Set Active button is the trigger for this callback
-    [State('keyword-table', 'selected_row_indices')]) # The selected row indices will be used to set records inactive
-@db_session # Initiating database session for entire function
+# Callback for turning KEYWORDS ACTIVE
+@app.callback(Output('activate_warning', 'children'), [Input('keyword_set_active', 'n_clicks')], [State('keyword-table', 'selected_row_indices')])
+@db_session
 def insert_url(n_clicks, selected_row_indices):
     try: # Try changing, if anything goes wrong, a warning message will be displayed instead of an application crash
         if 'df' not in globals(): # Check if the table is loaded and the user is not trying to set the "No data loaded" active
@@ -241,12 +186,9 @@ def insert_url(n_clicks, selected_row_indices):
         return html.Div('An unexpected error occurred.', # Warning messsage
                         id='negative_warning') # Red style (error style)
 
-# Changing the status of a Keyword to inactive for selected keywords
-@app.callback(
-    Output('inactivate_warning', 'children'), # Output displays the message succesfull/unsuccesfull
-    [Input('keyword_set_inactive', 'n_clicks')], # The Set Active button is the trigger for this callback
-    [State('keyword-table', 'selected_row_indices')]) # The selected row indices will be used to set records inactive
-@db_session # Initiating database session for entire function
+# Callback for turning KEYWORDS INACTIVE
+@app.callback(Output('inactivate_warning', 'children'), [Input('keyword_set_inactive', 'n_clicks')], [State('keyword-table', 'selected_row_indices')])
+@db_session
 def insert_url(n_clicks, selected_row_indices):
     try: # Try changing, if anything goes wrong, a warning message will be displayed instead of an application crash
         if 'df' not in globals(): # Check if the table is loaded and the user is not trying to set the "No data loaded" inactive
@@ -275,38 +217,28 @@ def insert_url(n_clicks, selected_row_indices):
                         id='negative_warning') # Red style (error style)
 
 ###################################################################################
-# App callbacks used for the URL Settings page.                                   #
+###################################################################################
+# URL SETTINGS
+###################################################################################
 ###################################################################################
 
-# Loading the value of StatisticsBox one
-# StatisticsBox one shows the total amount of urls in the database, this function is located in the urlsettings.py file.
-@app.callback(
-    Output('UrlStatisticsBox1', 'children'),
-    [Input('refresh-url-statistics', 'n_clicks')])
+# Loading the value of StatisticsBox one - total amount of URLs in the database
+@app.callback(Output('UrlStatisticsBox1', 'children'), [Input('refresh-url-statistics', 'n_clicks')])
 def refresh_url_statistics(n_clicks):
     return urlsettings.load_statistics('total') # Parameter total indicates the total amount of keywords
 
-# Loading the value of StatisticsBox two
-# StatisticsBox two shows the scanned amount of keywords in the database, this function is located in the urlsettings.py file.
-@app.callback(
-    Output('UrlStatisticsBox2', 'children'),
-    [Input('refresh-url-statistics', 'n_clicks')])
+# Loading the value of StatisticsBox two - total amount of scanned URLs
+@app.callback(Output('UrlStatisticsBox2', 'children'), [Input('refresh-url-statistics', 'n_clicks')])
 def refresh_url_statistics(n_clicks):
     return urlsettings.load_statistics('scanned') # Parameter scanned indicates the scanned amount of keywords
 
-# Loading the value of StatisticsBox three
-# StatisticsBox three shows the scraped amount of keywords in the database, this function is located in the urlsettings.py file.
-@app.callback(
-    Output('UrlStatisticsBox3', 'children'),
-    [Input('refresh-url-statistics', 'n_clicks')])
+# Loading the value of StatisticsBox three - total amount of scraped URLs
+@app.callback(Output('UrlStatisticsBox3', 'children'), [Input('refresh-url-statistics', 'n_clicks')])
 def refresh_url_statistics(n_clicks):
     return urlsettings.load_statistics('scraped') # Parameter scraped indicates the total scraped of keywords
 
-# Input for adding URLs to the database
-@app.callback(
-    Output('output-container-button', 'children'), # Warning box
-    [Input('urlsubmit', 'n_clicks')], # Submit button
-    [State('input-box', 'value')]) # Input field
+# Callback for adding URLs to the database
+@app.callback(Output('output-container-button', 'children'), [Input('urlsubmit', 'n_clicks')], [State('input-box', 'value')])
 @db_session
 def insert_url(n_clicks, value):
     result = select(p for p in Url if p.url == value).count() # Retrieving the amount of keywords in the database
@@ -336,11 +268,9 @@ def insert_url(n_clicks, value):
             return html.Div('An unexpected error occurred', # Output warning message
                             id='negative_warning') # Negative style (red)
 
-# Loading the url table from the database
-@app.callback(
-    Output('url-table', 'rows'), # Output is the rows of the table which displays the urls
-    [Input('reload-button', 'n_clicks')]) # Function is triggered by the Load table button
-@db_session # Initiating database session for entire function
+# Callback used for loading the URL table on the URL Settings page
+@app.callback(Output('url-table', 'rows'), [Input('reload-button', 'n_clicks')])
+@db_session
 def reload_table(n_clicks):
     results = select(p for p in Url)[:] # Retrieving all urls from the database
 
@@ -374,13 +304,107 @@ def reload_table(n_clicks):
     return df.to_dict('records') # Return each record in the dataframe as a dictionary.
 
 ###################################################################################
-# App callbacks used for displaying the right page                                #
+###################################################################################
+# CONTENT BLOCK SETTINGS
+###################################################################################
 ###################################################################################
 
-@app.callback(
-    Output('page-content', 'children'), # Return the layout to the page-content block of the application
-    [Input('url', 'pathname')] # The pathname is the trigger for this function
-)
+
+
+###################################################################################
+###################################################################################
+# USER GUIDE
+###################################################################################
+###################################################################################
+
+# Callback used for displaying an controlling the USER GUIDE tabs
+@app.callback(Output('tab-output', 'children'), [Input('tabs', 'value')])
+def display_content(value):
+    if value == 1:
+        return html.Div([
+            dcc.Markdown(
+            ''' ##### Start
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam eros, 
+            lobortis a libero eu, porttitor fermentum magna. Quisque sit amet magna 
+            et sem dapibus ullamcorper nec quis libero. Donec aliquam diam ac purus
+            vehicula ultrices. Etiam tristique nunc eu massa congue pellentesque. 
+            Donec dapibus risus vel mauris lacinia, sit amet pellentesque dui consequat. 
+            Fusce hendrerit id leo et rutrum. 
+            Quisque id neque at felis porta commodo id malesuada ligula. Praesent 
+            laoreet finibus nulla nec lacinia.
+            '''
+            ),
+        ])
+
+    elif value == 2:
+        return html.Div([
+            dcc.Markdown(
+            ''' ##### Purpose
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam eros, 
+            lobortis a libero eu, porttitor fermentum magna. Quisque sit amet magna 
+            et sem dapibus ullamcorper nec quis libero. Donec aliquam diam ac purus
+            vehicula ultrices. Etiam tristique nunc eu massa congue pellentesque. 
+            Donec dapibus risus vel mauris lacinia, sit amet pellentesque dui consequat. 
+            Fusce hendrerit id leo et rutrum. 
+            Quisque id neque at felis porta commodo id malesuada ligula. Praesent 
+            laoreet finibus nulla nec lacinia.
+            '''
+            ),
+        ])
+
+    elif value == 3:
+        return html.Div([
+            dcc.Markdown(
+            ''' ##### Settings
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam eros, 
+            lobortis a libero eu, porttitor fermentum magna. Quisque sit amet magna 
+            et sem dapibus ullamcorper nec quis libero. Donec aliquam diam ac purus
+            vehicula ultrices. Etiam tristique nunc eu massa congue pellentesque. 
+            Donec dapibus risus vel mauris lacinia, sit amet pellentesque dui consequat. 
+            Fusce hendrerit id leo et rutrum. 
+            Quisque id neque at felis porta commodo id malesuada ligula. Praesent 
+            laoreet finibus nulla nec lacinia.
+            '''
+            ),
+        ])
+
+    elif value == 4:
+        return html.Div([
+            dcc.Markdown(
+            ''' ##### Keyword Search
+            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed diam eros, 
+            lobortis a libero eu, porttitor fermentum magna. Quisque sit amet magna 
+            et sem dapibus ullamcorper nec quis libero. Donec aliquam diam ac purus
+            vehicula ultrices. Etiam tristique nunc eu massa congue pellentesque. 
+            Donec dapibus risus vel mauris lacinia, sit amet pellentesque dui consequat. 
+            Fusce hendrerit id leo et rutrum. 
+            Quisque id neque at felis porta commodo id malesuada ligula. Praesent 
+            laoreet finibus nulla nec lacinia.
+            '''
+            ),
+        ])
+
+    else:
+        return html.Div([
+            "An unexpected error occurred."
+        ])
+
+###################################################################################
+###################################################################################
+# APPLICATION WIDE CALLBACKS
+###################################################################################
+###################################################################################
+
+# Callback for displaying and closing the EULA
+@app.callback(Output('TermsBoxArea', 'children'), [dash.dependencies.Input('TermsButton', 'n_clicks')], [State('TermsBoxArea', 'children')], [Event('closeTerms', 'click')])
+def open_termsbox(n_clicks, state):
+    if state == None and n_clicks != 0:
+        return  termsofuse.hive_termsofuse
+    else:
+        return None
+
+# Callback which returns the page-layout based on the pathname of the visited page.
+@app.callback(Output('page-content', 'children'), [Input('url', 'pathname')])
 def display_page(pathname):
     if (pathname == '/pages/start') or (pathname == None) or (pathname == '/') : # If the pathname is not equal to a path
         return start.layout # Return the start page
@@ -399,6 +423,9 @@ def display_page(pathname):
 
     elif pathname == '/pages/keywordsettings': # If the page is equal to keywordsettings
         return keywordsettings.layout # Return the keywordsettings page
+
+    elif pathname == '/pages/blocksettings':
+        return blocksettings.layout
 
     elif pathname == '/pages/about': # If the page is equal to about
         return about.layout # Return the about page
@@ -456,6 +483,7 @@ def display_page(pathname):
     else: # Else
         return start.layout # Return the search page
 
+
 @db_session
 def keyword_search(keywords):
     df_id = 0
@@ -478,6 +506,6 @@ def keyword_search(keywords):
             df_id = df_id + 1
         return dataframe
 
-
+# Application starting command
 if __name__ == '__main__':
     app.run_server(debug=True, host='0.0.0.0')
