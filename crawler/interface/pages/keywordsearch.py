@@ -32,10 +32,6 @@ def keyword_search(keywords, start_date, end_date):
                                       'Content',
                                       'Link'])
 
-    # return empty dataframe if no keywords are entered
-    if keywords is None:
-        return dataframe
-
     # Check if start_date is entered, if not set the time to the beginning of time
     if start_date is None:
         dt_start_date = datetime.min
@@ -47,6 +43,10 @@ def keyword_search(keywords, start_date, end_date):
         dt_end_date = datetime.now()
     else:
         dt_end_date = datetime.strptime(end_date, '%Y-%m-%d')
+
+    # return empty dataframe if no keywords are entered
+    if keywords is None:
+        return dataframe
 
     # Creating the query to use when selecting keywords
     query = """select(c for c in Content
