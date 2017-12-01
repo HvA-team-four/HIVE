@@ -2,6 +2,7 @@ from interface.index import *
 import dash_html_components as html
 import dash_core_components as dcc
 from crawler.utilities.models import *
+import re
 
 @db_session
 def load_keywords():
@@ -16,6 +17,60 @@ def load_keywords():
                    ignore_index=True)
 
     return df.to_dict('records')
+
+
+@db_session
+def keyword_search(keywords, start_date, end_date):
+    # df_id is used to increment a dataframe number for the details link
+    df_id = 0
+
+    # Creating a dataframe
+    dataframe = pd.DataFrame(columns=['id',
+                                      'Domain',
+                                      'Keywords',
+                                      'Last Scraped Date',
+                                      'Content',
+                                      'Link'])
+
+    # Check if start_date is entered, if not set the time to the beginning of time
+    if start_date is None:
+        dt_start_date = datetime.min
+    else:
+        dt_start_date = datetime.strptime(start_date, '%Y-%m-%d')
+
+    # check if end_date is entered, if not set the time is set to now
+    if end_date is None:
+        dt_end_date = datetime.now()
+    else:
+        dt_end_date = datetime.strptime(end_date, '%Y-%m-%d')
+
+    # return empty dataframe if no keywords are entered
+    if keywords is None:
+        return dataframe
+
+    # Creating the query to use when selecting keywords
+    query = """select(c for c in Content
+    if c.url.date_scraped <= dt_end_date
+    and c.url.date_scraped >= dt_start_date
+    and """
+
+    query += ' in c.keyword.keyword and '.join('"{0}"'.format(w) for w in keywords) + ' in c.keyword.keyword )[:]'
+    print(query)
+
+    while True:
+            #execute the query to retrieve contents from database.
+            content_objects = eval(query)
+
+            for content in content_objects:
+                dataframe = dataframe.append({'id': content.id,
+                                              'Domain': content.url.url,
+                                              'Keywords': content.keyword.keyword,
+                                              'Last Scraped Date': content.url.date_scraped,
+                                              'Content': content.content,
+                                              'Link': '/pages/results$' + str(df_id)},
+                                             ignore_index=True)
+                df_id = df_id + 1
+            return dataframe
 
 
 layout = html.Div([
