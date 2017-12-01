@@ -1,14 +1,15 @@
 from time import sleep
+import asyncio
+
+from utilities.url_util import get_urls_from_content, format_url
 from utilities.models import *
 from utilities import log
-from utilities.tor import connect_to_tor
-from utilities.url_util import format_url, get_urls_from_content
-from utilities.website import get_content_from_url
+from utilities import tor
 
 # Add found URLs to the database if they are not being blocked by the content-block feature.
 @db_session
 def save_url(url):
-    blockedUrls = select(b.value for b in Block if b.type == "Url")[:]
+    blockedUrls = select(b.value for b in Block if b.type == "Url" and b.status == "Active")[:]
 
     if not any(x for x in blockedUrls if x in url):
         result = select(p for p in Url if p.url == url).count()
@@ -25,14 +26,33 @@ def save_url(url):
 # Update the URL which was being scraped
 @db_session
 def update_url(url):
-    url.date_scanned = datetime.now()
+    url_db = select(u for u in Url if u.id == url.id).get()
+    url_db.date_scanned = datetime.now()
+
 
 @db_session
-def start_scout():
-    log.debug('Scout has been started')
+def get_urls_from_database():
+    return select(u for u in Url if u.date_scanned is None).order_by(desc(Url.priority_scan))[:64]
 
+
+def get_urls_from_results(urls, results):
+    urls_in_results = []
+    for index, url in enumerate(urls):
+        if type(results[index]) is not bytes:
+            continue
+
+        urls_in_content = get_urls_from_content(results[index])
+        for url_in_content in urls_in_content:
+            urls_in_results.append(format_url(url.url, url_in_content))
+
+    return urls_in_results
+
+
+@db_session
+async def main(loop):
+    log.debug('scout has been started')
     while True:
-        urls = select(u for u in Url if u.date_scanned is None).order_by(desc(Url.priority_scan))[:32]
+        urls = get_urls_from_database()
 
         if len(urls) == 0:
             print("No URLs to be crawled, waiting for 60 seconds.")
@@ -41,25 +61,22 @@ def start_scout():
             commit()
             continue
 
+        results = await tor.get_content_from_urls(loop, urls)
+        # Update urls after crawling
         for url in urls:
-            try:
-                content = get_content_from_url(url.url)
-                content_urls = get_urls_from_content(content)
+            update_url(url)
 
-                for content_url in content_urls:
-                    formatted_url = format_url(url.url, content_url)
+        urls_from_content = get_urls_from_results(urls, results)
 
-                    if formatted_url is not None:
-                        save_url(formatted_url)
 
-            except(ValueError, NameError, TypeError) as error:
-                log.error(str(error))
-
-            finally:
-                update_url(url)
-
+        for u in urls_from_content:
+            if u is not None:
+                save_url(u)
+        print('Found ', len(urls_from_content), ' urls')
 
 
 
 if __name__ == '__main__':
-    start_scout()
+    loop = asyncio.get_event_loop()
+    loop.run_until_complete(main(loop))
+
