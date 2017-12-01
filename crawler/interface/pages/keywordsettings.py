@@ -16,21 +16,9 @@ def load_statistics(statistic):
         return '{}%'.format(percentage)
 
     elif statistic == 'matches':
-
-
-
-
-
-
-
-
-
-
-
         return select(p for p in Keyword).count()
 
 df = pd.DataFrame(columns=['Keyword', 'Status'])
-
 df = df.append({'Keyword': 'No data loaded'},
                ignore_index=True)
 
