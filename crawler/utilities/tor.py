@@ -22,7 +22,7 @@ def connect_to_tor():
 
 async def fetch(session, url):
     proxy = 'socks5://127.0.0.1:9050'
-    with async_timeout.timeout(5):
+    with async_timeout.timeout(10):
         async with session.get(url, proxy=proxy) as response:
             return await response.read()
 

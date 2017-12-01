@@ -9,7 +9,7 @@ from utilities import tor
 # Add found URLs to the database if they are not being blocked by the content-block feature.
 @db_session
 def save_url(url):
-    blockedUrls = select(b.value for b in Block if b.type == "Url" and b.status == "Active")[:]
+    blockedUrls = select(b.value for b in Block if b.type == "Url" and b.active)[:]
 
     if not any(x for x in blockedUrls if x in url):
         result = select(p for p in Url if p.url == url).count()
@@ -18,6 +18,7 @@ def save_url(url):
                 url=url,
                 date_added=datetime.now()
             )
+
     else:
         log.info("URL: {} is blocked".format(url))
 
@@ -32,7 +33,7 @@ def update_url(url):
 
 @db_session
 def get_urls_from_database():
-    return select(u for u in Url if u.date_scanned is None).order_by(desc(Url.priority_scan))[:64]
+    return select(u for u in Url if u.date_scanned is None).order_by(desc(Url.priority_scan))[:32]
 
 
 def get_urls_from_results(urls, results):
