@@ -63,14 +63,14 @@ def display_results(n_clicks, values, start_date, end_date):
 
     if df.empty:
         results = html.Div([
-        html.Div([
-            html.H4("Results"),
-            html.P(
-                "No results were found based on your keyword search",
-                style={"width": 370,
-                       "marginBottom": 15}),
-            ], className="content")
-        ], className="results_section")
+            html.Div([
+                html.H4("Results"),
+                html.P(
+                    "No results were found based on your keyword search",
+                    style={"width": 370,
+                           "marginBottom": 15}),
+                ], className="content")
+            ], className="results_section")
     else:
         results = html.Div([
             html.Div([
