@@ -1,6 +1,6 @@
 import scout
 import bee
 
-scout.start_scout()
+scout.main()
 bee.start_bee()
 
