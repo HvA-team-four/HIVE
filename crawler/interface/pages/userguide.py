@@ -8,12 +8,12 @@ layout = html.Div([
         html.Br(),
         dcc.Tabs(
             tabs=[
-                {'label': 'Start', 'value': 1},
-                {'label': 'Purpose', 'value': 2},
-                {'label': 'Settings', 'value': 3},
-                {'label': 'Keyword Search', 'value': 4},
+                {'label': 'Welcome', 'value': 1},
+                {'label': 'URL Settings', 'value': 2},
+                {'label': 'Keyword Settings', 'value': 3},
+                {'label': 'Content Block Settings', 'value': 4},
             ],
-            value=3,
+            value=1,
             id='tabs',
             vertical=True,
         )],
