@@ -17,3 +17,4 @@ pandas
 aiohttp
 aiodns
 aiosocks==0.2.6
+dash-core-components==0.13.0-rc5

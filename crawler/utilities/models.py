@@ -57,5 +57,16 @@ class Search(db.Entity):
     date_searched = Required(datetime)
 
 
+class Block(db.Entity):
+    int = PrimaryKey(
+        int,
+        auto=True
+    )
+    type = Required(str)
+    value = Required(LongStr)
+    active = Required(bool)
+
+
+
 #sql_debug(True)
 db.generate_mapping(create_tables=True)

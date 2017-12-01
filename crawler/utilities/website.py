@@ -18,7 +18,7 @@ def get_content_from_url(url):
     except (urllib.error.HTTPError, urllib.error.URLError) as error:
         print("Error retrieving website: ", url)
         log.error('Data not retrieved from URL: ' + url + ' because error ' + str(error))
-    except socket.timeout:
+    except socket.timeout: 
         print("timeout")
         log.error('Socket timed out, unable to retrieve data from URL: ' + url)
     except ValueError as error:

@@ -25,14 +25,12 @@ def load_statistics(statistic):
             percentage = 0
         return '{}%'.format(percentage)
 
-
 df = pd.DataFrame(columns=['URL',
                            'Date Added',
                            'Date Scan',
                            'Date Scrape',
                            'Priority Scrape',
                            'Priority Scan'])
-
 df = df.append({'URL': 'No data loaded'},
                ignore_index=True)
 

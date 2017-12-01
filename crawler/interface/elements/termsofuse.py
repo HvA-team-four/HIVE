@@ -6,18 +6,7 @@ hive_termsofuse = html.Div(
     html.H3("Terms of use"),
     html.Div([
         dcc.Markdown('''
-###### Article 1 - Authors
-1.1 This application is created by **FOUR.** on behalf of the Hogeschool van Amsterdam 
-during the project in the security semester. This application is created in close 
-cooperation with Deloitte.
-
-1.2 This application is created as a proof of concept and is not tested nor certified 
-for use in a operational environment. This application is licensed under the MIT 
-license, which is available in article 2.  
-
-
-
-###### Article 2 - Licensing (MIT)
+###### Article 1 - Licensing (MIT)
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
 in the Software without restriction, including without limitation the rights
@@ -36,7 +25,14 @@ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 SOFTWARE.
 
+###### Article 2 - Authors
+1.1 This application is created by **FOUR.** on behalf of the Hogeschool van Amsterdam 
+during the project in the security semester. This application is created in close 
+cooperation with Deloitte.
 
+1.2 This application is created as a proof of concept and is not tested nor certified 
+for use in a operational environment. This application is licensed under the MIT 
+license, which is available in article 2.  
 
 ###### Article 3 - Service and maintenance
 3.1 The organisation using this application is responsible for maintaining the code. **FOUR. will not be hold responsible for any interruptions during running the application and FOUR. will not be available for service-requests. 
