@@ -32,11 +32,19 @@ layout = html.Div([
 
     html.A([
             html.Img(
-                    src="https://herke-my.sharepoint.com/personal/t_lambalk_herke_nl/_layouts/15/guestaccess.aspx?docid=170ca763ad91b483ea269444f1a401607&authkey=ASirnpM17tNbnL0v25GpuJ8&e=9b46697960644b40b4fb53f2f60b3926",
+                    src="https://herke-my.sharepoint.com/:i:/g/personal/t_lambalk_herke_nl/EUxGjY93y4NNsBLytHZ6048B5NKq_YXJzDbdzrlqF3NJJw?e=d512d69044ec4739bc37dc911abdacee",
                     className="settingIcon"
                                         ),
-            html.P("User Guide", className='settingTitle')
-        ], href="userguide", className='setting'),
+            html.P("Configuration", className='settingTitle')
+        ], href="configurationsettings", className='setting'),
+
+    html.A([
+        html.Img(
+            src="https://herke-my.sharepoint.com/personal/t_lambalk_herke_nl/_layouts/15/guestaccess.aspx?docid=170ca763ad91b483ea269444f1a401607&authkey=ASirnpM17tNbnL0v25GpuJ8&e=9b46697960644b40b4fb53f2f60b3926",
+            className="settingIcon"
+        ),
+        html.P("User Guide", className='settingTitle')
+    ], href="userguide", className='setting'),
 
     ], className = 'hivesettings')
 ])

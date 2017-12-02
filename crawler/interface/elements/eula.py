@@ -3,7 +3,7 @@ import dash_core_components as dcc
 
 hive_termsofuse = html.Div(
     html.Div([
-    html.H3("Terms of use"),
+    html.H3("End-User License Agreement"),
     html.Div([
         dcc.Markdown('''
 ###### Article 1 - Licensing (MIT)
@@ -63,7 +63,7 @@ html.Button('Close', id='closeTerms')
 
 hive_bottombar = html.Div([
     "By using this application, you agree to the",
-    html.Button('terms of use', className="openTermsButton", id="TermsButton")
+    html.Button('License Agreement', className="openTermsButton", id="TermsButton")
 ]
     ,className = "termsOfUseBar", id="termsOfUseBar"
 )

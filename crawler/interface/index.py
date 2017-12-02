@@ -7,8 +7,7 @@ import pandas as pd
 from dash.dependencies import Input, Event, Output, State
 from crawler.utilities import config
 from interface.elements import header
-from interface.elements import termsofuse
-from interface.pages import about
+from interface.elements import eula
 from interface.pages import keywordsearch
 from interface.pages import keywordsettings
 from interface.pages import search
@@ -16,6 +15,7 @@ from interface.pages import settings
 from interface.pages import start
 from interface.pages import urlsettings
 from interface.pages import blocksettings
+from interface.pages import configurationsettings
 from interface.pages import userguide
 from crawler.utilities.models import *
 from datetime import datetime
@@ -40,7 +40,7 @@ app.layout = html.Div([ # App layout, this is the basic of the application. The 
         style={'display': 'none'}),
 
     html.Div(children=[], id="TermsBoxArea"),
-    termsofuse.hive_bottombar
+    eula.hive_bottombar
 ])
 
 ###################################################################################
@@ -598,7 +598,7 @@ Rules'''
 @app.callback(Output('TermsBoxArea', 'children'), [dash.dependencies.Input('TermsButton', 'n_clicks')], [State('TermsBoxArea', 'children')], [Event('closeTerms', 'click')])
 def open_termsbox(n_clicks, state):
     if state == None and n_clicks != 0:
-        return  termsofuse.hive_termsofuse
+        return  eula.hive_termsofuse
     else:
         return None
 
@@ -625,6 +625,9 @@ def display_page(pathname):
 
     elif pathname == '/pages/blocksettings':
         return blocksettings.layout
+
+    elif pathname == '/pages/configurationsettings':
+        return configurationsettings.layout
 
     elif pathname == '/pages/userguide':
         return userguide.layout
