@@ -18,12 +18,13 @@ from interface.pages import blocksettings
 from interface.pages import configurationsettings
 from interface.pages import userguide
 from crawler.utilities.models import *
+from crawler.utilities.config import *
 from datetime import datetime
 
 app = dash.Dash() # Setting up Dash application
 app.title = 'HIVE - A Dark Web Crawler' # Defining the application title
 app.css.append_css({'external_url': 'https://codepen.io/chriddyp/pen/bWLwgP.css'}) # This is a default css file made available for Dash via codepen
-app.css.append_css({'external_url': 'https://hive.airsweeper.nl/custom.css'}) # Appending a custom css which is defined in the configuration file, the css file needs to be hosted externally
+app.css.append_css({'external_url': configuration_get("styling", "css")}) # Appending a custom css which is defined in the configuration file, the css file needs to be hosted externally
 app.config.supress_callback_exceptions = True
 server = app.server # Setting up the application server variable
 
@@ -40,6 +41,14 @@ app.layout = html.Div([ # App layout, this is the basic of the application. The 
         style={'display': 'none'}),
 
     html.Div(children=[], id="TermsBoxArea"),
+    dcc.Interval(
+            id='interval-component-30',
+            interval=30*1000 # in milliseconds
+    ),
+    dcc.Interval(
+            id='interval-component-5',
+            interval=5*1000 # in milliseconds
+    ),
     eula.hive_bottombar
 ])
 
@@ -104,19 +113,22 @@ def display_results(n_clicks, values, start_date, end_date):
 ###################################################################################
 
 # Loading the value of StatisticsBox one - total amount of KEYWORDS
-@app.callback(Output('KeywordStatisticsBox1', 'children'), [Input('refresh-keyword-statistics', 'n_clicks')])
-def refresh_keyword_statistics(n_clicks):
-    return keywordsettings.load_statistics('total') # Parameter total indicates the total amount of keywords
+@app.callback(Output('KeywordStatisticsBox1', 'children'), [Input('refresh-keyword-statistics', 'n_clicks')], [State('url', 'pathname')], events=[Event('interval-component-30', 'interval')])
+def refresh_keyword_statistics(n_clicks, pathname):
+    if pathname == '/pages/keywordsettings':
+        return keywordsettings.load_statistics('total') # Parameter total indicates the total amount of keywords
 
 # Loading the value of StatisticsBox two - total amount of active KEYWORDS
-@app.callback(Output('KeywordStatisticsBox2', 'children'), [Input('refresh-keyword-statistics', 'n_clicks')])
-def refresh_keyword_statistics(n_clicks):
-    return keywordsettings.load_statistics('active') # Parameter active indicates the active amount of keywords
+@app.callback(Output('KeywordStatisticsBox2', 'children'), [Input('refresh-keyword-statistics', 'n_clicks')], [State('url', 'pathname')], events=[Event('interval-component-30', 'interval')])
+def refresh_keyword_statistics(n_clicks, pathname):
+    if pathname == '/pages/keywordsettings':
+        return keywordsettings.load_statistics('active') # Parameter active indicates the active amount of keywords
 
 # Loading the value of StatisticsBox three - no information yet
-@app.callback(Output('KeywordStatisticsBox3', 'children'), [Input('refresh-keyword-statistics', 'n_clicks')])
-def refresh_keyword_statistics(n_clicks):
-    return keywordsettings.load_statistics('other') # Parameter other returns no usefull information yet
+@app.callback(Output('KeywordStatisticsBox3', 'children'), [Input('refresh-keyword-statistics', 'n_clicks')], [State('url', 'pathname')], events=[Event('interval-component-30', 'interval')])
+def refresh_keyword_statistics(n_clicks, pathname):
+    if pathname == '/pages/keywordsettings':
+        return keywordsettings.load_statistics('other') # Parameter other returns no usefull information yet
 
 # Callback for adding KEYWORDS to the database
 @app.callback(Output('output-container-keyword', 'children'), [Input('keywordsubmit', 'n_clicks')], [State('keyword-input-box', 'value')])
@@ -238,19 +250,22 @@ def insert_url(n_clicks, selected_row_indices):
 ###################################################################################
 
 # Loading the value of StatisticsBox one - total amount of URLs in the database
-@app.callback(Output('UrlStatisticsBox1', 'children'), [Input('refresh-url-statistics', 'n_clicks')])
-def refresh_url_statistics(n_clicks):
-    return urlsettings.load_statistics('total') # Parameter total indicates the total amount of keywords
+@app.callback(Output('UrlStatisticsBox1', 'children'), [Input('refresh-url-statistics', 'n_clicks')], [State('url', 'pathname')], events=[Event('interval-component-5', 'interval')])
+def refresh_url_statistics(n_clicks, pathname):
+    if pathname == '/pages/urlsettings':
+        return urlsettings.load_statistics('total') # Parameter total indicates the total amount of keywords
 
 # Loading the value of StatisticsBox two - total amount of scanned URLs
-@app.callback(Output('UrlStatisticsBox2', 'children'), [Input('refresh-url-statistics', 'n_clicks')])
-def refresh_url_statistics(n_clicks):
-    return urlsettings.load_statistics('scanned') # Parameter scanned indicates the scanned amount of keywords
+@app.callback(Output('UrlStatisticsBox2', 'children'), [Input('refresh-url-statistics', 'n_clicks')], [State('url', 'pathname')], events=[Event('interval-component-5', 'interval')])
+def refresh_url_statistics(n_clicks, pathname):
+    if pathname == '/pages/urlsettings':
+        return urlsettings.load_statistics('scanned') # Parameter scanned indicates the scanned amount of keywords
 
 # Loading the value of StatisticsBox three - total amount of scraped URLs
-@app.callback(Output('UrlStatisticsBox3', 'children'), [Input('refresh-url-statistics', 'n_clicks')])
-def refresh_url_statistics(n_clicks):
-    return urlsettings.load_statistics('scraped') # Parameter scraped indicates the total scraped of keywords
+@app.callback(Output('UrlStatisticsBox3', 'children'), [Input('refresh-url-statistics', 'n_clicks')], [State('url', 'pathname')], events=[Event('interval-component-5', 'interval')])
+def refresh_url_statistics(n_clicks, pathname):
+    if pathname == '/pages/urlsettings':
+        return urlsettings.load_statistics('scraped') # Parameter scraped indicates the total scraped of keywords
 
 # Callback for adding URLs to the database
 @app.callback(Output('output-container-button', 'children'), [Input('urlsubmit', 'n_clicks')], [State('input-box', 'value')])
@@ -324,19 +339,22 @@ def reload_table(n_clicks):
 ###################################################################################
 ###################################################################################
 # Loading the value of StatisticsBox one - total amount of active blockrules in the database
-@app.callback(Output('BlockStatisticsBox1', 'children'), [Input('refresh-block-statistics', 'n_clicks')])
-def refresh_url_statistics(n_clicks):
-    return blocksettings.load_statistics('total') # Parameter total indicates the total amount of keywords
+@app.callback(Output('BlockStatisticsBox1', 'children'), [Input('refresh-block-statistics', 'n_clicks')], [State('url', 'pathname')], events=[Event('interval-component-30', 'interval')])
+def refresh_url_statistics(n_clicks, pathname):
+    if pathname == '/pages/blocksettings':
+        return blocksettings.load_statistics('total') # Parameter total indicates the total amount of keywords
 
 # Loading the value of StatisticsBox two - total amount of active url blocks
-@app.callback(Output('BlockStatisticsBox2', 'children'), [Input('refresh-block-statistics', 'n_clicks')])
-def refresh_url_statistics(n_clicks):
-    return blocksettings.load_statistics('urltype') # Parameter scanned indicates the scanned amount of keywords
+@app.callback(Output('BlockStatisticsBox2', 'children'), [Input('refresh-block-statistics', 'n_clicks')], [State('url', 'pathname')], events=[Event('interval-component-30', 'interval')])
+def refresh_url_statistics(n_clicks, pathname):
+    if pathname == '/pages/blocksettings':
+        return blocksettings.load_statistics('urltype') # Parameter scanned indicates the scanned amount of keywords
 
 # Loading the value of StatisticsBox three - total amount of scraped URLs
-@app.callback(Output('BlockStatisticsBox3', 'children'), [Input('refresh-block-statistics', 'n_clicks')])
-def refresh_url_statistics(n_clicks):
-    return blocksettings.load_statistics('keywordtype') # Parameter scraped indicates the total scraped of keywords
+@app.callback(Output('BlockStatisticsBox3', 'children'), [Input('refresh-block-statistics', 'n_clicks')], [State('url', 'pathname')], events=[Event('interval-component-30', 'interval')])
+def refresh_url_statistics(n_clicks, pathname):
+    if pathname == '/pages/blocksettings':
+        return blocksettings.load_statistics('keywordtype') # Parameter scraped indicates the total scraped of keywords
 
 # Callback for adding KEYWORDS to the database
 @app.callback(Output('output-container-block', 'children'), [Input('blocksubmit', 'n_clicks')], [State('block-input-box', 'value'), State('block-category', 'value')])
@@ -631,9 +649,6 @@ def display_page(pathname):
 
     elif pathname == '/pages/userguide':
         return userguide.layout
-
-    elif pathname == '/pages/about': # If the page is equal to about
-        return about.layout # Return the about page
 
     elif pathname.startswith('/pages/results'): # If the detailed results page is retrieved with an ID (therefore .startswith())
         try:

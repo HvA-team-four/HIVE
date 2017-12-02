@@ -33,7 +33,7 @@ def update_url(url):
 
 @db_session
 def get_urls_from_database():
-    return select(u for u in Url if u.date_scanned is None).order_by(desc(Url.priority_scan))[:32]
+    return select(u for u in Url if u.date_scanned is None).order_by(desc(Url.priority_scan))[:200]
 
 
 def get_urls_from_results(urls, results):
