@@ -1,6 +1,5 @@
 from time import sleep
 import asyncio
-
 from utilities.url_util import get_urls_from_content, format_url
 from utilities.models import *
 from utilities import log
@@ -30,11 +29,9 @@ def update_url(url):
     url_db = select(u for u in Url if u.id == url.id).get()
     url_db.date_scanned = datetime.now()
 
-
 @db_session
 def get_urls_from_database():
     return select(u for u in Url if u.date_scanned is None).order_by(desc(Url.priority_scan))[:200]
-
 
 def get_urls_from_results(urls, results):
     urls_in_results = []
@@ -47,7 +44,6 @@ def get_urls_from_results(urls, results):
             urls_in_results.append(format_url(url.url, url_in_content))
 
     return urls_in_results
-
 
 @db_session
 async def main(loop):
@@ -74,8 +70,6 @@ async def main(loop):
             if u is not None:
                 save_url(u)
         print('Found ', len(urls_from_content), ' urls')
-
-
 
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
