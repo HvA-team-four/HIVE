@@ -58,18 +58,18 @@ app.layout = html.Div([ # App layout, this is the basic of the application. The 
 ###################################################################################
 ###################################################################################
 
-
 # Callback for refreshing the list of selectable keywords
 @app.callback(Output('keywordList', 'options'), [Input('refresh-keyword-list', 'n_clicks')])
 def refresh_keyword_list(n_clicks):
     return keywordsearch.load_keywords()
 
-
 # Callback for searching data by keyword
 @app.callback(Output('keyword_search_results', 'children'), [Input('keyword_search', 'n_clicks')], [State('keywordList', 'value'), State('keyword_date_picker', 'start_date'), State('keyword_date_picker', 'end_date')])
 def display_results(n_clicks, values, start_date, end_date):
+    keywordsearch.save_query(values, start_date, end_date) # Save query in database
+
     global df
-    df = keywordsearch.keyword_search(values, start_date, end_date)
+    df = keywordsearch.keyword_search(values, start_date, end_date) # Search query
 
     if df.empty:
         results = html.Div([
