@@ -2,6 +2,22 @@ from interface.index import *
 import dash_html_components as html
 import dash_core_components as dcc
 
+@db_session
+def save_query(query, start_date, end_date):
+    search_type = 'Search for "'
+    query_search = query
+    start_date_search = str(start_date)
+    end_date_search = str(end_date)
+
+    query = search_type + query_search + '" From: ' + start_date_search + " Till: " + end_date_search
+
+    content_object = Search(
+        query = query,
+        date_searched = datetime.now()
+    )
+    commit()
+
+
 layout = html.Div([
     html.H3('Search',
             style={'text-align':'center',
