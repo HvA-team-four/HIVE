@@ -40,4 +40,10 @@ Vagrant.configure("2") do |config|
         sh.path = "tools/install_packages.sh"
     end
 
+	# - install mysql 5.6
+    config.vm.provision :shell do |sh|
+        sh.privileged = true # this means it runs as 'root'
+        sh.path = "tools/install_mysql-5.6.sh"
+    end
+
 end
