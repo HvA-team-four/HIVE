@@ -10,7 +10,7 @@ from utilities.website import get_content_from_url
 
 @db_session
 def get_urls():
-    return select(u for u in Url if u.date_scraped is None).order_by(desc(Url.priority_scrape))
+    return select(u for u in Url if u.date_scraped is None).order_by(desc(Url.priority_scrape))[:16]
 
 
 @db_session
@@ -30,17 +30,19 @@ def filter_keywords(content):
 
 @db_session
 def save_content(url_id, cleaned, raw, hashed, keywords):
-    url = select(u for u in Url if u.id == url_id).get()
-    raw_string = raw.decode('utf-8')
-    content_object = Content(
-        url=url,
-        content=cleaned,
-        content_raw=raw_string,
-        content_raw_hash=hashed,
-        keyword=keywords
-    )
-    commit()
-
+    try:
+        url = select(u for u in Url if u.id == url_id).get()
+        raw_string = raw.decode('utf-8')
+        content_object = Content(
+            url=url,
+            content=cleaned,
+            content_raw=raw_string,
+            content_raw_hash=hashed,
+            keyword=keywords
+        )
+        commit()
+    except OptimisticCheckError as error:
+        print(str(error))
 
 @db_session
 def update_url(url):

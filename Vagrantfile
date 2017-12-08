@@ -23,6 +23,12 @@ Vagrant.configure("2") do |config|
         sh.path = "tools/install_python.sh"
     end
 
+    # - install circus
+    config.vm.provision :shell do |sh|
+        sh.privileged = true # this means it runs as 'root'
+        sh.path = "tools/install_circus.sh"
+    end
+
     # - install PIP
     config.vm.provision :shell do |sh|
         sh.privileged = true # this means it runs as 'root'

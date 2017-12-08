@@ -5,6 +5,7 @@ from utilities.models import *
 from utilities import log
 from utilities import tor
 
+
 # Add found URLs to the database if they are not being blocked by the content-block feature.
 @db_session
 def save_url(url):
@@ -49,7 +50,7 @@ def get_urls_from_results(urls, results):
     return urls_in_results
 
 
-@db_session
+@db_session(optimistic=False)
 async def main(loop):
     log.debug('scout has been started')
     while True:
