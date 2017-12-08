@@ -8,7 +8,6 @@ from utilities.models import *
 from utilities import log
 from utilities.website import get_content_from_url
 
-
 @db_session
 def get_urls():
     return select(u for u in Url if u.date_scraped is None).order_by(desc(Url.priority_scrape))
@@ -46,7 +45,6 @@ def save_content(url_id, cleaned, raw, hashed, keywords):
 @db_session
 def update_url(url):
     url.date_scraped = datetime.now()
-    url.priority_scrape = False
 
 
 def clean_html(html):  # clean the html, css and javascript tags
@@ -72,7 +70,9 @@ def start_bee():
 
         if len(urls) == 0:
             print("No URLs to be crawled, waiting for 60 seconds.")
+            log.info('No URLs to be crawled, waiting for 60 seconds.')
             sleep(60)
+            commit()
             continue
 
         for url in urls:

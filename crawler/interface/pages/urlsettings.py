@@ -38,7 +38,7 @@ layout = html.Div([
     html.H3('URL Settings',
             style={'text-align':'center'}),
 
-    html.P('On this page, you are able to add URLs to the database which will automatically receive a priority flag',
+    html.P('On this page, you are able to add URLs to the database which will automatically receive a priority flag. The statistics are refreshed every 30 seconds.',
            style={'width':380,
                   'marginLeft':'auto',
                   'marginRight':'auto',

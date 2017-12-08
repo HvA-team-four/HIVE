@@ -2,7 +2,21 @@ from interface.index import *
 import dash_html_components as html
 import dash_core_components as dcc
 from crawler.utilities.models import *
-import re
+
+@db_session
+def save_query(keywords, start_date, end_date):
+    search_type = 'Keyword Search for "'
+    keywords_search = ', '.join(map(str, keywords))
+    start_date_search = str(start_date)
+    end_date_search = str(end_date)
+
+    query = search_type + keywords_search + '" From: ' + start_date_search + " Till: " + end_date_search
+
+    content_object = Search(
+        query = query,
+        date_searched = datetime.now()
+    )
+    commit()
 
 @db_session
 def load_keywords():
@@ -17,7 +31,6 @@ def load_keywords():
                    ignore_index=True)
 
     return df.to_dict('records')
-
 
 @db_session
 def keyword_search(keywords, start_date, end_date):
