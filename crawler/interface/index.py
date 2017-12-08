@@ -20,14 +20,14 @@ from interface.pages import userguide
 from crawler.utilities.models import *
 from crawler.utilities.config import *
 from datetime import datetime
+import re
 
 backgroundimageurl = configuration_get("styling", "imagepath") + "branding/background.png"
-
-
 app = dash.Dash() # Setting up Dash application
-app.title = 'HIVE - A Dark Web Crawler' # Defining the application title
+app.title = configuration_get("honeycomb", "title") # Defining the application title
 app.css.append_css({'external_url': 'https://codepen.io/chriddyp/pen/bWLwgP.css'}) # This is a default css file made available for Dash via codepen
 app.css.append_css({'external_url': configuration_get("styling", "css")}) # Appending a custom css which is defined in the configuration file, the css file needs to be hosted externally
+
 app.config.supress_callback_exceptions = True
 server = app.server # Setting up the application server variable
 
@@ -54,7 +54,58 @@ app.layout = html.Div([ # App layout, this is the basic of the application. The 
     ),
     eula.hive_bottombar
 ], style={'background': "url('{}')".format(backgroundimageurl),
-          'height': '100vh'})
+          'height': '100%',
+          'minHeight':'100vh'})
+
+
+###################################################################################
+###################################################################################
+# NORMAL SEARCH
+###################################################################################
+###################################################################################
+
+# Callback for searching data by user input
+@app.callback(Output('normal_search_results', 'children'), [Input('normal_search', 'n_clicks')], [State('search_bar', 'value'), State('normal_date_picker', 'start_date'), State('normal_date_picker', 'end_date')])
+def display_results(n_clicks, values, start_date, end_date):
+    values_array = (re.findall(r"[\w']+", values))
+
+    global df
+    df = search.normal_search(values_array, values, start_date, end_date)
+
+    if df.empty:
+        results = html.Div([
+            html.Div([
+                html.H4("Results"),
+                html.P(
+                    "No results were found based on your search",
+                    style={"width": 370,
+                           "marginBottom": 15}),
+            ], className="content")
+        ], className="results_section")
+    else:
+        results = html.Div([
+            html.Div([
+                html.H4("Results"),
+                html.P(
+                    "The following table displays all the search results which were retrieved based on your search query.",
+                    style={"width": 370,
+                           "marginBottom": 15}),
+                html.Table(
+
+                    [html.Tr([html.Th(col) for col in df.columns], className="tableHeader")] +
+
+                    [html.Tr([
+                        html.Td(df.iloc[i]['id'], className="tableData"),
+                        html.Td(df.iloc[i]['Domain'], className="tableData"),
+                        html.Td(df.iloc[i]['Last Scraped Date'], className="tableData"),
+                        html.Td(dcc.Markdown(str(df.iloc[i]['Content'][:75] + (df.iloc[i]['Content'][75:] and '...'))),
+                                className="tableData"),
+                        html.Td([html.A("Details", href=df.iloc[i]['Link'])], className="tableData")
+                    ]) for i in range(len(df))]
+                )], className="content")
+        ], className="results_section")
+
+    return results
 
 ###################################################################################
 ###################################################################################
@@ -695,13 +746,55 @@ def display_page(pathname):
 
         return results
 
+    elif pathname.startswith('/pages/search_results'): # If the detailed results page is retrieved with an ID (therefore .startswith())
+        try:
+            index       = int(pathname.split('$',1)[1])
+            resultsid   = df.iloc[index]['id']
+            domain      = df.iloc[index]['Domain']
+            lastscraped = df.iloc[index]['Last Scraped Date']
+            content     = df.iloc[index]['Content']
+
+            results = html.Div([
+                html.H4('Detailed results'),
+                html.A("Back to results",
+                       href="javascript:history.back()",
+                       className="back_button"),
+
+                html.Div([
+                    html.Div([
+                        html.H5("Details"),
+                        html.Div([
+                            html.P("Result ID: ", className="hive_bold"),
+                            html.Div(resultsid, className="hive_normal")],
+                            id="results_row"),
+
+                        html.Div([
+                            html.P("Domain: ", className="hive_bold"),
+                            html.Div(domain, className="hive_normal")],
+                            id="results_row"),
+
+                        html.Div([
+                            html.P("Last scraped: ", className="hive_bold"),
+                            html.Div(lastscraped, className="hive_normal")],
+                            id="results_row")
+                    ], className="pane"),
+
+                html.Div([
+                    html.H5("Content"),
+                    html.Div(dcc.Markdown(str(content)), id="results_row")], className="pane")],
+                    className="results_dashboard")
+            ])
+
+        except:
+            results = html.Div(["An unexpected error occurred."])
+
+        return results
+
     else: # Else
         return start.layout # Return the search page
 
 
 # Application starting command
 if __name__ == '__main__':
-    try:
-        app.run_server(debug = True, host = configuration_get("honeycomb", "ip"))
-    except:
-        print("Something went wrong starting the honeycomb. Make sure you have assigned the right IP address in the configuration.ini file and port 8050 is available.")
+
+    app.run_server(debug = True, host = configuration_get("honeycomb", "ip"))
