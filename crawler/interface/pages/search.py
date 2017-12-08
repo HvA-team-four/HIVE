@@ -1,6 +1,7 @@
 from interface.index import *
 import dash_html_components as html
 import dash_core_components as dcc
+from crawler.utilities.models import *
 
 @db_session
 def save_query(query, start_date, end_date):
