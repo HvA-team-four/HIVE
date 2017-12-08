@@ -9,7 +9,6 @@ from utilities import log
 from utilities.tor import connect_to_tor
 from utilities.website import get_content_from_url
 
-
 @db_session
 def get_urls():
     return select(u for u in Url if u.date_scraped is None).order_by(desc(Url.priority_scrape))
@@ -47,7 +46,6 @@ def save_content(url_id, cleaned, raw, hashed, keywords):
 @db_session
 def update_url(url):
     url.date_scraped = datetime.now()
-    url.priority_scrape = False
 
 
 def clean_html(html):  # clean the html, css and javascript tags

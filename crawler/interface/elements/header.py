@@ -18,7 +18,7 @@ hive_header = html.Div(className='header',	# Defining the hive_header so it can 
                                                        href="/pages/search",
                                                         className = "header_link")
                                                 ), # Li - class = 'header_link', links to a certain source
-                                        html.Li(html.A('Keyword',
+                                        html.Li(html.A('Keyword search',
                                                        href="/pages/keywordsearch",
                                                         className = "header_link")
                                                 ), # Li - class = 'header_link', links to a certain source
