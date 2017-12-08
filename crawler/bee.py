@@ -6,7 +6,6 @@ from pony.orm import *
 
 from utilities.models import *
 from utilities import log
-from utilities.tor import connect_to_tor
 from utilities.website import get_content_from_url
 
 
@@ -67,6 +66,10 @@ def start_bee():
     log.debug("Bee has been started")
     while True:
         urls = get_urls()
+        # update the url so different instances don't crawl the same url
+        for url in urls:
+            update_url(url)
+
         if len(urls) == 0:
             print("No URLs to be crawled, waiting for 60 seconds.")
             sleep(60)
@@ -86,8 +89,6 @@ def start_bee():
 
             except(ValueError, NameError, TypeError) as error:
                 log.error(str(error))
-            finally:
-                update_url(url)
 
 
 if __name__ == '__main__':

@@ -10,8 +10,6 @@ def get_content_from_url(url):
     # crawls the content
     webcontent = None
 
-    print("Crawling: " + str(url))
-
     # request to onion site, open url and read contents
     try:
         webcontent = urllib.request.urlopen(url, timeout=10).read()

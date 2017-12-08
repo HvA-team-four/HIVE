@@ -8,7 +8,6 @@ pony
 dash
 dash-renderer
 dash-html-components
-dash-core-components
 html5lib
 flask
 dash_table_experiments
