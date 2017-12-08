@@ -1,8 +1,9 @@
 import dash_html_components as html
+from crawler.utilities.config import *
 
 layout = html.Div(style={'textAlign' : 'center'}, children=[
     html.Img(
-        src="https://herke-my.sharepoint.com/:i:/g/personal/t_lambalk_herke_nl/ETxIWuf1J5RCjtTvJDVkmK4BPRxYcu-uijsqCSv7qLT0Xw?e=fb78dff402744852a04e87fb744299d0",
+        src= configuration_get("styling", "imagepath") + "branding/favicon.png",
         style={'width' : 105, 'marginLeft' : 'auto', 'marginRight' : 'auto', 'marginTop' : 50}),
     html.H2("Welcome at HIVE", style={'maxWidth' : 400, 'marginLeft' : 'auto', 'marginRight' : 'auto', "letterSpacing" : "0.02em", "color" : "#484848"}),
     html.P("Version 2.0 - Prototype", style={'fontSize': 14, 'maxWidth' : 400, 'marginLeft' : 'auto', 'marginRight' : 'auto', 'fontWeight' : 300, 'marginTop' : -20, 'color' : '#717171'}),

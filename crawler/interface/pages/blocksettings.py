@@ -21,7 +21,7 @@ layout = html.Div([
     html.H3('Content Block Settings',
             style={'text-align':'center'}),
 
-    html.P('On this page, the content block settings for HIVE can be set. Blocked content will not be stored in the database and will simply be ignored. Please use the controls to define content which needs to be blocked. Read the User Guide before using this feature. ',
+    html.P('On this page, the content block settings for HIVE can be set. Blocked content will not be stored in the database and will simply be ignored. The statistics are refreshed every 30 seconds. Read the User Guide before using this feature. ',
            style={'width':380,
                   'marginLeft':'auto',
                   'marginRight':'auto',

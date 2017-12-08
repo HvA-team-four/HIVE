@@ -86,12 +86,6 @@ def keyword_search(keywords, start_date, end_date):
             return dataframe
 
 
-@db_session
-def found_keyword_count():
-    count_query = db.select('select count(*) from content_keyword')
-    for number in count_query:
-        return number
-
 layout = html.Div([
     html.H3('Keyword Search',
             style={'text-align':'center',

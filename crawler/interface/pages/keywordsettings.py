@@ -16,7 +16,9 @@ def load_statistics(statistic):
         return '{}%'.format(percentage)
 
     elif statistic == 'matches':
-        return select(p for p in Keyword).count()
+        count_query = db.select('select count(*) from content_keyword')
+        for number in count_query:
+            return number
 
 df = pd.DataFrame(columns=['Keyword', 'Status'])
 df = df.append({'Keyword': 'No data loaded'},
@@ -26,7 +28,7 @@ layout = html.Div([
     html.H3('Keyword Settings',
             style={'text-align':'center'}),
 
-    html.P('On this page, you are able to add Keywords to the database. By selecting Keywords, you are also able to set the Keywords inactive.',
+    html.P('On this page, you are able to add Keywords to the database and enable/disable certain keywords. The statistics are refreshed every 30 seconds.',
            style={'width':380,
                   'marginLeft':'auto',
                   'marginRight':'auto',
@@ -55,12 +57,12 @@ layout = html.Div([
         ], className    = 'statisticsWrapper'),
 
         html.Div([
-            html.Div(children   = load_statistics('other'),
+            html.Div(children   = load_statistics('matches'),
                      className  = 'statisticsBox',
                      id         = 'KeywordStatisticsBox3'),
-            html.Div(children   = 'Other',
+            html.Div(children   = 'Matches',
                      className  = 'title'),
-            html.Div(children   = 'No information yet',
+            html.Div(children   = 'Amount of keyword matches in the database',
                      className  = 'description')
         ], className    = 'statisticsWrapper'),
 
