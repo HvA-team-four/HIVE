@@ -1,4 +1,4 @@
-from interface.index import *
+from interface.honeycomb import *
 import dash_html_components as html
 import dash_core_components as dcc
 from crawler.utilities.models import *
@@ -34,16 +34,14 @@ def normal_search(keywords_array, keywords, start_date, end_date):
     select_query = str(Content.select_by_sql("""SELECT content.id FROM content INNER JOIN url ON content.url = url.id \
     WHERE Match(content) AGAINST ($keywords IN BOOLEAN MODE) AND url.date_scraped <= $dt_end_date AND url.date_scraped >= $dt_start_date"""))
 
-
     while True:
-            #execute the query to retrieve contents from database.
+            # Execute the query to retrieve contents from database.
             content_objects = eval(select_query)
 
             for content in content_objects:
                 content_keywords = content.content
                 for i in keywords_array:
                     content_keywords = re.sub(r'(%s)' % i, r'**\1**', content_keywords, flags=re.I)
-
 
                 dataframe = dataframe.append({'id': content.id,
                                               'Domain': content.url.url,
@@ -73,16 +71,18 @@ layout = html.Div([
             id='search_bar',
             required=True
         ),
-    html.Br(),
-    dcc.DatePickerRange(
-        id='normal_date_picker',
-        start_date_placeholder_text='Start date',
-        end_date_placeholder_text='End date'
-    ),
-    html.Button('Search', id='normal_search', style={'float':'right', 'marginRight': -20})
 
-    ], style={'width':700, 'marginLeft':'auto', 'marginRight':'auto'}),
+        html.Br(),
+
+        dcc.DatePickerRange(
+            id='normal_date_picker',
+            start_date_placeholder_text='Start date',
+            end_date_placeholder_text='End date'
+        ),
+
+        html.Button('Search', id='normal_search', style={'float': 'right', 'marginRight': -20})
+
+    ], style={'width': 700, 'marginLeft': 'auto', 'marginRight': 'auto'}),
 
     html.Div(id='normal_search_results')
-
 ])

@@ -5,6 +5,7 @@ from utilities.models import *
 from utilities import log
 from utilities import tor
 
+
 # Add found URLs to the database if they are not being blocked by the content-block feature.
 @db_session
 def save_url(url):
@@ -29,9 +30,11 @@ def update_url(url):
     url_db = select(u for u in Url if u.id == url.id).get()
     url_db.date_scanned = datetime.now()
 
+
 @db_session
 def get_urls_from_database():
     return select(u for u in Url if u.date_scanned is None).order_by(desc(Url.priority_scan))[:200]
+
 
 def get_urls_from_results(urls, results):
     urls_in_results = []
@@ -44,6 +47,7 @@ def get_urls_from_results(urls, results):
             urls_in_results.append(format_url(url.url, url_in_content))
 
     return urls_in_results
+
 
 @db_session
 async def main(loop):
@@ -65,7 +69,6 @@ async def main(loop):
 
         urls_from_content = get_urls_from_results(urls, results)
 
-
         for u in urls_from_content:
             if u is not None:
                 save_url(u)
@@ -74,4 +77,3 @@ async def main(loop):
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
     loop.run_until_complete(main(loop))
-

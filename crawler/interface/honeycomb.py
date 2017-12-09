@@ -5,7 +5,6 @@ import dash_html_components as html
 import dash_table_experiments as dt
 import pandas as pd
 from dash.dependencies import Input, Event, Output, State
-from crawler.utilities import config
 from interface.elements import header
 from interface.elements import eula
 from interface.pages import keywordsearch
@@ -54,8 +53,8 @@ app.layout = html.Div([ # App layout, this is the basic of the application. The 
     ),
     eula.hive_bottombar
 ], style={'background': "url('{}')".format(backgroundimageurl),
-          'height': '100%',
-          'minHeight':'100vh'})
+                                    'height': '100%',
+                                    'minHeight':'100vh'})
 
 
 ###################################################################################

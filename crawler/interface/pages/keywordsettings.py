@@ -1,4 +1,4 @@
-from interface.index import *
+from interface.honeycomb import *
 from crawler.utilities.models import *
 
 @db_session
