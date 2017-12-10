@@ -195,9 +195,11 @@ def display_results(n_clicks, values, start_date, end_date):
 # settings page functions and the User Guide page.
 ###################################################################################
 
+
 ####################
 # Keyword settings
 ####################
+
 
 # Loading the value of StatisticsBox one - total amount of KEYWORDS
 @app.callback(Output('KeywordStatisticsBox1', 'children'),
@@ -346,6 +348,7 @@ def insert_url(n_clicks, selected_row_indices):
         return html.Div('An unexpected error occurred.',  # Warning messsage
                         id='negative_warning')  # Red style (error style)
 
+
 ################
 # URL settings
 ################
@@ -444,6 +447,7 @@ def reload_table(n_clicks):
                         'Priority Scan': priorityscan}, ignore_index=True)  # Add the record to a dataframe
 
     return df.to_dict('records')  # Return each record in the dataframe as a dictionary.
+
 
 #########################
 # Content-block settings
