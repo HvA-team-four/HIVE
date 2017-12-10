@@ -1,7 +1,11 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from interface.honeycomb import *
 import dash_html_components as html
 import dash_core_components as dcc
 from crawler.utilities.models import *
+
 
 @db_session
 def save_query(keywords, start_date, end_date):
@@ -9,18 +13,18 @@ def save_query(keywords, start_date, end_date):
     keywords_search = ', '.join(map(str, keywords))
     start_date_search = str(start_date)
     end_date_search = str(end_date)
-
     query = search_type + keywords_search + '" From: ' + start_date_search + " Till: " + end_date_search
 
     content_object = Search(
-        query = query,
-        date_searched = datetime.now()
+        query=query,
+        date_searched=datetime.now()
     )
     commit()
 
+
 @db_session
 def load_keywords():
-    results = select(p for p in Keyword if p.active == True)[:]
+    results = select(p for p in Keyword if p.active)[:]
 
     df = pd.DataFrame(columns=['label',
                                'value'])
@@ -28,16 +32,16 @@ def load_keywords():
     for result in results:
         df = df.append({'label': result.keyword,
                         'value': result.keyword},
-                   ignore_index=True)
+                       ignore_index=True)
 
     return df.to_dict('records')
+
 
 @db_session
 def keyword_search(keywords, start_date, end_date):
     # df_id is used to increment a dataframe number for the details link
     df_id = 0
 
-    # Creating a dataframe
     dataframe = pd.DataFrame(columns=['id',
                                       'Domain',
                                       'Keywords',
@@ -71,7 +75,7 @@ def keyword_search(keywords, start_date, end_date):
     print(query)
 
     while True:
-            #execute the query to retrieve contents from database.
+            # Execute the query to retrieve contents from database.
             content_objects = eval(query)
 
             for content in content_objects:
@@ -83,28 +87,30 @@ def keyword_search(keywords, start_date, end_date):
                                               'Link': '/pages/results$' + str(df_id)},
                                              ignore_index=True)
                 df_id = df_id + 1
+
             return dataframe
 
 
 layout = html.Div([
     html.H3('Keyword Search',
-            style={'text-align':'center',
+            style={'text-align': 'center',
                    'marginTop': 50}),
 
     html.P('Please use the dropdown-bar below to select the keywords you want to search the database for.',
-           style={'width':380,
-                  'marginLeft':'auto',
-                  'marginRight':'auto',
-                  'textAlign':'center',
-                  'marginBottom':30}),
+           style={'width': 380,
+                  'marginLeft': 'auto',
+                  'marginRight': 'auto',
+                  'textAlign': 'center',
+                  'marginBottom': 30}),
 
     html.Div([
         dcc.Dropdown(
             options=load_keywords(),
             multi=True,
-            id='keywordList',
-        ),
+            id='keywordList'),
+
     html.Br(),
+
     dcc.DatePickerRange(
         id='keyword_date_picker',
         start_date_placeholder_text='Start date',
@@ -113,12 +119,13 @@ layout = html.Div([
 
     html.Button('Search', id='keyword_search'),
         html.Button('Reload keywords',
-                            id          = 'refresh-keyword-list',
-                            className   = 'refresh_button',
-                            style       = {'paddingLeft' : 10,
-                                           'paddingRight' : 10})
-
-        ], style={'width':700, 'marginLeft':'auto', 'marginRight':'auto'}),
+                    id='refresh-keyword-list',
+                    className='refresh_button',
+                    style={'paddingLeft': 10,
+                           'paddingRight': 10})
+    ], style={'width': 700,
+              'marginLeft': 'auto',
+              'marginRight': 'auto'}),
 
     html.Div(id='keyword_search_results')
 ])

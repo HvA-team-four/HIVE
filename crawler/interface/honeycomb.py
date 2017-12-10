@@ -1,4 +1,6 @@
-# All packages are loaded here.
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -21,40 +23,55 @@ from crawler.utilities.config import *
 from datetime import datetime
 import re
 
-backgroundimageurl = configuration_get("styling", "imagepath") + "branding/background.png"
-app = dash.Dash() # Setting up Dash application
-app.title = configuration_get("honeycomb", "title") # Defining the application title
-app.css.append_css({'external_url': 'https://codepen.io/chriddyp/pen/bWLwgP.css'}) # This is a default css file made available for Dash via codepen
-app.css.append_css({'external_url': configuration_get("styling", "css")}) # Appending a custom css which is defined in the configuration file, the css file needs to be hosted externally
+# Defining a Dash application/interface with the name 'app'
+app = dash.Dash()
 
+# Defining some parameters of the interface
+# Title: the name of the interface (name of tab)
+# CSS: Default CSS style sheet provided by Dash
+# CSS: Custom CSS style sheet defined in the configuration.ini
+app.title = configuration_get("honeycomb", "title")
+app.css.append_css({'external_url': 'https://codepen.io/chriddyp/pen/bWLwgP.css'})
+app.css.append_css({'external_url': configuration_get("styling", "css")})
+
+# Suppressing callback exceptions, otherwise Dash is raising error
+# when callbacks are not working correctly
 app.config.supress_callback_exceptions = True
-server = app.server # Setting up the application server variable
 
-app.layout = html.Div([ # App layout, this is the basic of the application. The content of the 'page-content' section will differ based on the page you are visiting.
-    header.hive_header, # Loading the header from the HIVE file
+# Layout of the application, the layout consist of multiple components
+# this lay-out contains the following elements
+# Header: default header from the 'header.py'
+# Location: used for setting the pathname variable which is used later
+# Page-content: this content changed when the user selects another page
+# Datatable: hidden, but needed for displaying tables correctly
+# Termsboxarea: used for displaying the terms of use when a user selects the EULA
+# Interval elements: used for pages which automatically reload
+# Termsbox: orange bar defining the EULA which the user agrees to
+app.layout = html.Div([
+    header.hive_header,
 
-    dcc.Location(id='url', # This section defines the url based on the url, this can be seen as a bridge, because this element is later used to defined the page you are visiting
-                 refresh = False),
+    dcc.Location(id='url',
+                 refresh=False),
 
-    html.Div(id='page-content'), # The actual content box in de middle of the page. This section is filled based on the page you are visiting.
+    html.Div(id='page-content'),
 
-    html.Div( # This element is hidden but needs to be here to succesfully load the DataTables from other pages
+    html.Div(
         dt.DataTable(rows=[{}]),
         style={'display': 'none'}),
 
     html.Div(children=[], id="TermsBoxArea"),
     dcc.Interval(
             id='interval-component-30',
-            interval=20*1000 # in milliseconds
+            interval=20*1000
     ),
     dcc.Interval(
             id='interval-component-5',
-            interval=5*1000 # in milliseconds
+            interval=5*1000
     ),
     eula.hive_bottombar
-], style={'background': "url('{}')".format(backgroundimageurl),
-                                    'height': '100%',
-                                    'minHeight':'100vh'})
+], style={'background': "url('{}')".format(configuration_get("styling", "imagepath") + "branding/background.png"),
+          'height': '100%',
+          'minHeight': '100vh'})
 
 
 ###################################################################################
@@ -795,5 +812,4 @@ def display_page(pathname):
 
 # Application starting command
 if __name__ == '__main__':
-
     app.run_server(debug = True, host = configuration_get("honeycomb", "ip"))

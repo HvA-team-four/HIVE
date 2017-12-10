@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 from interface.honeycomb import *
 import dash_html_components as html
 import dash_core_components as dcc
@@ -30,9 +33,9 @@ def normal_search(keywords_array, keywords, start_date, end_date):
     # return empty dataframe if no keywords are entered
     if keywords_array is None:
         return dataframe
-    print(keywords)
-    select_query = str(Content.select_by_sql("""SELECT content.id FROM content INNER JOIN url ON content.url = url.id \
-    WHERE Match(content) AGAINST ($keywords IN BOOLEAN MODE) AND url.date_scraped <= $dt_end_date AND url.date_scraped >= $dt_start_date"""))
+
+    select_query = str(Content.select_by_sql('''SELECT content.id FROM content INNER JOIN url ON content.url = url.id \
+    WHERE Match(content) AGAINST ($keywords IN BOOLEAN MODE) AND url.date_scraped <= $dt_end_date AND url.date_scraped >= $dt_start_date'''))
 
     while True:
             # Execute the query to retrieve contents from database.
@@ -50,20 +53,21 @@ def normal_search(keywords_array, keywords, start_date, end_date):
                                               'Link': '/pages/search_results$' + str(df_id)},
                                              ignore_index=True)
                 df_id = df_id + 1
+
             return dataframe
 
 
 layout = html.Div([
     html.H3('Search',
-            style={'text-align':'center',
+            style={'text-align': 'center',
                    'marginTop': 50}),
 
     html.P('Please use input field below to specify a search query.',
-           style={'width':380,
-                  'marginLeft':'auto',
-                  'marginRight':'auto',
-                  'textAlign':'center',
-                  'marginBottom':30}),
+           style={'width': 380,
+                  'marginLeft': 'auto',
+                  'marginRight': 'auto',
+                  'textAlign': 'center',
+                  'marginBottom': 30}),
 
     html.Div([
         dcc.Input(
@@ -80,9 +84,14 @@ layout = html.Div([
             end_date_placeholder_text='End date'
         ),
 
-        html.Button('Search', id='normal_search', style={'float': 'right', 'marginRight': -20})
+        html.Button('Search',
+                    id='normal_search',
+                    style={'float': 'right',
+                           'marginRight': -20})
 
-    ], style={'width': 700, 'marginLeft': 'auto', 'marginRight': 'auto'}),
+    ], style={'width': 700,
+              'marginLeft': 'auto',
+              'marginRight': 'auto'}),
 
     html.Div(id='normal_search_results')
 ])

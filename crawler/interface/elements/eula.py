@@ -1,11 +1,14 @@
-import dash_html_components as html # Importing Dash HTML components as html
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
+import dash_html_components as html
 import dash_core_components as dcc
 
 hive_termsofuse = html.Div(
     html.Div([
-    html.H3("End-User License Agreement"),
-    html.Div([
-        dcc.Markdown('''
+        html.H3("End-User License Agreement"),
+        html.Div([
+            dcc.Markdown('''
 ###### Article 1 - Licensing (MIT)
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -52,18 +55,13 @@ license, which is available in article 2.
 ###### Article 6 - Usage and searches
 6.1 The application provides an interface which enables users to search the database for content. The application does not automatically block searches for illegal content, neither **FOUR.** or the Hogeschool van Amsterdam are responsible for (illegal) searches done by users of the application. 
 '''
-)], className="termsText"),
-
-html.Button('Close', id='closeTerms')
-
-
-], className = "termsOfUseBox"
-), className="termsOfUseBackground"
+                         )], className="termsText"),
+        html.Button('Close', id='closeTerms')
+    ], className="termsOfUseBox"
+    ), className="termsOfUseBackground"
 )
 
 hive_bottombar = html.Div([
     "By using this application, you agree to the",
     html.Button('License Agreement', className="openTermsButton", id="TermsButton")
-]
-    ,className = "termsOfUseBar", id="termsOfUseBar"
-)
+], className="termsOfUseBar", id="termsOfUseBar")
