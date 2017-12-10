@@ -455,164 +455,176 @@ def reload_table(n_clicks):
 
 
 # Loading the value of StatisticsBox one - total amount of active blockrules in the database
-@app.callback(Output('BlockStatisticsBox1', 'children'), [Input('refresh-block-statistics', 'n_clicks')], events=[Event('interval-component-30', 'interval')])
+@app.callback(Output('BlockStatisticsBox1', 'children'),
+              [Input('refresh-block-statistics', 'n_clicks')],
+              events=[Event('interval-component-30', 'interval')])
 def refresh_url_statistics(n_clicks):
-    return blocksettings.load_statistics('total') # Parameter total indicates the total amount of keywords
+    return blocksettings.load_statistics('total')  # Parameter total indicates the total amount of keywords
+
 
 # Loading the value of StatisticsBox two - total amount of active url blocks
-@app.callback(Output('BlockStatisticsBox2', 'children'), [Input('refresh-block-statistics', 'n_clicks')], events=[Event('interval-component-30', 'interval')])
+@app.callback(Output('BlockStatisticsBox2', 'children'),
+              [Input('refresh-block-statistics', 'n_clicks')],
+              events=[Event('interval-component-30', 'interval')])
 def refresh_url_statistics(n_clicks):
-    return blocksettings.load_statistics('urltype') # Parameter scanned indicates the scanned amount of keywords
+    return blocksettings.load_statistics('urltype')  # Parameter scanned indicates the scanned amount of keywords
+
 
 # Loading the value of StatisticsBox three - total amount of scraped URLs
-@app.callback(Output('BlockStatisticsBox3', 'children'), [Input('refresh-block-statistics', 'n_clicks')], events=[Event('interval-component-30', 'interval')])
+@app.callback(Output('BlockStatisticsBox3', 'children'),
+              [Input('refresh-block-statistics', 'n_clicks')],
+              events=[Event('interval-component-30', 'interval')])
 def refresh_url_statistics(n_clicks):
-    return blocksettings.load_statistics('keywordtype') # Parameter scraped indicates the total scraped of keywords
+    return blocksettings.load_statistics('keywordtype')  # Parameter scraped indicates the total scraped of keywords
+
 
 # Callback for adding KEYWORDS to the database
-@app.callback(Output('output-container-block', 'children'), [Input('blocksubmit', 'n_clicks')], [State('block-input-box', 'value'), State('block-category', 'value')])
+@app.callback(Output('output-container-block', 'children'),
+              [Input('blocksubmit', 'n_clicks')],
+              [State('block-input-box', 'value'),
+               State('block-category', 'value')])
 @db_session
 def insert_keyword(n_clicks, value, typevalue):
-    result = select(p for p in Block if p.value == value and p.type == typevalue).count() # Retrieving the amount of keywords in the database
+    result = select(p for p in Block if p.value == value and p.type == typevalue).count() # Retrieving the amount
 
-    if not value: # If the user has not submitted anything in the input field
-        return html.Div('Please insert a value in the input field.', # Output warning message
-                        id='negative_warning') # Negative style (red)
+    if not value:  # If the user has not submitted anything in the input field
+        return html.Div('Please insert a value in the input field.',  # Output warning message
+                        id='negative_warning')  # Negative style (red)
 
-    elif result != 0: # Check if the keyword already exists in the database
-        return html.Div('Value with type already exists in database', # Output warning message
-                        id='negative_warning') # Negative style (red)
+    elif result != 0:  # Check if the keyword already exists in the database
+        return html.Div('Value with type already exists in database',  # Output warning message
+                        id='negative_warning')  # Negative style (red)
 
-    else: # If keyword does not exist yet
-        try: # Trying
+    else:  # If keyword does not exist yet
+        try:  # Trying
             keyword_object = Block(
-                type = typevalue,
-                value = value,
-                active = True
-            ) # Defining an object of class Keyword
-            commit() # Committing the object (sending it to database)
+                type=typevalue,
+                value=value,
+                active=True
+            )  # Defining an object of class Keyword
+            commit()  # Committing the object (sending it to database)
 
-            return html.Div('Rule: {} of type {} has been added to the database.'.format(value, typevalue), # Output warning message
-                            id='positive_warning') # Positive style (green)
+            return html.Div('Rule: {} of type {} has been added to the database.'.format(value, typevalue),
+                            id='positive_warning')  # Positive style (green)
 
         except:
-            return html.Div('An unexpected error occurred', # Output warning message
-                            id='negative_warning') # Negative style (red)
+            return html.Div('An unexpected error occurred',  # Output warning message
+                            id='negative_warning')  # Negative style (red)
+
 
 # Callback used for loading the KEYWORD table on the KEYWORD Settings page
-@app.callback(Output('block-table', 'rows'), [Input('reload-button', 'n_clicks')])
+@app.callback(Output('block-table', 'rows'),
+              [Input('reload-button', 'n_clicks')])
 @db_session
 def reload_table(n_clicks):
-    results = select(p for p in Block)[:] # Retrieving all keywords from the database
+    results = select(p for p in Block)[:]  # Retrieving all keywords from the database
 
-    global df # Defining a global dataframe so the keywords can be loaded from the keywords search page
-    df = pd.DataFrame(columns=['Type', # Defining a dataframe with the columns: keyword and status
+    global df  # Defining a global dataframe so the keywords can be loaded from the keywords search page
+
+    df = pd.DataFrame(columns=['Type',  # Defining a dataframe with the columns: keyword and status
                                'Value',
                                'Status'])
 
-    for result in results: # For each keyword in the table do:
-        if result.active == True: # If the active column is true, then set status equal to the word Active
-            status  = 'Active'
+    for result in results:  # For each keyword in the table do:
+        if result.active:  # If the active column is true, then set status equal to the word Active
+            status = 'Active'
 
-        else: # If not active then say Inactive
+        else:  # If not active then say Inactive
             status = 'Inactive'
-
 
         df = df.append({'Type': result.type,
                         'Value': result.value,
                         'Status': status},
-                       ignore_index=True) # Add the record to a dataframe which can then be displayed in the table
+                       ignore_index=True)  # Add the record to a dataframe which can then be displayed in the table
 
-    return df.to_dict('records') # Return each record in the dataframe as a dictionary.
+    return df.to_dict('records')  # Return each record in the dataframe as a dictionary.
+
 
 # Callback for turning KEYWORDS ACTIVE
-@app.callback(Output('block_activate_warning', 'children'), [Input('block_set_active', 'n_clicks')], [State('block-table', 'selected_row_indices')])
+@app.callback(Output('block_activate_warning', 'children'),
+              [Input('block_set_active', 'n_clicks')],
+              [State('block-table', 'selected_row_indices')])
 @db_session
 def insert_url(n_clicks, selected_row_indices):
-    try: # Try changing, if anything goes wrong, a warning message will be displayed instead of an application crash
-        if 'df' not in globals(): # Check if the table is loaded and the user is not trying to set the "No data loaded" active
-            return html.Div('Please load the blockrule table first.', # Warning message
-                            id='negative_warning') # Red style (error style)
+    try:  # Try changing, if anything goes wrong, a warning message will be displayed instead of an application crash
+        if 'df' not in globals():  # Check if the table is loaded
+            return html.Div('Please load the blockrule table first.',  # Warning message
+                            id='negative_warning')  # Red style (error style)
 
-        elif not selected_row_indices: # If there are no rows selected
-            return html.Div('Please select a blockrule.', # Warning message
-                            id='negative_warning') # Red style (error style)
+        elif not selected_row_indices:  # If there are no rows selected
+            return html.Div('Please select a blockrule.',  # Warning message
+                            id='negative_warning')  # Red style (error style)
 
         else:
-            records = df.iloc[selected_row_indices,:] # Retrieve the selected rows from the dataframe variable
+            records = df.iloc[selected_row_indices, :]  # Retrieve the selected rows from the dataframe variable
 
             for index, row in records.iterrows():
-                results = select(p for p in Block if p.value == row['Value'] and p.type==row['Type']) # Retrieve the keyword object from the database
+                results = select(p for p in Block if p.value == row['Value'] and p.type == row['Type'])
 
-                for result in results: # This needs to be unwrapped because the result is a ponyORM object.
-                    result.active = True # Setting the active field to true
-                    commit() # Committing the action
+                for result in results:  # This needs to be unwrapped because the result is a ponyORM object.
+                    result.active = True  # Setting the active field to true
+                    commit()  # Committing the action
 
-            return html.Div('The selected records are set active.', # Warning message
-                            id='positive_warning') # Green style (positive style)
+            return html.Div('The selected records are set active.',  # Warning message
+                            id='positive_warning')  # Green style (positive style)
 
     except: # If anything unexpected occurs
-        return html.Div('An unexpected error occurred.', # Warning messsage
-                        id='negative_warning') # Red style (error style)
+        return html.Div('An unexpected error occurred.',  # Warning messsage
+                        id='negative_warning')  # Red style (error style)
+
 
 # Callback for turning KEYWORDS INACTIVE
-@app.callback(Output('block_inactivate_warning', 'children'), [Input('block_set_inactive', 'n_clicks')], [State('block-table', 'selected_row_indices')])
+@app.callback(Output('block_inactivate_warning', 'children'),
+              [Input('block_set_inactive', 'n_clicks')],
+              [State('block-table', 'selected_row_indices')])
 @db_session
 def insert_url(n_clicks, selected_row_indices):
-    # try: # Try changing, if anything goes wrong, a warning message will be displayed instead of an application crash
-        if 'df' not in globals(): # Check if the table is loaded and the user is not trying to set the "No data loaded" inactive
-            return html.Div('Please load the blockrule table first.', # Warning message
-                            id='negative_warning') # Red style (error style)
+    if 'df' not in globals():  # Check if the table is loaded
+        return html.Div('Please load the blockrule table first.',  # Warning message
+                        id='negative_warning')  # Red style (error style)
 
-        elif not selected_row_indices: # If there are no rows selected
-            return html.Div('Please select a blockrule.', # Warning message
-                            id='negative_warning') # Red style (error style)
+    elif not selected_row_indices:  # If there are no rows selected
+        return html.Div('Please select a blockrule.',  # Warning message
+                        id='negative_warning')  # Red style (error style)
 
-        else:
-            records = df.iloc[selected_row_indices,:] # Retrieve the selected rows from the dataframe variable
+    else:
+        records = df.iloc[selected_row_indices, :]  # Retrieve the selected rows from the dataframe variable
 
-            for index, row in records.iterrows():
-                results = select(p for p in Block if p.value == row['Value'] and p.type == row['Type']) # Retrieve the keyword object from the database
+        for index, row in records.iterrows():
+            results = select(p for p in Block if p.value == row['Value'] and p.type == row['Type'])
 
-                for result in results: # This needs to be unwrapped because the result is a ponyORM object.
-                    result.active = False # Setting the active field to false
-                    commit() # Comitting the action
+            for result in results:  # This needs to be unwrapped because the result is a ponyORM object.
+                result.active = False  # Setting the active field to false
+                commit()  # Comitting the action
 
-            return html.Div('The selected records are set inactive.', # Warning message
-                            id='positive_warning') # Green style (positive style)
+        return html.Div('The selected records are set inactive.',  # Warning message
+                        id='positive_warning')  # Green style (positive style)
 
-    # except: # If anything unexpected occurs
-    #     return html.Div('An unexpected error occurred.', # Warning messsage
-    #                     id='negative_warning') # Red style (error style)
 
-###################################################################################
-###################################################################################
-# USER GUIDE
-###################################################################################
-###################################################################################
+################
+# User Guide settings
+################
+
 
 # Callback used for displaying an controlling the USER GUIDE tabs
-@app.callback(Output('tab-output', 'children'), [Input('tabs', 'value')])
+@app.callback(Output('tab-output', 'children'),
+              [Input('tabs', 'value')])
 def display_content(value):
     if value == 1:
         return html.Div([
-            dcc.Markdown(
-            '''             
+            dcc.Markdown('''
 #### Start
 Welcome at the User Guide. This guide provides you inside in how the application works and why certain 
 development choices were made. Please use the tabs to navigate to the right guide and get familiar with 
 HIVE quickly. 
 
 HIVE is made by team FOUR. on behalf of the Hogeschool van Amsterdam. This application comes with no 
-warrenty as stated in the EULA (MIT license).
-            '''
-            ),
+warrenty as stated in the EULA (MIT license).'''),
         ])
 
     elif value == 2:
         return html.Div([
-            dcc.Markdown(
-            ''' 
+            dcc.Markdown(''' 
 #### URL Settings
 On the  [**URL Settings** page](/pages/urlsettings), you are able to view the following sections:
 
@@ -631,15 +643,12 @@ Priority Scrape and Priority Scan flag.
 ###### Load table
 The table is not loaded by default, this done because this can take a while depending on the amount of URLs 
 in the database. When using the **LOAD TABLE** button, the application will try to retrieve *all* URLs in
-the database. When the application is loading the table, you will not be able to perform other tasks. 
-            '''
-            ),
+the database. When the application is loading the table, you will not be able to perform other tasks. '''),
         ])
 
     elif value == 3:
         return html.Div([
-            dcc.Markdown(
-            ''' 
+            dcc.Markdown(''' 
 #### Keyword Settings
 On the  [**Keyword Settings** page](/pages/keywordsettings), you are able to view the following sections:
 
@@ -665,15 +674,12 @@ By using the **FILTER ROWS** button, you are able to show fields which can be us
 ###### Active/Inactive
 The active and inactive buttons can be used to set keywords active or inactive. Inactive keywords will not be matched
 any longer but won't be removed from the database as well. As a user, you will still be able to search for content that 
-was matched before you set the keyword inactive.  
-            '''
-            ),
+was matched before you set the keyword inactive.'''),
         ])
 
     elif value == 4:
         return html.Div([
-            dcc.Markdown(
-            ''' 
+            dcc.Markdown(''' 
 #### Content Block Settings
 On the [**Keyword Settings** page](/pages/blocksettings), you are able to view the following sections:
 
@@ -710,8 +716,7 @@ By using the **FILTER ROWS** button, you are able to show fields which can be us
 ###### Active/Inactive
 The active and inactive buttons can be used to set Rules active or inactive. Inactive keywords will not be matched
 any longer but won't be removed from the database as well. As a user, you will still be able to search for content that 
-Rules'''
-            ),
+Rules'''),
         ])
 
     else:
@@ -719,40 +724,49 @@ Rules'''
             "An unexpected error occurred."
         ])
 
+
 ###################################################################################
-###################################################################################
-# APPLICATION WIDE CALLBACKS
-###################################################################################
+# Application callbacks
+#
+# This block contains all callbacks which are not related to a specific type of
+# page but instead support the entire interface.
 ###################################################################################
 
+
 # Callback for displaying and closing the EULA
-@app.callback(Output('TermsBoxArea', 'children'), [dash.dependencies.Input('TermsButton', 'n_clicks')], [State('TermsBoxArea', 'children')], [Event('closeTerms', 'click')])
+@app.callback(Output('TermsBoxArea', 'children'),
+              [Input('TermsButton', 'n_clicks')],
+              [State('TermsBoxArea', 'children')],
+              [Event('closeTerms', 'click')])
 def open_termsbox(n_clicks, state):
-    if state == None and n_clicks != 0:
-        return  eula.hive_termsofuse
+    if state is None and n_clicks != 0:
+        return eula.hive_termsofuse
+
     else:
         return None
 
+
 # Callback which returns the page-layout based on the pathname of the visited page.
-@app.callback(Output('page-content', 'children'), [Input('url', 'pathname')])
+@app.callback(Output('page-content', 'children'),
+              [Input('url', 'pathname')])
 def display_page(pathname):
-    if (pathname == '/pages/start') or (pathname == None) or (pathname == '/') : # If the pathname is not equal to a path
-        return start.layout # Return the start page
+    if (pathname == '/pages/start') or (pathname is None) or (pathname == '/'):  # If the pathname is not equal to path
+        return start.layout  # Return the start page
 
-    elif pathname == '/pages/search': # If the page is equal to search
-        return search.layout # Return the search page
+    elif pathname == '/pages/search':  # If the page is equal to search
+        return search.layout  # Return the search page
 
-    elif pathname == '/pages/keywordsearch': # If the page is equal to keyword search
-        return keywordsearch.layout # Return the keyword search page
+    elif pathname == '/pages/keywordsearch':  # If the page is equal to keyword search
+        return keywordsearch.layout  # Return the keyword search page
 
-    elif pathname == '/pages/settings': # If the page is equal to settings
-        return settings.layout # Return the settings page
+    elif pathname == '/pages/settings':  # If the page is equal to settings
+        return settings.layout  # Return the settings page
 
-    elif pathname == '/pages/urlsettings': # If the page is equal to urlsettings
-        return urlsettings.layout # Return the urlsettings page
+    elif pathname == '/pages/urlsettings':  # If the page is equal to urlsettings
+        return urlsettings.layout  # Return the urlsettings page
 
-    elif pathname == '/pages/keywordsettings': # If the page is equal to keywordsettings
-        return keywordsettings.layout # Return the keywordsettings page
+    elif pathname == '/pages/keywordsettings':  # If the page is equal to keywordsettings
+        return keywordsettings.layout  # Return the keywordsettings page
 
     elif pathname == '/pages/blocksettings':
         return blocksettings.layout
@@ -763,14 +777,14 @@ def display_page(pathname):
     elif pathname == '/pages/userguide':
         return userguide.layout
 
-    elif pathname.startswith('/pages/results'): # If the detailed results page is retrieved with an ID (therefore .startswith())
+    elif pathname.startswith('/pages/results'):  # If the detailed results page is retrieved with an ID
         try:
-            index       = int(pathname.split('$',1)[1])
-            resultsid   = df.iloc[index]['id']
-            domain      = df.iloc[index]['Domain']
-            keywords    = df.iloc[index]['Keywords']
+            index = int(pathname.split('$', 1)[1])
+            resultsid = df.iloc[index]['id']
+            domain = df.iloc[index]['Domain']
+            keywords = df.iloc[index]['Keywords']
             lastscraped = df.iloc[index]['Last Scraped Date']
-            content     = df.iloc[index]['Content']
+            content = df.iloc[index]['Content']
 
             results = html.Div([
                 html.H4('Detailed results'),
@@ -813,13 +827,13 @@ def display_page(pathname):
 
         return results
 
-    elif pathname.startswith('/pages/search_results'): # If the detailed results page is retrieved with an ID (therefore .startswith())
+    elif pathname.startswith('/pages/search_results'):  # If the detailed results page is retrieved with an ID
         try:
-            index       = int(pathname.split('$',1)[1])
-            resultsid   = df.iloc[index]['id']
-            domain      = df.iloc[index]['Domain']
+            index= int(pathname.split('$', 1)[1])
+            resultsid = df.iloc[index]['id']
+            domain = df.iloc[index]['Domain']
             lastscraped = df.iloc[index]['Last Scraped Date']
-            content     = df.iloc[index]['Content']
+            content = df.iloc[index]['Content']
 
             results = html.Div([
                 html.H4('Detailed results'),
@@ -857,10 +871,10 @@ def display_page(pathname):
 
         return results
 
-    else: # Else
-        return start.layout # Return the search page
+    else:  # Else
+        return start.layout  # Return the search page
 
 
 # Application starting command
 if __name__ == '__main__':
-    app.run_server(debug = True, host = configuration_get("honeycomb", "ip"))
+    app.run_server(debug=True, host=configuration_get("honeycomb", "ip"))
