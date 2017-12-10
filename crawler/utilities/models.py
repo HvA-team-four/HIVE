@@ -1,12 +1,13 @@
 from pony.orm import *
 from datetime import datetime
+from crawler.utilities.config import *
 
 db = Database()
 db.bind(
-    provider='mysql',
-    user='root',
-    passwd='root',
-    db='scotchbox'
+    provider=configuration_get("database", "provider"),
+    user=configuration_get("database", "username"),
+    passwd=configuration_get("database", "password"),
+    db=configuration_get("database", "database")
 )
 
 

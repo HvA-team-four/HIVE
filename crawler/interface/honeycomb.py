@@ -75,13 +75,18 @@ app.layout = html.Div([
 
 
 ###################################################################################
-###################################################################################
-# NORMAL SEARCH
-###################################################################################
+# SEARCH pages callback
+#
+# This block contains all functions which are required for a right
+# functioning of the two search pages (normal search, keyword search).
 ###################################################################################
 
-# Callback for searching data by user input
-@app.callback(Output('normal_search_results', 'children'), [Input('normal_search', 'n_clicks')], [State('search_bar', 'value'), State('normal_date_picker', 'start_date'), State('normal_date_picker', 'end_date')])
+# Normal search query
+@app.callback(Output('normal_search_results', 'children'),
+              [Input('normal_search', 'n_clicks')],
+              [State('search_bar', 'value'),
+               State('normal_date_picker', 'start_date'),
+               State('normal_date_picker', 'end_date')])
 def display_results(n_clicks, values, start_date, end_date):
     values_array = (re.findall(r"[\w']+", values))
 
@@ -102,12 +107,13 @@ def display_results(n_clicks, values, start_date, end_date):
         results = html.Div([
             html.Div([
                 html.H4("Results"),
-                html.P(
-                    "The following table displays all the search results which were retrieved based on your search query.",
-                    style={"width": 370,
-                           "marginBottom": 15}),
-                html.Table(
 
+                html.P('''The following table displays all the search results which were retrieved based 
+                on your search query.''',
+                       style={"width": 370,
+                              "marginBottom": 15}),
+
+                html.Table(
                     [html.Tr([html.Th(col) for col in df.columns], className="tableHeader")] +
 
                     [html.Tr([
@@ -123,19 +129,23 @@ def display_results(n_clicks, values, start_date, end_date):
 
     return results
 
-###################################################################################
-###################################################################################
-# KEYWORD SEARCH
-###################################################################################
-###################################################################################
 
 # Callback for refreshing the list of selectable keywords
-@app.callback(Output('keywordList', 'options'), [Input('refresh-keyword-list', 'n_clicks')], events=[Event('interval-component-30', 'interval')])
+# this can be done manually but is also refreshed
+# automatically every 30 seconds.
+@app.callback(Output('keywordList', 'options'),
+              [Input('refresh-keyword-list', 'n_clicks')],
+              events=[Event('interval-component-30', 'interval')])
 def refresh_keyword_list(n_clicks):
     return keywordsearch.load_keywords()
 
-# Callback for searching data by keyword
-@app.callback(Output('keyword_search_results', 'children'), [Input('keyword_search', 'n_clicks')], [State('keywordList', 'value'), State('keyword_date_picker', 'start_date'), State('keyword_date_picker', 'end_date')])
+
+# Keyword search query
+@app.callback(Output('keyword_search_results', 'children'),
+              [Input('keyword_search', 'n_clicks')],
+              [State('keywordList', 'value'),
+               State('keyword_date_picker', 'start_date'),
+               State('keyword_date_picker', 'end_date')])
 def display_results(n_clicks, values, start_date, end_date):
     keywordsearch.save_query(values, start_date, end_date) # Save query in database
 
@@ -156,12 +166,12 @@ def display_results(n_clicks, values, start_date, end_date):
         results = html.Div([
             html.Div([
                 html.H4("Results"),
-                html.P(
-                    "The following table displays all the search results which were retrieved based on your search query.",
-                    style={"width": 370,
-                           "marginBottom": 15}),
-                html.Table(
+                html.P('''The following table displays all the search results which were retrieved based 
+                on your search query.''',
+                       style={"width": 370,
+                              "marginBottom": 15}),
 
+                html.Table(
                     [html.Tr([html.Th(col) for col in df.columns], className="tableHeader")] +
 
                     [html.Tr([
@@ -177,216 +187,253 @@ def display_results(n_clicks, values, start_date, end_date):
 
     return results
 
+
 ###################################################################################
+# SETTINGS pages callback
+#
+# This block contains all functions which are required for the application's
+# settings page functions and the User Guide page.
 ###################################################################################
-# KEYWORD SETTINGS
-###################################################################################
-###################################################################################
+
+####################
+# Keyword settings
+####################
 
 # Loading the value of StatisticsBox one - total amount of KEYWORDS
-@app.callback(Output('KeywordStatisticsBox1', 'children'), [Input('refresh-keyword-statistics', 'n_clicks')], events=[Event('interval-component-30', 'interval')])
+@app.callback(Output('KeywordStatisticsBox1', 'children'),
+              [Input('refresh-keyword-statistics', 'n_clicks')],
+              events=[Event('interval-component-30', 'interval')])
 def refresh_keyword_statistics(n_clicks):
-    return keywordsettings.load_statistics('total') # Parameter total indicates the total amount of keywords
+    return keywordsettings.load_statistics('total')  # Parameter total indicates the total amount of keywords
+
 
 # Loading the value of StatisticsBox two - total amount of active KEYWORDS
-@app.callback(Output('KeywordStatisticsBox2', 'children'), [Input('refresh-keyword-statistics', 'n_clicks')], events=[Event('interval-component-30', 'interval')])
+@app.callback(Output('KeywordStatisticsBox2', 'children'),
+              [Input('refresh-keyword-statistics', 'n_clicks')],
+              events=[Event('interval-component-30', 'interval')])
 def refresh_keyword_statistics(n_clicks):
-    return keywordsettings.load_statistics('active') # Parameter active indicates the active amount of keywords
+    return keywordsettings.load_statistics('active')  # Parameter active indicates the active amount of keywords
+
 
 # Loading the value of StatisticsBox three - no information yet
-@app.callback(Output('KeywordStatisticsBox3', 'children'), [Input('refresh-keyword-statistics', 'n_clicks')], events=[Event('interval-component-30', 'interval')])
+@app.callback(Output('KeywordStatisticsBox3', 'children'),
+              [Input('refresh-keyword-statistics', 'n_clicks')],
+              events=[Event('interval-component-30', 'interval')])
 def refresh_keyword_statistics(n_clicks):
-    return keywordsettings.load_statistics('matches') # Parameter matches shows the amount of keyword matches
+    return keywordsettings.load_statistics('matches')  # Parameter matches shows the amount of keyword matches
+
 
 # Callback for adding KEYWORDS to the database
-@app.callback(Output('output-container-keyword', 'children'), [Input('keywordsubmit', 'n_clicks')], [State('keyword-input-box', 'value')])
+@app.callback(Output('output-container-keyword', 'children'),
+              [Input('keywordsubmit', 'n_clicks')],
+              [State('keyword-input-box', 'value')])
 @db_session
 def insert_keyword(n_clicks, value):
-    result = select(p for p in Keyword if p.keyword == value).count() # Retrieving the amount of keywords in the database
+    result = select(p for p in Keyword if p.keyword == value).count()  # Retrieving the amount of keywords
 
-    if not value: # If the user has not submitted anything in the input field
-        return html.Div('Please insert a value in the input field.', # Output warning message
+    if not value:  # If the user has not submitted anything in the input field
+        return html.Div('Please insert a value in the input field.',  # Output warning message
                         id='negative_warning') # Negative style (red)
 
-    elif result != 0: # Check if the keyword already exists in the database
-        return html.Div('Keyword already exists in database', # Output warning message
+    elif result != 0:  # Check if the keyword already exists in the database
+        return html.Div('Keyword already exists in database',  # Output warning message
                         id='negative_warning') # Negative style (red)
 
-    else: # If keyword does not exist yet
-        try: # Trying
+    else:  # If keyword does not exist yet
+        try:  # Trying
             keyword_object = Keyword(
                 keyword=value,
                 active=True
-            ) # Defining an object of class Keyword
-            commit() # Committing the object (sending it to database)
+            )  # Defining an object of class Keyword
+            commit()  # Committing the object (sending it to database)
 
-            return html.Div('Keyword: {} has been added to the database.'.format(value), # Output warning message
-                            id='positive_warning') # Positive style (green)
+            return html.Div('Keyword: {} has been added to the database.'.format(value),  # Output warning message
+                            id='positive_warning')  # Positive style (green)
 
         except:
-            return html.Div('An unexpected error occurred', # Output warning message
-                            id='negative_warning') # Negative style (red)
+            return html.Div('An unexpected error occurred',  # Output warning message
+                            id='negative_warning')  # Negative style (red)
+
 
 # Callback used for loading the KEYWORD table on the KEYWORD Settings page
-@app.callback(Output('keyword-table', 'rows'), [Input('reload-button', 'n_clicks')])
+@app.callback(Output('keyword-table', 'rows'),
+              [Input('reload-button', 'n_clicks')])
 @db_session
 def reload_table(n_clicks):
-    results = select(p for p in Keyword)[:] # Retrieving all keywords from the database
+    results = select(p for p in Keyword)[:]  # Retrieving all keywords from the database
 
-    global df # Defining a global dataframe so the keywords can be loaded from the keywords search page
-    df = pd.DataFrame(columns=['Keyword', # Defining a dataframe with the columns: keyword and status
+    global df  # Defining a global dataframe so the keywords can be loaded from the keywords search page
+
+    df = pd.DataFrame(columns=['Keyword',  # Defining a dataframe with the columns: keyword and status
                                'Status'])
 
-    for result in results: # For each keyword in the table do:
-        if result.active == True: # If the active column is true, then set status equal to the word Active
-            status  = 'Active'
+    for result in results:  # For each keyword in the table do:
+        if result.active:  # If the active column is true, then set status equal to the word Active
+            status = 'Active'
 
-        else: # If not active then say Inactive
+        else:  # If not active then say Inactive
             status = 'Inactive'
-
 
         df = df.append({'Keyword': result.keyword,
                         'Status': status},
-                       ignore_index=True) # Add the record to a dataframe which can then be displayed in the table
+                       ignore_index=True)  # Add the record to a dataframe which can then be displayed in the table
 
-    return df.to_dict('records') # Return each record in the dataframe as a dictionary.
+    return df.to_dict('records')  # Return each record in the dataframe as a dictionary.
+
 
 # Callback for turning KEYWORDS ACTIVE
-@app.callback(Output('activate_warning', 'children'), [Input('keyword_set_active', 'n_clicks')], [State('keyword-table', 'selected_row_indices')])
+@app.callback(Output('activate_warning', 'children'),
+              [Input('keyword_set_active', 'n_clicks')],
+              [State('keyword-table', 'selected_row_indices')])
 @db_session
 def insert_url(n_clicks, selected_row_indices):
-    try: # Try changing, if anything goes wrong, a warning message will be displayed instead of an application crash
-        if 'df' not in globals(): # Check if the table is loaded and the user is not trying to set the "No data loaded" active
-            return html.Div('Please load the keyword table first.', # Warning message
-                            id='negative_warning') # Red style (error style)
+    try:  # Try changing, if anything goes wrong, a warning message will be displayed instead of an application crash
+        if 'df' not in globals():  # Check if the table is loaded
+            return html.Div('Please load the keyword table first.',  # Warning message
+                            id='negative_warning')  # Red style (error style)
 
-        elif not selected_row_indices: # If there are no rows selected
-            return html.Div('Please select a keyword.', # Warning message
-                            id='negative_warning') # Red style (error style)
+        elif not selected_row_indices:  # If there are no rows selected
+            return html.Div('Please select a keyword.',  # Warning message
+                            id='negative_warning')  # Red style (error style)
 
         else:
-            records = df.iloc[selected_row_indices].Keyword # Retrieve the selected rows from the dataframe variable
+            records = df.iloc[selected_row_indices].Keyword  # Retrieve the selected rows from the dataframe variable
 
-            for record in records: # For each selected keyword
-                results = select(p for p in Keyword if p.keyword == record) # Retrieve the keyword object from the database
+            for record in records:  # For each selected keyword
+                results = select(p for p in Keyword if p.keyword == record)  # Retrieve the keyword object
 
-                for result in results: # This needs to be unwrapped because the result is a ponyORM object.
-                    result.active = True # Setting the active field to true
-                    commit() # Committing the action
+                for result in results:  # This needs to be unwrapped because the result is a ponyORM object.
+                    result.active = True  # Setting the active field to true
+                    commit()  # Committing the action
 
-            return html.Div('The selected records are set active.', # Warning message
-                            id='positive_warning') # Green style (positive style)
+            return html.Div('The selected records are set active.',  # Warning message
+                            id='positive_warning')  # Green style (positive style)
 
-    except: # If anything unexpected occurs
-        return html.Div('An unexpected error occurred.', # Warning messsage
-                        id='negative_warning') # Red style (error style)
+    except:  # If anything unexpected occurs
+        return html.Div('An unexpected error occurred.',  # Warning messsage
+                        id='negative_warning')  # Red style (error style)
+
 
 # Callback for turning KEYWORDS INACTIVE
-@app.callback(Output('inactivate_warning', 'children'), [Input('keyword_set_inactive', 'n_clicks')], [State('keyword-table', 'selected_row_indices')])
+@app.callback(Output('inactivate_warning', 'children'),
+              [Input('keyword_set_inactive', 'n_clicks')],
+              [State('keyword-table', 'selected_row_indices')])
 @db_session
 def insert_url(n_clicks, selected_row_indices):
-    try: # Try changing, if anything goes wrong, a warning message will be displayed instead of an application crash
-        if 'df' not in globals(): # Check if the table is loaded and the user is not trying to set the "No data loaded" inactive
-            return html.Div('Please load the keyword table first.', # Warning message
-                            id='negative_warning') # Red style (error style)
+    try:  # Try changing, if anything goes wrong, a warning message will be displayed instead of an application crash
+        if 'df' not in globals():  # Check if the table is loaded
+            return html.Div('Please load the keyword table first.',  # Warning message
+                            id='negative_warning')  # Red style (error style)
 
-        elif not selected_row_indices: # If there are no rows selected
-            return html.Div('Please select a keyword.', # Warning message
-                            id='negative_warning') # Red style (error style)
+        elif not selected_row_indices:  # If there are no rows selected
+            return html.Div('Please select a keyword.',  # Warning message
+                            id='negative_warning')  # Red style (error style)
 
         else:
-            records = df.iloc[selected_row_indices].Keyword # Retrieve the selected rows from the dataframe variable
+            records = df.iloc[selected_row_indices].Keyword  # Retrieve the selected rows from the dataframe variable
 
-            for record in records: # For each selected keyword
-                results = select(p for p in Keyword if p.keyword == record) # Retrieve the keyword object from the database
+            for record in records:  # For each selected keyword
+                results = select(p for p in Keyword if p.keyword == record)  # Retrieve the keyword object
 
-                for result in results: # This needs to be unwrapped because the result is a ponyORM object.
-                    result.active = False # Setting the active field to false
-                    commit() # Comitting the action
+                for result in results:  # This needs to be unwrapped because the result is a ponyORM object.
+                    result.active = False  # Setting the active field to false
+                    commit()  # Comitting the action
 
-            return html.Div('The selected records are set inactive.', # Warning message
-                            id='positive_warning') # Green style (positive style)
+            return html.Div('The selected records are set inactive.',  # Warning message
+                            id='positive_warning')  # Green style (positive style)
 
-    except: # If anything unexpected occurs
-        return html.Div('An unexpected error occurred.', # Warning messsage
-                        id='negative_warning') # Red style (error style)
+    except:  # If anything unexpected occurs
+        return html.Div('An unexpected error occurred.',  # Warning messsage
+                        id='negative_warning')  # Red style (error style)
 
-###################################################################################
-###################################################################################
-# URL SETTINGS
-###################################################################################
-###################################################################################
+################
+# URL settings
+################
+
 
 # Loading the value of StatisticsBox one - total amount of URLs in the database
-@app.callback(Output('UrlStatisticsBox1', 'children'), [Input('refresh-url-statistics', 'n_clicks')], events=[Event('interval-component-5', 'interval')])
+@app.callback(Output('UrlStatisticsBox1', 'children'),
+              [Input('refresh-url-statistics', 'n_clicks')],
+              events=[Event('interval-component-5', 'interval')])
 def refresh_url_statistics(n_clicks):
-    return urlsettings.load_statistics('total') # Parameter total indicates the total amount of keywords
+    return urlsettings.load_statistics('total')  # Parameter total indicates the total amount of keywords
+
 
 # Loading the value of StatisticsBox two - total amount of scanned URLs
-@app.callback(Output('UrlStatisticsBox2', 'children'), [Input('refresh-url-statistics', 'n_clicks')], events=[Event('interval-component-5', 'interval')])
+@app.callback(Output('UrlStatisticsBox2', 'children'),
+              [Input('refresh-url-statistics', 'n_clicks')],
+              events=[Event('interval-component-5', 'interval')])
 def refresh_url_statistics(n_clicks):
-    return urlsettings.load_statistics('scanned') # Parameter scanned indicates the scanned amount of keywords
+    return urlsettings.load_statistics('scanned')  # Parameter scanned indicates the scanned amount of keywords
+
 
 # Loading the value of StatisticsBox three - total amount of scraped URLs
-@app.callback(Output('UrlStatisticsBox3', 'children'), [Input('refresh-url-statistics', 'n_clicks')], events=[Event('interval-component-5', 'interval')])
+@app.callback(Output('UrlStatisticsBox3', 'children'),
+              [Input('refresh-url-statistics', 'n_clicks')],
+              events=[Event('interval-component-5', 'interval')])
 def refresh_url_statistics(n_clicks):
-    return urlsettings.load_statistics('scraped') # Parameter scraped indicates the total scraped of keywords
+    return urlsettings.load_statistics('scraped')  # Parameter scraped indicates the total scraped of keywords
+
 
 # Callback for adding URLs to the database
-@app.callback(Output('output-container-button', 'children'), [Input('urlsubmit', 'n_clicks')], [State('input-box', 'value')])
+@app.callback(Output('output-container-button', 'children'),
+              [Input('urlsubmit', 'n_clicks')],
+              [State('input-box', 'value')])
 @db_session
 def insert_url(n_clicks, value):
-    result = select(p for p in Url if p.url == value).count() # Retrieving the amount of keywords in the database
+    result = select(p for p in Url if p.url == value).count()  # Retrieving the amount of keywords in the database
 
-    if not value: # If the user has not submitted anything in the input field
-        return html.Div('Please insert a value in the input field.', # Output warning message
-                        id='negative_warning') # Negative style (red)
+    if not value:  # If the user has not submitted anything in the input field
+        return html.Div('Please insert a value in the input field.',  # Output warning message
+                        id='negative_warning')  # Negative style (red)
 
     elif result != 0:  # Check if the url already exists in the database
-        return html.Div('URL already exists in database', # Output warning message
-                        id='negative_warning') # Negative style (red)
-    else: # If url does not exist yet
-        try: # Trying
+        return html.Div('URL already exists in database',  # Output warning message
+                        id='negative_warning')  # Negative style (red)
+    else:  # If url does not exist yet
+        try:  # Trying
             with db_session:
                 url_object = Url(
                     url=value,
                     date_added=datetime.now(),
                     priority_scrape=True,
                     priority_scan=True
-                ) # Defining an object of class Keyword
-                commit() # Comitting th object (sending it to database)
+                )  # Defining an object of class Keyword
+                commit()  # Comitting th object (sending it to database)
 
-            return html.Div('URL: {} has been added to the database.'.format(value), # Output warning message
+            return html.Div('URL: {} has been added to the database.'.format(value),  # Output warning message
                             id='positive_warning') # Positive style (green)
 
         except:
-            return html.Div('An unexpected error occurred', # Output warning message
-                            id='negative_warning') # Negative style (red)
+            return html.Div('An unexpected error occurred',  # Output warning message
+                            id='negative_warning')  # Negative style (red)
+
 
 # Callback used for loading the URL table on the URL Settings page
-@app.callback(Output('url-table', 'rows'), [Input('reload-button', 'n_clicks')])
+@app.callback(Output('url-table', 'rows'),
+              [Input('reload-button', 'n_clicks')])
 @db_session
 def reload_table(n_clicks):
-    results = select(p for p in Url)[:] # Retrieving all urls from the database
+    results = select(p for p in Url)[:]  # Retrieving all urls from the database
 
-    df = pd.DataFrame(columns=['URL', # Defining a dataframe
+    df = pd.DataFrame(columns=['URL',  # Defining a dataframe
                                'Date Added',
                                'Date Scan',
                                'Date Scrape',
                                'Priority Scrape',
                                'Priority Scan'])
 
-    for result in results: # For each keyword in the table do:
-        if result.priority_scan == True: # If the priority_scan column is true
+    for result in results:  # For each keyword in the table do:
+        if result.priority_scan:  # If the priority_scan column is true
             priorityscan = 'Yes'
 
-        else: # If not true then say 'No'
+        else:  # If not true then say 'No'
             priorityscan = 'No'
 
-        if result.priority_scrape == True: # If the priority_scan column is true
+        if result.priority_scrape:  # If the priority_scan column is true
             priorityscrape = 'Yes'
 
-        else: # If not true then say 'No
+        else:  # If not true then say 'No
             priorityscrape = 'No'
 
         df = df.append({'URL': result.url,
@@ -394,15 +441,15 @@ def reload_table(n_clicks):
                         'Date Scan': result.date_scanned,
                         'Date Scrape': result.date_scraped,
                         'Priority Scrape': priorityscrape,
-                        'Priority Scan': priorityscan}, ignore_index=True) # Add the record to a dataframe which can then be displayed in the table
+                        'Priority Scan': priorityscan}, ignore_index=True)  # Add the record to a dataframe
 
-    return df.to_dict('records') # Return each record in the dataframe as a dictionary.
+    return df.to_dict('records')  # Return each record in the dataframe as a dictionary.
 
-###################################################################################
-###################################################################################
-# CONTENT BLOCK SETTINGS
-###################################################################################
-###################################################################################
+#########################
+# Content-block settings
+#########################
+
+
 # Loading the value of StatisticsBox one - total amount of active blockrules in the database
 @app.callback(Output('BlockStatisticsBox1', 'children'), [Input('refresh-block-statistics', 'n_clicks')], events=[Event('interval-component-30', 'interval')])
 def refresh_url_statistics(n_clicks):
