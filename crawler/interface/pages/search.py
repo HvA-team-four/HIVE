@@ -9,6 +9,21 @@ import re
 
 
 @db_session
+def save_query(keywords, start_date, end_date):
+    search_type = 'Normal Search for "'
+    keywords_search = ', '.join(map(str, keywords))
+    start_date_search = str(start_date)
+    end_date_search = str(end_date)
+    query = search_type + keywords_search + '" From: ' + start_date_search + " Till: " + end_date_search
+
+    content_object = Search(
+        query=query,
+        date_searched=datetime.now()
+    )
+    commit()
+
+
+@db_session
 def normal_search(keywords_array, keywords, start_date, end_date):
     df_id = 0
 

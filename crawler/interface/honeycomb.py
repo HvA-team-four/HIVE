@@ -89,6 +89,7 @@ app.layout = html.Div([
                State('normal_date_picker', 'end_date')])
 def display_results(n_clicks, values, start_date, end_date):
     values_array = (re.findall(r"[\w']+", values))
+    search.save_query(values_array, start_date, end_date)
 
     global df
     df = search.normal_search(values_array, values, start_date, end_date)
@@ -147,10 +148,10 @@ def refresh_keyword_list(n_clicks):
                State('keyword_date_picker', 'start_date'),
                State('keyword_date_picker', 'end_date')])
 def display_results(n_clicks, values, start_date, end_date):
-    keywordsearch.save_query(values, start_date, end_date) # Save query in database
+    keywordsearch.save_query(values, start_date, end_date)  # Save query in database
 
     global df
-    df = keywordsearch.keyword_search(values, start_date, end_date) # Search query
+    df = keywordsearch.keyword_search(values, start_date, end_date)  # Search query
 
     if df.empty:
         results = html.Div([
