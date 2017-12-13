@@ -6,6 +6,10 @@ import dash_html_components as html
 import dash_core_components as dcc
 from crawler.utilities.models import *
 
+df = pd.DataFrame(columns=['Query',
+                           'Date Searched'])
+
+df = df.append({'Query': 'No data loaded'}, ignore_index=True)
 
 layout = html.Div([
     html.H3('Search Log',
@@ -27,12 +31,15 @@ layout = html.Div([
 
     html.Br(),
 
-    # html.Div(
-    #     dt.DataTable(
-    #         sortable=True,
-    #         row_selectable=True,
-    #         filterable=True,
-    #         selected_row_indices=[],
-    #         id='keyword-table')
-    # ),
+    html.Br(),
+
+html.Br(),
+
+    html.Div(
+         dt.DataTable(
+            rows=df.to_dict('records'),
+            sortable=False,
+            filterable=True,
+            id='searchlog-table')
+    ),
 ], style={'paddingBottom': 55})

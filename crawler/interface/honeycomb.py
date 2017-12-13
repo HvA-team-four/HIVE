@@ -627,9 +627,9 @@ def insert_url(n_clicks, selected_row_indices):
                         id='positive_warning')  # Green style (positive style)
 
 
-################
+#####################
 # User Guide settings
-################
+#####################
 
 
 # Callback used for displaying an controlling the USER GUIDE tabs
@@ -749,6 +749,27 @@ Rules'''),
         return html.Div([
             "An unexpected error occurred."
         ])
+
+
+#####################
+# Search Log
+#####################
+
+# Callback used for loading the Search log
+@app.callback(Output('searchlog-table', 'rows'),
+              [Input('reload-button', 'n_clicks')])
+@db_session
+def reload_table(n_clicks):
+    results = select(p for p in Search).order_by(desc(Search.date_searched))[:]  # Retrieving all urls from the database
+
+    df = pd.DataFrame(columns=['Query',  # Defining a dataframe
+                               'Date Searched'])
+
+    for result in results:  # For each keyword in the table do:
+        df = df.append({'Query': result.query,
+                        'Date Searched': result.date_searched}, ignore_index=True)  # Add the record to a dataframe
+
+    return df.to_dict('records')  # Return each record in the dataframe as a dictionary.
 
 
 ###################################################################################
