@@ -4,6 +4,9 @@
 import dash_html_components as html
 import dash_core_components as dcc
 
+# This function builds up a variable which contains a Dash element with the End-User License Agreement
+# this EULA has to be accepted by every user and pop up when u users clicks on LICENSE AGREEMENT in the
+# terms of use bar.
 hive_termsofuse = html.Div(
     html.Div([
         html.H3("End-User License Agreement"),
@@ -38,22 +41,31 @@ for use in a operational environment. This application is licensed under the MIT
 license, which is available in article 2.  
 
 ###### Article 3 - Service and maintenance
-3.1 The organisation using this application is responsible for maintaining the code. **FOUR. will not be hold responsible for any interruptions during running the application and FOUR. will not be available for service-requests. 
+3.1 The organisation using this application is responsible for maintaining the code. **FOUR. will not be hold 
+responsible for any interruptions during running the application and FOUR. will not be available for service-requests. 
 
-3.2 This application comes without warranty or service. **FOUR.** cannot be hold responsible for malfunction of the application and any effects of malfunction. 
+3.2 This application comes without warranty or service. **FOUR.** cannot be hold responsible for malfunction of the 
+application and any effects of malfunction. 
 
 ###### Article 4 - Effects
 4.1 Using this application can cause websites to block the IP-address of the organization using the application. 
 
 ###### Article 5 - Data an illegal content
-5.1 **FOUR.** is not responsible for any data, legal or illegal, that is scraped/retrieved by the crawler and stored in the database. 
+5.1 **FOUR.** is not responsible for any data, legal or illegal, that is scraped/retrieved by the crawler and stored in 
+the database. 
 
-5.2 The application makes NO use of a VPN connection to connect to the dark web, a TOR proxy is used to crawl the dark web. 
+5.2 The application makes NO use of a VPN connection to connect to the dark web, a TOR proxy is used to crawl the dark
+ web. 
 
-5.3 The application stores all content/data from the websites it crawles in the database. By default, the application does not block any illegal content and the interface does not provide a way to delete illegal content from the database. Neither **FOUR.** or the Hogeschool van Amsterdam are responsible for the possibility of illegal content being stored.
+5.3 The application stores all content/data from the websites it crawles in the database. By default, the application 
+does not block any illegal content and the interface does not provide a way to delete illegal content from the 
+database. Neither **FOUR.** or the Hogeschool van Amsterdam are responsible for the possibility of illegal content 
+being stored.
 
 ###### Article 6 - Usage and searches
-6.1 The application provides an interface which enables users to search the database for content. The application does not automatically block searches for illegal content, neither **FOUR.** or the Hogeschool van Amsterdam are responsible for (illegal) searches done by users of the application. 
+6.1 The application provides an interface which enables users to search the database for content. The application does 
+not automatically block searches for illegal content, neither **FOUR.** or the Hogeschool van Amsterdam are responsible 
+for (illegal) searches done by users of the application. 
 '''
                          )], className="termsText"),
         html.Button('Close', id='closeTerms')
@@ -61,6 +73,8 @@ license, which is available in article 2.
     ), className="termsOfUseBackground"
 )
 
+# This is the orange bottom bar of the application which contains a link to the EULA and notifies the user about
+# the EULA he/she automatically accepts by using the application.
 hive_bottombar = html.Div([
     "By using this application, you agree to the",
     html.Button('License Agreement', className="openTermsButton", id="TermsButton")
