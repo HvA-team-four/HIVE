@@ -1,8 +1,4 @@
-from datetime import datetime
-
-from pony.orm import *
-
-from models import *
+from utilities.models import *
 
 
 @db_session

@@ -6,7 +6,7 @@ db.bind(
     provider='mysql',
     user='root',
     passwd='root',
-    db='scotchbox'
+    db='HIVE'
 )
 
 
@@ -67,6 +67,5 @@ class Block(db.Entity):
     active = Required(bool)
 
 
-
-#sql_debug(True)
+# sql_debug(True)
 db.generate_mapping(create_tables=True)

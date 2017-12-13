@@ -2,6 +2,6 @@
 
 sudo apt-get install libzmq-dev libevent-dev python-dev python-virtualenv -y
 
-virtualenv /opt/circus
-cd /opt/circus
+virtualenv /opt/HIVE
+cd /opt/HIVE
 bin/pip install circus

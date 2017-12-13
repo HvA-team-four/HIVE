@@ -61,7 +61,8 @@ def hash_content(content):
     hex_dig = hash_object.hexdigest()
     return hex_dig
 
-@db_session
+
+@db_session(optimistic=False)
 def start_bee():
     log.debug("Bee has been started")
     while True:

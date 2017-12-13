@@ -35,7 +35,7 @@ Vagrant.configure("2") do |config|
         sh.path = "tools/install_pip.sh"
     end
 
-    # - install PIP
+    # - install zeromq
     config.vm.provision :shell do |sh|
         sh.privileged = true # this means it runs as 'root'
         sh.path = "tools/install_zeromq.sh"
