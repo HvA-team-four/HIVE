@@ -34,7 +34,8 @@ def update_url(url):
 
 @db_session
 def get_urls_from_database():
-    return select(u for u in Url if u.date_scanned is None).order_by(desc(Url.priority_scan))[:200]
+    return select(u for u in Url if u.date_scanned is None).order_by(desc(Url.priority_scan))[:8]
+
 
 
 def get_urls_from_results(urls, results):
@@ -48,6 +49,7 @@ def get_urls_from_results(urls, results):
             urls_in_results.append(format_url(url.url, url_in_content))
 
     return urls_in_results
+
 
 
 @db_session(optimistic=False)
@@ -77,4 +79,3 @@ async def main(loop):
 if __name__ == '__main__':
     loop = asyncio.get_event_loop()
     loop.run_until_complete(main(loop))
-
