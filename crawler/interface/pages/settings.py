@@ -48,5 +48,15 @@ layout = html.Div([
                 className="settingIcon"),
             html.P("User Guide", className='settingTitle')
         ], href="userguide", className='setting'),
+
+        html.A([
+            html.Img(
+                src=configuration_get("styling", "imagepath") + "settings/searchlog.png",
+                className="settingIcon"),
+            html.P("Search Log", className='settingTitle')
+        ], href="searchlog", className='setting'),
+
+
+
     ], className='hivesettings')
 ])

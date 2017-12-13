@@ -18,6 +18,7 @@ from interface.pages import urlsettings
 from interface.pages import blocksettings
 from interface.pages import configurationsettings
 from interface.pages import userguide
+from interface.pages import searchlog
 from crawler.utilities.models import *
 from crawler.utilities.config import *
 from datetime import datetime
@@ -82,6 +83,8 @@ app.layout = html.Div([
 ###################################################################################
 
 # Normal search query
+# This function is called from the search page when a users inputs a query and
+# clicks on the search button. The start_date and end_date are inputted as well.
 @app.callback(Output('normal_search_results', 'children'),
               [Input('normal_search', 'n_clicks')],
               [State('search_bar', 'value'),
@@ -89,22 +92,26 @@ app.layout = html.Div([
                State('normal_date_picker', 'end_date')])
 def display_results(n_clicks, values, start_date, end_date):
     values_array = (re.findall(r"[\w']+", values))
-    search.save_query(values_array, start_date, end_date)
+    search.save_query(values_array, start_date, end_date)  # Save the query in the database (logging)
 
-    global df
+    global df  # Creating a global variable in which the results will be stored
+
+    # The following function calls the normal_search() function which is located at the
+    # Search.py file, it provides the required parameters. Results are stored in the
+    # Global dataframe
     df = search.normal_search(values_array, values, start_date, end_date)
 
-    if df.empty:
+    if df.empty:  # Check if the dataframe contains any results
         results = html.Div([
             html.Div([
                 html.H4("Results"),
-                html.P(
+                html.P(  # Display a no results message
                     "No results were found based on your search",
                     style={"width": 370,
                            "marginBottom": 15}),
             ], className="content")
         ], className="results_section")
-    else:
+    else:  # If any results were returned
         results = html.Div([
             html.Div([
                 html.H4("Results"),
@@ -114,6 +121,8 @@ def display_results(n_clicks, values, start_date, end_date):
                        style={"width": 370,
                               "marginBottom": 15}),
 
+                # The following function builds a dynamic HTML table based on the records in the
+                # Global dataframe. The entire output-element is stored in the "results" variable
                 html.Table(
                     [html.Tr([html.Th(col) for col in df.columns], className="tableHeader")] +
 
@@ -128,7 +137,7 @@ def display_results(n_clicks, values, start_date, end_date):
                 )], className="content")
         ], className="results_section")
 
-    return results
+    return results  # Return the results, they will be displayed as children in the normal_search_results element.
 
 
 # Callback for refreshing the list of selectable keywords
@@ -138,32 +147,41 @@ def display_results(n_clicks, values, start_date, end_date):
               [Input('refresh-keyword-list', 'n_clicks')],
               events=[Event('interval-component-30', 'interval')])
 def refresh_keyword_list(n_clicks):
+    # This function loads the keywords table every 30 seconds. This is done because the user is
+    # able to add new keywords, which of course need to be loaded in order for the user to search
+    # on them. This function (load_keywords()) is located at the keywordsearch.py file
     return keywordsearch.load_keywords()
 
 
 # Keyword search query
+# This function is called from the keyword-search page when a users inputs a query and
+# clicks on the search button. The start_date and end_date are inputted as well.
 @app.callback(Output('keyword_search_results', 'children'),
               [Input('keyword_search', 'n_clicks')],
               [State('keywordList', 'value'),
                State('keyword_date_picker', 'start_date'),
                State('keyword_date_picker', 'end_date')])
 def display_results(n_clicks, values, start_date, end_date):
-    keywordsearch.save_query(values, start_date, end_date)  # Save query in database
+    keywordsearch.save_query(values, start_date, end_date)  # Save the query in the database (logging)
 
-    global df
-    df = keywordsearch.keyword_search(values, start_date, end_date)  # Search query
+    global df  # Creating a global variable in which the results will be stored
 
-    if df.empty:
+    # The following function calls the keyword_search() function which is located at the
+    # Keywordsearch.py file, it provides the required parameters. Results are stored in the
+    # Global dataframe
+    df = keywordsearch.keyword_search(values, start_date, end_date)
+
+    if df.empty: # Check if the dataframe contains any results
         results = html.Div([
             html.Div([
                 html.H4("Results"),
-                html.P(
+                html.P(  # Display a no results message
                     "No results were found based on your keyword search",
                     style={"width": 370,
                            "marginBottom": 15}),
                 ], className="content")
             ], className="results_section")
-    else:
+    else:  # If any results were returned
         results = html.Div([
             html.Div([
                 html.H4("Results"),
@@ -172,6 +190,8 @@ def display_results(n_clicks, values, start_date, end_date):
                        style={"width": 370,
                               "marginBottom": 15}),
 
+                # The following function builds a dynamic HTML table based on the records in the
+                # Global dataframe. The entire output-element is stored in the "results" variable
                 html.Table(
                     [html.Tr([html.Th(col) for col in df.columns], className="tableHeader")] +
 
@@ -186,7 +206,7 @@ def display_results(n_clicks, values, start_date, end_date):
                 )], className="content")
         ], className="results_section")
 
-    return results
+    return results  # Return the results, they will be displayed as children in the keyword_search_results element.
 
 
 ###################################################################################
@@ -227,6 +247,8 @@ def refresh_keyword_statistics(n_clicks):
 
 
 # Callback for adding KEYWORDS to the database
+# This function is called from the keywordsettings page when a uses clicks the submit button.
+# The entered keyword is stored in the database and a message wil be displayed.
 @app.callback(Output('output-container-keyword', 'children'),
               [Input('keywordsubmit', 'n_clicks')],
               [State('keyword-input-box', 'value')])
@@ -259,6 +281,7 @@ def insert_keyword(n_clicks, value):
 
 
 # Callback used for loading the KEYWORD table on the KEYWORD Settings page
+# This function is called from the keywordsettings page when a uses clicks the load_table button.
 @app.callback(Output('keyword-table', 'rows'),
               [Input('reload-button', 'n_clicks')])
 @db_session
@@ -380,6 +403,8 @@ def refresh_url_statistics(n_clicks):
 
 
 # Callback for adding URLs to the database
+# This function is called from the urlsettings page when a uses clicks the submit button.
+# The entered url is stored in the database and a message wil be displayed.
 @app.callback(Output('output-container-button', 'children'),
               [Input('urlsubmit', 'n_clicks')],
               [State('input-box', 'value')])
@@ -777,6 +802,9 @@ def display_page(pathname):
 
     elif pathname == '/pages/userguide':
         return userguide.layout
+
+    elif pathname == '/pages/searchlog':
+        return searchlog.layout
 
     elif pathname.startswith('/pages/results'):  # If the detailed results page is retrieved with an ID
         try:

@@ -8,18 +8,24 @@ from crawler.utilities.models import *
 import re
 
 
+# This function is used to save the user's query in the database
+# These search queries can be retrieved to view what users have been looking for
 @db_session
 def save_query(keywords, start_date, end_date):
+    # Composing the string
     search_type = 'Normal Search for "'
     keywords_search = ', '.join(map(str, keywords))
     start_date_search = str(start_date)
     end_date_search = str(end_date)
     query = search_type + keywords_search + '" From: ' + start_date_search + " Till: " + end_date_search
 
+    # Creating a database object to be stored
     content_object = Search(
         query=query,
         date_searched=datetime.now()
     )
+
+    # Committing the objects and closing the session
     commit()
 
 

@@ -7,34 +7,44 @@ import dash_core_components as dcc
 from crawler.utilities.models import *
 
 
+# This function is used to save the user's query in the database
+# These search queries can be retrieved to view what users have been looking for
 @db_session
 def save_query(keywords, start_date, end_date):
+    # Composing the string
     search_type = 'Keyword Search for "'
     keywords_search = ', '.join(map(str, keywords))
     start_date_search = str(start_date)
     end_date_search = str(end_date)
     query = search_type + keywords_search + '" From: ' + start_date_search + " Till: " + end_date_search
 
+    # Creating a database object to be stored
     content_object = Search(
         query=query,
         date_searched=datetime.now()
     )
+
+    # Committing the objects and closing the session
     commit()
 
 
+# This function is used to reload the keywords table
+# This function is triggered by a callback
 @db_session
 def load_keywords():
-    results = select(p for p in Keyword if p.active)[:]
+    results = select(p for p in Keyword if p.active)[:]  # Retrieving all keywords from db
 
+    # Creating a dataframe
     df = pd.DataFrame(columns=['label',
                                'value'])
 
+    # Looping through the results and making up a dataframe
     for result in results:
         df = df.append({'label': result.keyword,
                         'value': result.keyword},
                        ignore_index=True)
 
-    return df.to_dict('records')
+    return df.to_dict('records')  # Returning the keywords as a table
 
 
 @db_session
