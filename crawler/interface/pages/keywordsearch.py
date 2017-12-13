@@ -7,10 +7,11 @@ import dash_core_components as dcc
 from crawler.utilities.models import *
 
 
-# This function is used to save the user's query in the database
-# These search queries can be retrieved to view what users have been looking for
 @db_session
 def save_query(keywords, start_date, end_date):
+    """The save_query function takes the keywords, start_date and end_date and stores the query in the database.
+    These queries can be retrieved to view what users have been looking for"""
+
     # Composing the string
     search_type = 'Keyword Search for "'
     keywords_search = ', '.join(map(str, keywords))
@@ -28,10 +29,11 @@ def save_query(keywords, start_date, end_date):
     commit()
 
 
-# This function is used to reload the keywords table
-# This function is triggered by a callback
 @db_session
 def load_keywords():
+    """The load_keywords function is used to reload the keywords table. This function is triggered by a callback.
+     The function returns a dataframe containing the results"""
+
     results = select(p for p in Keyword if p.active)[:]  # Retrieving all keywords from db
 
     # Creating a dataframe
@@ -49,9 +51,14 @@ def load_keywords():
 
 @db_session
 def keyword_search(keywords, start_date, end_date):
+    """The keyword_search function takes an array of keywords, a start_date and end_date. It returns a dataframe
+    containing the results of de keyword search query
+    """
+
     # df_id is used to increment a dataframe number for the details link
     df_id = 0
 
+    # Creating a dataframe
     dataframe = pd.DataFrame(columns=['id',
                                       'Domain',
                                       'Keywords',
@@ -59,13 +66,13 @@ def keyword_search(keywords, start_date, end_date):
                                       'Content',
                                       'Link'])
 
-    # Check if start_date is entered, if not set the time to the beginning of time
+    # Check if start_date is entered, else set the time to the beginning of time
     if start_date is None:
         dt_start_date = datetime.min
     else:
         dt_start_date = datetime.strptime(start_date, '%Y-%m-%d')
 
-    # check if end_date is entered, if not set the time is set to now
+    # check if end_date is entered, else set the time is set to now
     if end_date is None:
         dt_end_date = datetime.now()
     else:
@@ -75,19 +82,20 @@ def keyword_search(keywords, start_date, end_date):
     if keywords is None:
         return dataframe
 
-    # Creating the query to use when selecting keywords
+    # The static part of the keyword search query. Contains the search dates
     query = """select(c for c in Content
     if c.url.date_scraped <= dt_end_date
     and c.url.date_scraped >= dt_start_date
     and """
 
+    # Generating the dynamic part of the query, this part contains all the keywords entered
     query += ' in c.keyword.keyword and '.join('"{0}"'.format(w) for w in keywords) + ' in c.keyword.keyword )[:]'
-    print(query)
 
     while True:
             # Execute the query to retrieve contents from database.
             content_objects = eval(query)
 
+            # Generating a dataframe for each found object within the query
             for content in content_objects:
                 dataframe = dataframe.append({'id': content.id,
                                               'Domain': content.url.url,
