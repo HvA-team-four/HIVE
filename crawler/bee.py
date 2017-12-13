@@ -6,12 +6,11 @@ from pony.orm import *
 
 from utilities.models import *
 from utilities import log
-from utilities.tor import connect_to_tor
 from utilities.website import get_content_from_url
 
 @db_session
 def get_urls():
-    return select(u for u in Url if u.date_scraped is None).order_by(desc(Url.priority_scrape))
+    return select(u for u in Url if u.date_scraped is None).order_by(desc(Url.priority_scrape))[:16]
 
 
 @db_session
@@ -31,17 +30,19 @@ def filter_keywords(content):
 
 @db_session
 def save_content(url_id, cleaned, raw, hashed, keywords):
-    url = select(u for u in Url if u.id == url_id).get()
-    raw_string = raw.decode('utf-8')
-    content_object = Content(
-        url=url,
-        content=cleaned,
-        content_raw=raw_string,
-        content_raw_hash=hashed,
-        keyword=keywords
-    )
-    commit()
-
+    try:
+        url = select(u for u in Url if u.id == url_id).get()
+        raw_string = raw.decode('utf-8')
+        content_object = Content(
+            url=url,
+            content=cleaned,
+            content_raw=raw_string,
+            content_raw_hash=hashed,
+            keyword=keywords
+        )
+        commit()
+    except OptimisticCheckError as error:
+        print(str(error))
 
 @db_session
 def update_url(url):
@@ -60,11 +61,16 @@ def hash_content(content):
     hex_dig = hash_object.hexdigest()
     return hex_dig
 
-@db_session
+
+@db_session(optimistic=False)
 def start_bee():
     log.debug("Bee has been started")
     while True:
         urls = get_urls()
+        # update the url so different instances don't crawl the same url
+        for url in urls:
+            update_url(url)
+
         if len(urls) == 0:
             print("No URLs to be crawled, waiting for 60 seconds.")
             log.info('No URLs to be crawled, waiting for 60 seconds.')
@@ -86,8 +92,6 @@ def start_bee():
 
             except(ValueError, NameError, TypeError) as error:
                 log.error(str(error))
-            finally:
-                update_url(url)
 
 
 if __name__ == '__main__':

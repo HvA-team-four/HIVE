@@ -9,9 +9,9 @@ from utilities import tor
 # Add found URLs to the database if they are not being blocked by the content-block feature.
 @db_session
 def save_url(url):
-    blockedUrls = select(b.value for b in Block if b.type == "Url" and b.active)[:]
+    blocked_urls = select(b.value for b in Block if b.type == "Url" and b.active)[:]
 
-    if not any(x for x in blockedUrls if x in url):
+    if not any(x for x in blocked_urls if x in url):
         result = select(p for p in Url if p.url == url).count()
         if result == 0:
             url_object = Url(
@@ -24,6 +24,7 @@ def save_url(url):
 
     commit()
 
+
 # Update the URL which was being scraped
 @db_session
 def update_url(url):
@@ -34,6 +35,7 @@ def update_url(url):
 @db_session
 def get_urls_from_database():
     return select(u for u in Url if u.date_scanned is None).order_by(desc(Url.priority_scan))[:8]
+
 
 
 def get_urls_from_results(urls, results):
@@ -49,11 +51,15 @@ def get_urls_from_results(urls, results):
     return urls_in_results
 
 
-@db_session
+
+@db_session(optimistic=False)
 async def main(loop):
     log.debug('scout has been started')
     while True:
         urls = get_urls_from_database()
+        # update urls immediately to avoid different instances crawling the same urls
+        for url in urls:
+            update_url(url)
 
         if len(urls) == 0:
             print("No URLs to be crawled, waiting for 60 seconds.")
@@ -63,10 +69,6 @@ async def main(loop):
             continue
 
         results = await tor.get_content_from_urls(loop, urls)
-        # Update urls after crawling
-        for url in urls:
-            update_url(url)
-
         urls_from_content = get_urls_from_results(urls, results)
 
         for u in urls_from_content:
