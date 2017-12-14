@@ -34,4 +34,3 @@ async def get_content_from_urls(loop, urls):
             *[fetch(session, url.url) for url in urls],
             return_exceptions=True  # default is false, that would raise
         )
-

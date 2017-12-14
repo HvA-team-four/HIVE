@@ -1,10 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from interface.honeycomb import *
 import dash_html_components as html
-import dash_core_components as dcc
-from crawler.utilities.models import *
+from honeycomb import *
 
 df = pd.DataFrame(columns=['Query',
                            'Date Searched'])

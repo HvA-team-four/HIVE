@@ -1,8 +1,8 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from interface.honeycomb import *
-from crawler.utilities.models import *
+from utilities.models import *
+from honeycomb import *
 
 
 @db_session

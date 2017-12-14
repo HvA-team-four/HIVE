@@ -1,9 +1,9 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from interface.honeycomb import *
 import dash_html_components as html
-from crawler.utilities.config import *
+from utilities.config import *
+from honeycomb import *
 
 configlocation = location_configuration()
 csslocation = configuration_get("styling",
