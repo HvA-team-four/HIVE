@@ -99,6 +99,8 @@ def hash_content(content):
 
 @db_session(optimistic=False)
 def start_bee():
+    """The start_bee function starts all the tasks related to starting the bee.
+    When this function is called the bee will start working."""
     log.debug("Bee has been started")
     while True:
         urls = get_urls()
