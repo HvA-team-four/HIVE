@@ -6,7 +6,7 @@ import dash_core_components as dcc
 
 
 def user_guide(value):
-    if value == 1:
+    if value == 1: # Welcome page
         return html.Div([
             dcc.Markdown('''
 #### Start
@@ -18,7 +18,39 @@ HIVE is made by team FOUR. on behalf of the Hogeschool van Amsterdam. This appli
     warrenty as stated in the EULA (MIT license).'''),
         ])
 
-    elif value == 2:
+    elif value == 2:  # Search page
+        return html.Div([
+            dcc.Markdown(''' 
+#### Search
+On the [**Full-text search** page](/pages/search), you are able to view the following sections:
+
+###### Keywords on user input
+The Full-text search engine displays search results on the given keywords. It sorts the results based on the number of keywords
+that are found in the text. You can also filter on date. The search engine displays only results based on given keywords and 
+the given date.
+
+###### Multiple keywords
+For using multiple keywords, a space between the words is needed. For example: first second. The search engine displays 
+results based on one of multiple keywords. Results are ranked on on how many keywords are found. 
+The results that contains both keywords are high ranked. Results that contains one of the keywords, are lower ranked. 
+
+When you want to get only results based on multiple keywords, you have to specify the keywords with the + character.
+For example: +first +second. It displays only results that contains the multiple keywords. The results will ranked on 
+amount of keywords that are found. You have also the option to filter on date. 
+
+###### Detail page
+When the results are displayed, there is an option to see the detailed page. On the displayed page, the full web page
+content is displayed.'''),
+        ])
+
+    elif value == 3:  # Keyword search page
+        return html.Div([
+            dcc.Markdown(''' 
+#### Keyword Search
+Lorum Ipsum dolor sit amet.'''),
+        ])
+
+    elif value == 4:  # URL settings
         return html.Div([
             dcc.Markdown(''' 
 #### URL Settings
@@ -42,7 +74,7 @@ in the database. When using the **LOAD TABLE** button, the application will try 
 the database. When the application is loading the table, you will not be able to perform other tasks. '''),
         ])
 
-    elif value == 3:
+    elif value == 5:  # Keyword settings
         return html.Div([
             dcc.Markdown(''' 
 #### Keyword Settings
@@ -73,7 +105,7 @@ any longer but won't be removed from the database as well. As a user, you will s
 was matched before you set the keyword inactive.'''),
         ])
 
-    elif value == 4:
+    elif value == 6:  # Content-block settings
         return html.Div([
             dcc.Markdown(''' 
 #### Content Block Settings
@@ -117,37 +149,9 @@ Rules'''),
 
         ])
 
-    elif value == 5:
-
-        return html.Div([
-
-            dcc.Markdown(''' 
-#### Content Block Settings
-On the [**Full-text search** page](/pages/search), you are able to view the following sections:
-
-###### Keywords on user input
-The Full-text search engine displays search results on the given keywords. It sorts the results based on the number of keywords
-that are found in the text. You can also filter on date. The search engine displays only results based on given keywords and 
-the given date.
-
-###### Multiple keywords
-For using multiple keywords, a space between the words is needed. For example: first second. The search engine displays 
-results based on one of multiple keywords. Results are ranked on on how many keywords are found. 
-The results that contains both keywords are high ranked. Results that contains one of the keywords, are lower ranked. 
-
-When you want to get only results based on multiple keywords, you have to specify the keywords with the + character.
-For example: +first +second. It displays only results that contains the multiple keywords. The results will ranked on 
-amount of keywords that are found. You have also the option to filter on date. 
-
-###### Detail page
-When the results are displayed, there is an option to see the detailed page. On the displayed page, the full web page
-content is displayed.
-
-'''),])
-
     else:
         return html.Div([
-            "An unexpected error occurred."
+            "This User Guide page does not exist yet. "
         ])
 
 
@@ -158,17 +162,30 @@ layout = html.Div([
         html.P('''Use the user guide to find information on how to use HIVE to search through content and to find 
         known issues.'''),
 
+        html.H5("Usage", style={'margin-top': 20}),
         dcc.Tabs(
             tabs=[
                 {'label': 'Welcome', 'value': 1},
-                {'label': 'URL Settings', 'value': 2},
-                {'label': 'Keyword Settings', 'value': 3},
-                {'label': 'Content Block Settings', 'value': 4},
-                {'label': 'Full-text search', 'value': 5},
+                {'label': 'Search', 'value': 2},
+                {'label': 'Keyword Search', 'value': 3},
             ],
-            value=1,
             id='tabs',
-            vertical=True,)
+            vertical=True
+        ),
+        html.H5("Settings", style={'margin-top': 20}),
+        dcc.Tabs(
+            tabs=[
+                {'label': 'Settings: URL', 'value': 4},
+                {'label': 'Settings: Keyword', 'value': 5},
+                {'label': 'Settings: Content Block', 'value': 6},
+                {'label': 'Settings: Configuration', 'value': 7},
+                {'label': 'Settings: User Guide', 'value': 8},
+                {'label': 'Settings: Search Log', 'value': 9},
+
+            ],
+            id='tabs',
+            vertical=True
+        )
     ], className="userguide_menu"),
 
     html.Div(
