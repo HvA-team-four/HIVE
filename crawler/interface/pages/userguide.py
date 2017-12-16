@@ -128,8 +128,6 @@ layout = html.Div([
         html.P('''Use the user guide to find information on how to use HIVE to search through content and to find 
         known issues.'''),
 
-        html.Br(),
-
         dcc.Tabs(
             tabs=[
                 {'label': 'Welcome', 'value': 1},
