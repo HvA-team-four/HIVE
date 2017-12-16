@@ -28,12 +28,16 @@ def save_url(url):
 # Update the URL which was being scraped
 @db_session
 def update_url(url):
+    """The update_url function sets the date of scraped urls to now."""
     url_db = select(u for u in Url if u.id == url.id).get()
     url_db.date_scanned = datetime.now()
 
 
 @db_session
 def get_urls_from_database():
+    """The get_urls_from_database function fetches 8 urls from the database that need to be scraped by the scout.
+     The urls which are set with a priority in the database will be retrieved first.
+     """
     return select(u for u in Url if u.date_scanned is None).order_by(desc(Url.priority_scan))[:8]
 
 

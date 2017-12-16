@@ -3,6 +3,7 @@ from urllib.parse import urlparse, urljoin
 
 
 def get_urls_from_content(content):
+    """The get_urls_from_content function receives content and filters out the urls contained within."""
     soup = BeautifulSoup(content, "html5lib")
     urls = []
 

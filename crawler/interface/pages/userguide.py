@@ -113,7 +113,37 @@ By using the **FILTER ROWS** button, you are able to show fields which can be us
 The active and inactive buttons can be used to set Rules active or inactive. Inactive keywords will not be matched
 any longer but won't be removed from the database as well. As a user, you will still be able to search for content that 
 Rules'''),
+
+
         ])
+
+    elif value == 5:
+
+        return html.Div([
+
+            dcc.Markdown(''' 
+#### Content Block Settings
+On the [**Full-text search** page](/pages/search), you are able to view the following sections:
+
+###### Keywords on user input
+The Full-text search engine displays search results on the given keywords. It sorts the results based on the number of keywords
+that are found in the text. You can also filter on date. The search engine displays only results based on given keywords and 
+the given date.
+
+###### Multiple keywords
+For using multiple keywords, a space between the words is needed. For example: first second. The search engine displays 
+results based on one of multiple keywords. Results are ranked on on how many keywords are found. 
+The results that contains both keywords are high ranked. Results that contains one of the keywords, are lower ranked. 
+
+When you want to get only results based on multiple keywords, you have to specify the keywords with the + character.
+For example: +first +second. It displays only results that contains the multiple keywords. The results will ranked on 
+amount of keywords that are found. You have also the option to filter on date. 
+
+###### Detail page
+When the results are displayed, there is an option to see the detailed page. On the displayed page, the full web page
+content is displayed.
+
+'''),])
 
     else:
         return html.Div([
@@ -134,6 +164,7 @@ layout = html.Div([
                 {'label': 'URL Settings', 'value': 2},
                 {'label': 'Keyword Settings', 'value': 3},
                 {'label': 'Content Block Settings', 'value': 4},
+                {'label': 'Full-text search', 'value': 5},
             ],
             value=1,
             id='tabs',
