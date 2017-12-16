@@ -1,6 +1,6 @@
 from pony.orm import *
 from datetime import datetime
-from crawler.utilities.config import *
+from utilities.config import *
 
 db = Database()
 db.bind(

@@ -1,20 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from interface.honeycomb import *
 import dash_html_components as html
-from crawler.utilities.config import *
+from utilities.config import *
+from honeycomb import *
 
 configlocation = location_configuration()
-csslocation = configuration_get("styling",
-                                "css")
+csslocation = configuration_get("styling", "css")
+imagelocation = configuration_get("styling", "imagepath")
 
 df = pd.DataFrame(columns=['Type',
                            'Value',
                            'Status'])
 
 df = df.append({'Type': 'No data loaded'}, ignore_index=True)
-
 layout = html.Div([
     html.H3('Configuration Settings',
             style={'text-align': 'center'}),
@@ -44,6 +43,19 @@ layout = html.Div([
                   'marginBottom': 2}),
 
     html.P(csslocation,
+           style={'fontWeight': 'bold',
+                  'width': 800,
+                  'wordWrap': 'breakWord'}),
+
+    html.Br(),
+
+    html.H4('Images'),
+
+    html.P('Location of the images base URL:',
+           style={'width': 380,
+                  'marginBottom': 2}),
+
+    html.P(imagelocation,
            style={'fontWeight': 'bold',
                   'width': 800,
                   'wordWrap': 'breakWord'})

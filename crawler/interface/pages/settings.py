@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import dash_html_components as html
-from crawler.utilities.config import *
+from utilities.config import *
 
 layout = html.Div([
     html.H3('Settings'),
