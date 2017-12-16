@@ -175,12 +175,12 @@ layout = html.Div([
         html.H5("Settings", style={'margin-top': 20}),
         dcc.Tabs(
             tabs=[
-                {'label': 'Settings: URL', 'value': 4},
-                {'label': 'Settings: Keyword', 'value': 5},
-                {'label': 'Settings: Content Block', 'value': 6},
-                {'label': 'Settings: Configuration', 'value': 7},
-                {'label': 'Settings: User Guide', 'value': 8},
-                {'label': 'Settings: Search Log', 'value': 9},
+                {'label': 'URL', 'value': 4},
+                {'label': 'Keyword', 'value': 5},
+                {'label': 'Content Block', 'value': 6},
+                {'label': 'Configuration', 'value': 7},
+                {'label': 'User Guide', 'value': 8},
+                {'label': 'Search Log', 'value': 9},
 
             ],
             id='tabs',
