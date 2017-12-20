@@ -43,6 +43,10 @@ layout = html.Div(style={'textAlign': 'center'},
                                     'marginTop': 20,
                                     'fontStyle': 'italic'}),
 
+                      html.A('User Guide',
+                             href="/pages/userguide",
+                             className="userguide_button"),
+
                       html.Div([
                           html.Div('''This application is created by FOUR. on behalf of the Hogeschool van Amsterdam. 
                           HIVE is a proof-of-concept self-managing Dark Web crawler which is able to scrape content 
