@@ -1,5 +1,5 @@
 from configparser import ConfigParser, NoOptionError, NoSectionError
-from utilities import log
+import log
 from os import path
 
 CONFIGURATION_FILE_PATH = path.abspath(path.join(path.abspath(__file__), "..", "..", "..", "configuration.ini"))

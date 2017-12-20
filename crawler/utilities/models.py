@@ -1,13 +1,14 @@
 from pony.orm import *
 from datetime import datetime
-from utilities.config import *
+from config import *
 
 db = Database()
 db.bind(
     provider=configuration_get("database", "provider"),
     user=configuration_get("database", "username"),
     passwd=configuration_get("database", "password"),
-    db=configuration_get("database", "database")
+    db=configuration_get("database", "database"),
+    host='127.0.0.1'
 )
 
 
