@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 source /opt/HIVE/bin/activate
-circusd circus.ini
+circusd /opt/crawler/circus_docker.ini
