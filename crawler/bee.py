@@ -7,6 +7,7 @@ from pony.orm import *
 from utilities.models import *
 from utilities import log
 from utilities.website import get_content_from_url
+#from utilities.tor import get_content_from_urls
 
 @db_session
 def get_urls():
@@ -21,6 +22,22 @@ def get_keywords():
     """ The get_keywords function retrieves keywords from the database if they are set to active."""
     return select(k for k in Keyword if k.active)
 
+@db_session
+def get_blocked_keywords():
+    """The get_blocked_keywords function retrieves keywords to be blocked from the database "Block" if the block is set
+    to active."""
+    return select(b.value for b in Block if b.type == "Keyword" and b.active)[:]
+
+def check_blocked_keywords(content):
+    blocked_keywords = get_blocked_keywords()
+
+    blocked_keywords_in_content = []
+    for bk in blocked_keywords:
+        if bk in content:
+            return bk
+
+    return None
+    
 
 def filter_keywords(content):
     """The filter_keywords function scans webcontent it receives for matching keywords retrieved from the database.
@@ -123,9 +140,13 @@ def start_bee():
 
                 content_cleaned = clean_html(content)
 
-                keywords = filter_keywords(content_cleaned)
+                check_blocked = check_blocked_keywords(content_cleaned)
 
-                save_content(url.id, content_cleaned, content, content_hashed, keywords)
+                if check_blocked is None:
+                    keywords = filter_keywords(content_cleaned)
+                    save_content(url.id, content_cleaned, content, content_hashed, keywords)
+                else:
+                    print("URL: " + url.url + "  has been blocked because it contains a blocked keyword " + check_blocked)
 
             except(ValueError, NameError, TypeError) as error:
                 log.error(str(error))
