@@ -107,8 +107,8 @@ layout = html.Div([
 
     ], className="page_title"),
 
-    html.P('Please use input field below to specify a search query. Specify multiple words as follow: first second. '
-           'For showing only results that contains the given keywords, specify as follow: +first +second',
+    html.P('''Please use input field below to specify a search query. Please read the User Guide before using the 
+    search functionality.''',
            style={'width': 380,
                   'marginLeft': 'auto',
                   'marginRight': 'auto',
