@@ -6,7 +6,8 @@ import dash_core_components as dcc
 
 
 def user_guide(value):
-    if value == 1:  # Welcome page
+    if value == 1:  # Welcome
+        # e page
         return html.Div([
             dcc.Markdown('''
 #### Start
@@ -25,9 +26,9 @@ HIVE is made by team FOUR. on behalf of the Hogeschool van Amsterdam. This appli
 On the [**Full-text search** page](/pages/search), you are able to view the following sections:
 
 ###### Keywords on user input
-The Full-text search engine displays search results on the given keywords. It sorts the results based on the number of keywords
-that are found in the text. You can also filter on date. The search engine displays only results based on given keywords and 
-the given date.
+The Full-text search engine displays search results on the given keywords. It sorts the results based on the number of 
+keywords that are found in the text. You can also filter on date. The search engine displays only results based on given 
+keywords and the given date.
 
 ###### Multiple keywords
 For using multiple keywords, a space between the words is needed. For example: first second. The search engine displays 
@@ -177,6 +178,7 @@ the image directory.'''),
         ])
 
 
+# Defining the lay-out of this page.
 layout = html.Div([
     html.Div([
         html.H3('User guide'),

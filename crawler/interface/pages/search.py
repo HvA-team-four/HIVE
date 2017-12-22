@@ -89,6 +89,7 @@ def normal_search(keywords_array, keywords, start_date, end_date):
             return dataframe
 
 
+# Defining the lay-out of this page.
 layout = html.Div([
     html.H3('Search',
             style={'text-align': 'center',

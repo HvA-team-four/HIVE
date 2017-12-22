@@ -5,15 +5,19 @@ import dash_html_components as html
 from utilities.config import *
 from honeycomb import *
 
+# Loading values from the configuration file.
 configlocation = location_configuration()
 csslocation = configuration_get("styling", "css")
 imagelocation = configuration_get("styling", "imagepath")
 
+# Creating a dataframe and filling it with one row: No data loaded.
 df = pd.DataFrame(columns=['Type',
                            'Value',
                            'Status'])
 
 df = df.append({'Type': 'No data loaded'}, ignore_index=True)
+
+# Defining the lay-out of this page.
 layout = html.Div([
     html.H3('Configuration Settings',
             style={'text-align': 'center'}),

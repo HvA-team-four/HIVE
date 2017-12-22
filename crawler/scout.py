@@ -1,9 +1,10 @@
-from time import sleep
 import asyncio
-from utilities.url_util import get_urls_from_content, format_url
-from utilities.models import *
-from utilities import log
+from time import sleep
+
 from utilities import tor
+from utilities.models import *
+from utilities.url_util import get_urls_from_content, format_url
+from utilities.log import *
 
 
 # Add found URLs to the database if they are not being blocked by the content-block feature.
@@ -39,7 +40,6 @@ def get_urls_from_database():
      The urls which are set with a priority in the database will be retrieved first.
      """
     return select(u for u in Url if u.date_scanned is None).order_by(desc(Url.priority_scan))[:8]
-
 
 
 def get_urls_from_results(urls, results):

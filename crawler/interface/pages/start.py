@@ -4,6 +4,8 @@
 import dash_html_components as html
 from utilities.config import *
 
+
+# Defining the lay-out of this page.
 layout = html.Div(style={'textAlign': 'center'},
                   children=[
                       html.Img(
