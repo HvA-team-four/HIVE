@@ -172,6 +172,26 @@ This section displays the base path of the image location, the images need to be
 the image directory.'''),
         ])
 
+    elif value == 9:  # Search Log
+        return html.Div([
+            dcc.Markdown(''' 
+#### Search Log
+In the [**Search Log** ](/pages/searchlog), you are able to view the following sections:
+
+###### Search Log Table
+The search log table shows all search requests that have been made using the honeycomb (interface). When searching for
+a specific query, the query including all parameters (start-date, end-date) are combined and stored in the database. 
+
+The timestamp of the search is stored as well.
+
+It is not possible to delete the search log (only an administrator can).
+
+###### Filter Rows
+The filter rows button can be used to filter rows in the search log. For example, when you are looking for a specific 
+search, you can use this button.
+    '''),
+        ])
+
     else:
         return html.Div([
             "This User Guide page does not exist yet. "
@@ -217,4 +237,4 @@ layout = html.Div([
         html.Div(id='tab-output'),
         className="userguide_output"
     )
-])
+], style={'overflow': 'auto'})

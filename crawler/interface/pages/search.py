@@ -91,9 +91,21 @@ def normal_search(keywords_array, keywords, start_date, end_date):
 
 # Defining the lay-out of this page.
 layout = html.Div([
+    html.Div([
     html.H3('Search',
             style={'text-align': 'center',
-                   'marginTop': 50}),
+                   'marginTop': 50},
+            className="page_title_info"),
+
+    html.A('help',
+           href="/pages/userguide",
+           style={'text-align': 'center',
+                  'marginTop': 50,
+                  'display': 'inlineBlock'},
+           className="page_title_info_bullet"
+           ),
+
+    ], className="page_title"),
 
     html.P('Please use input field below to specify a search query. Specify multiple words as follow: first second. '
            'For showing only results that contains the given keywords, specify as follow: +first +second',
