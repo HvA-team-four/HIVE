@@ -1,3 +1,6 @@
+#!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 """
 In order to use the logging functionality you need to import the following if its not already imported:
 from utilities import log
@@ -14,10 +17,13 @@ the "debug" level shows all messages in the logfile.
 from os import path, makedirs
 import logging
 
-if not path.exists("logs/"):
-    makedirs("logs/")
+pathname = path.dirname(path.realpath(__file__))
+
+if not path.exists("{}/logs/".format(pathname)):
+    makedirs("{}/logs/".format(pathname))
+
 logging.basicConfig(
-    filename="logs/HIVE.log",
+    filename="{}/logs/hive.log".format(pathname),
     format="%(asctime)s %(levelname)s %(message)s",
     datefmt="%H:%M:%S",
     level=logging.DEBUG

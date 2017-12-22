@@ -7,6 +7,9 @@ from honeycomb import *
 
 @db_session
 def load_statistics(statistic):
+    """This function takes a string as parameter and returns a certain value, which is then displayed in the statistics
+    bar on the url-settings page.
+    """
     if statistic == 'total':
         return select(p for p in Url).count()
 
@@ -30,6 +33,7 @@ def load_statistics(statistic):
         return '{}%'.format(percentage)
 
 
+# Creating a dataframe and filling it with one row: No data loaded.
 df = pd.DataFrame(columns=['URL',
                            'Date Added',
                            'Date Scan',
@@ -39,6 +43,7 @@ df = pd.DataFrame(columns=['URL',
 
 df = df.append({'URL': 'No data loaded'}, ignore_index=True)
 
+# Defining the lay-out of this page.
 layout = html.Div([
     html.H3('URL Settings',
             style={'text-align': 'center'}),

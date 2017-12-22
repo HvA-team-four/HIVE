@@ -109,6 +109,7 @@ def keyword_search(keywords, start_date, end_date):
             return dataframe
 
 
+# Defining the lay-out of this page.
 layout = html.Div([
     html.H3('Keyword Search',
             style={'text-align': 'center',

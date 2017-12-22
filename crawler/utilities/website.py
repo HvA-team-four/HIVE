@@ -1,7 +1,8 @@
 import socket
-import urllib.request
-import urllib.error
 import urllib
+import urllib.error
+import urllib.request
+
 from utilities import log
 
 
