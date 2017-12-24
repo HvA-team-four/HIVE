@@ -4,7 +4,7 @@
 from configparser import ConfigParser, NoOptionError, NoSectionError
 from os import path
 
-from utilities import log
+from log import *
 
 # Setting variables
 CONFIGURATION_FILE_PATH = path.abspath(path.join(path.abspath(__file__), "..", "..", "..", "configuration.ini"))
