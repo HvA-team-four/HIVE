@@ -4,7 +4,7 @@ from time import sleep
 from utilities import tor
 from utilities.models import *
 from utilities.url_util import get_urls_from_content, format_url
-from utilities.log import *
+import utilities.log as log
 
 
 # Add found URLs to the database if they are not being blocked by the content-block feature.

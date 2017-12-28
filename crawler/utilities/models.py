@@ -1,6 +1,6 @@
 from pony.orm import *
 from datetime import datetime
-import config
+from .config import *
 
 db = Database()
 db.bind(
