@@ -3,7 +3,7 @@ import urllib
 import urllib.error
 import urllib.request
 
-import log
+from . import log
 
 
 def get_content_from_url(url):
