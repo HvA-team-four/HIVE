@@ -5,6 +5,7 @@ from bs4 import BeautifulSoup
 
 from utilities.models import *
 from utilities.website import get_content_from_url
+from utilities import log
 
 
 @db_session
