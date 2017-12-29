@@ -68,7 +68,7 @@ async def main(loop):
         if len(urls) == 0:
             print("No URLs to be crawled, waiting for 60 seconds.")
             log.info('No URLs to be crawled, waiting for 60 seconds.')
-            sleep(10)
+            sleep(60)
             commit()
             continue
 
