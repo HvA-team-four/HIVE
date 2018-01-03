@@ -1,9 +1,10 @@
-from time import sleep
 import asyncio
-from utilities.url_util import get_urls_from_content, format_url
-from utilities.models import *
-from utilities import log
+from time import sleep
+
 from utilities import tor
+from utilities.models import *
+from utilities.url_util import get_urls_from_content, format_url
+import utilities.log as log
 
 
 # Add found URLs to the database if they are not being blocked by the content-block feature.
@@ -41,7 +42,6 @@ def get_urls_from_database():
     return select(u for u in Url if u.date_scanned is None).order_by(desc(Url.priority_scan))[:8]
 
 
-
 def get_urls_from_results(urls, results):
     urls_in_results = []
     for index, url in enumerate(urls):
@@ -68,7 +68,7 @@ async def main(loop):
         if len(urls) == 0:
             print("No URLs to be crawled, waiting for 60 seconds.")
             log.info('No URLs to be crawled, waiting for 60 seconds.')
-            sleep(10)
+            sleep(60)
             commit()
             continue
 

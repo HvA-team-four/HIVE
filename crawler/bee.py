@@ -2,11 +2,11 @@ import hashlib
 from time import sleep
 
 from bs4 import BeautifulSoup
-from pony.orm import *
 
 from utilities.models import *
-from utilities import log
 from utilities.website import get_content_from_url
+from utilities import log
+
 
 @db_session
 def get_urls():

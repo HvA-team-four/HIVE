@@ -1,10 +1,12 @@
+import asyncio
 import socket
-import socks
-from utilities import log
+
 import aiohttp
 import async_timeout
-import asyncio
+import socks
 from aiosocks.connector import ProxyConnector, ProxyClientRequest
+
+from utilities import log
 
 
 def getaddrinfo(*args):
@@ -36,4 +38,3 @@ async def get_content_from_urls(loop, urls):
             *[fetch(session, url.url) for url in urls],
             return_exceptions=True  # default is false, that would raise
         )
-

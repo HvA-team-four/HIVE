@@ -1,12 +1,15 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from interface.honeycomb import *
-from crawler.utilities.models import *
+from utilities.models import *
+from honeycomb import *
 
 
 @db_session
 def load_statistics(statistic):
+    """This function takes a string as parameter and returns a certain value, which is then displayed in the statistics
+    bar on the keyword settings page.
+    """
     if statistic == 'total':
         return select(p for p in Keyword).count()
 
@@ -25,11 +28,13 @@ def load_statistics(statistic):
             return number
 
 
+# Creating a dataframe and filling it with one row: No data loaded.
 df = pd.DataFrame(columns=['Keyword',
                            'Status'])
 
 df = df.append({'Keyword': 'No data loaded'}, ignore_index=True)
 
+# Defining the lay-out of this page.
 layout = html.Div([
     html.H3('Keyword Settings',
             style={'text-align': 'center'}),

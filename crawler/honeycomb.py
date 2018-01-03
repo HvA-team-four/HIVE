@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import sys
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
@@ -19,10 +20,12 @@ from interface.pages import blocksettings
 from interface.pages import configurationsettings
 from interface.pages import userguide
 from interface.pages import searchlog
-from crawler.utilities.models import *
-from crawler.utilities.config import *
+from utilities.models import *
+from utilities.config import *
 from datetime import datetime
 import re
+
+sys.path.append('../')
 
 # Defining a Dash application/interface with the name 'app'
 app = dash.Dash()
@@ -838,4 +841,5 @@ def display_page(pathname):
 
 # Application starting command
 if __name__ == '__main__':
+    print("Starting honeycomb interface on ip: {} \t port: {}".format(configuration_get("honeycomb", "ip"), '8050'))
     app.run_server(debug=True, host=configuration_get("honeycomb", "ip"))

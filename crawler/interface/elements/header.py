@@ -2,7 +2,8 @@
 # -*- coding: utf-8 -*-
 
 import dash_html_components as html
-from crawler.utilities.config import *
+from utilities.config import *
+
 
 hive_header = html.Div(className='header',	 # Defining the hive_header so it can be called from the index.py file
                        children=html.Div(  # Defining the children for the header

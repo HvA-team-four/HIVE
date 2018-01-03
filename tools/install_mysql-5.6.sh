@@ -9,13 +9,13 @@ echo "mysql-server-5.6 mysql-server/root_password_again password root" | debconf
 apt-get -y install mysql-server-5.6
 
 mysql -u root -proot <<MY_QUERY
-CREATE SCHEMA HIVE;
+CREATE SCHEMA scotchbox;
 MY_QUERY
 
 python3.6 /home/vagrant/hive/crawler/utilities/models.py
 
 mysql -u root -proot <<MY_QUERY
 USE HIVE;
-ALTER TABLE HIVE.content ADD FULLTEXT (content);
-ALTER TABLE HIVE.content ADD FULLTEXT (content);
+ALTER TABLE scotchbox.content ADD FULLTEXT (content);
+ALTER TABLE scotchbox.content ADD FULLTEXT (content);
 MY_QUERY

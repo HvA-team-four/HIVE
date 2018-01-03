@@ -1,17 +1,19 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from interface.honeycomb import *
-import dash_html_components as html
-import dash_core_components as dcc
-from crawler.utilities.models import *
 import re
+import dash_core_components as dcc
+import dash_html_components as html
+from utilities.models import *
+from honeycomb import *
 
 
 # This function is used to save the user's query in the database
 # These search queries can be retrieved to view what users have been looking for
 @db_session
 def save_query(keywords, start_date, end_date):
+    """The save_query function takes the keywords, start_date and end_date and stores the query in the database.
+    These queries can be retrieved to view what users have been looking for"""
     # Composing the string
     search_type = 'Normal Search for "'
     keywords_search = ', '.join(map(str, keywords))
@@ -31,8 +33,14 @@ def save_query(keywords, start_date, end_date):
 
 @db_session
 def normal_search(keywords_array, keywords, start_date, end_date):
+    """The normal_search function takes an array of keywords by user input, a start_date and end_date. It returns a dataframe
+    containing the results of de search query
+    """
+
+    # df_id is used to increment a dataframe number for the details link
     df_id = 0
 
+    # Creating a dataframe
     dataframe = pd.DataFrame(columns=['id',
                                       'Domain',
                                       'Last Scraped Date',
@@ -55,6 +63,7 @@ def normal_search(keywords_array, keywords, start_date, end_date):
     if keywords_array is None:
         return dataframe
 
+    #select the id of the specific content that contains the keywords. Also the user can filter on date.
     select_query = str(Content.select_by_sql('''SELECT content.id FROM content INNER JOIN url ON content.url = url.id \
     WHERE Match(content) AGAINST ($keywords IN BOOLEAN MODE) AND url.date_scraped <= $dt_end_date AND url.date_scraped >= $dt_start_date'''))
 
@@ -65,8 +74,10 @@ def normal_search(keywords_array, keywords, start_date, end_date):
             for content in content_objects:
                 content_keywords = content.content
                 for i in keywords_array:
+                    #replace the keyword in the text with stars. The keywords will be displaying as bolt words.
                     content_keywords = re.sub(r'(%s)' % i, r'**\1**', content_keywords, flags=re.I)
 
+                # Generating a dataframe for each found object within the query
                 dataframe = dataframe.append({'id': content.id,
                                               'Domain': content.url.url,
                                               'Last Scraped Date': content.url.date_scraped,
@@ -78,12 +89,26 @@ def normal_search(keywords_array, keywords, start_date, end_date):
             return dataframe
 
 
+# Defining the lay-out of this page.
 layout = html.Div([
+    html.Div([
     html.H3('Search',
             style={'text-align': 'center',
-                   'marginTop': 50}),
+                   'marginTop': 50},
+            className="page_title_info"),
 
-    html.P('Please use input field below to specify a search query.',
+    html.A('help',
+           href="/pages/userguide",
+           style={'text-align': 'center',
+                  'marginTop': 50,
+                  'display': 'inlineBlock'},
+           className="page_title_info_bullet"
+           ),
+
+    ], className="page_title"),
+
+    html.P('''Please use input field below to specify a search query. Please read the User Guide before using the 
+    search functionality.''',
            style={'width': 380,
                   'marginLeft': 'auto',
                   'marginRight': 'auto',

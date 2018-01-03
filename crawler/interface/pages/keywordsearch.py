@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from interface.honeycomb import *
-import dash_html_components as html
 import dash_core_components as dcc
-from crawler.utilities.models import *
+import dash_html_components as html
+from utilities.models import *
+from honeycomb import *
 
 
 @db_session
@@ -109,10 +109,24 @@ def keyword_search(keywords, start_date, end_date):
             return dataframe
 
 
+# Defining the lay-out of this page.
 layout = html.Div([
+
+    html.Div([
     html.H3('Keyword Search',
             style={'text-align': 'center',
-                   'marginTop': 50}),
+                   'marginTop': 50},
+            className="page_title_info"),
+
+    html.A('help',
+           href="/pages/userguide",
+           style={'text-align': 'center',
+                  'marginTop': 50,
+                  'display': 'inlineBlock'},
+           className="page_title_info_bullet"
+           ),
+
+    ], className="page_title"),
 
     html.P('Please use the dropdown-bar below to select the keywords you want to search the database for.',
            style={'width': 380,
