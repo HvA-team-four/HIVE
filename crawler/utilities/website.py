@@ -3,7 +3,7 @@ import urllib
 import urllib.error
 import urllib.request
 
-from utilities import log
+from . import log
 
 
 def get_content_from_url(url):
@@ -11,7 +11,7 @@ def get_content_from_url(url):
     This function takes one string containing the full url as its parameter.
     """
 
-    #Set the webcontent to None. This is used in the case an url is not working
+    # Set the webcontent to None. This is used in the case an url is not working
     webcontent = None
 
     # try to open the URL  with a timeout of 10 seconds. Excepts catch an exception when it happens and give back an

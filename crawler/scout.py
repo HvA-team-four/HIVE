@@ -4,7 +4,7 @@ from time import sleep
 from utilities import tor
 from utilities.models import *
 from utilities.url_util import get_urls_from_content, format_url
-from utilities.log import *
+import utilities.log as log
 
 
 # Add found URLs to the database if they are not being blocked by the content-block feature.
@@ -68,7 +68,7 @@ async def main(loop):
         if len(urls) == 0:
             print("No URLs to be crawled, waiting for 60 seconds.")
             log.info('No URLs to be crawled, waiting for 60 seconds.')
-            sleep(10)
+            sleep(60)
             commit()
             continue
 

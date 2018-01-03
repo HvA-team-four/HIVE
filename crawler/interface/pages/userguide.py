@@ -22,22 +22,54 @@ HIVE is made by team FOUR. on behalf of the Hogeschool van Amsterdam. This appli
     elif value == 2:  # Search page
         return html.Div([
             dcc.Markdown(''' 
-#### Search
+#### Full text-search
 On the [**Full-text search** page](/pages/search), you are able to view the following sections:
 
-###### Keywords on user input
-The Full-text search engine displays search results on the given keywords. It sorts the results based on the number of 
-keywords that are found in the text. You can also filter on date. The search engine displays only results based on given 
-keywords and the given date.
-
 ###### Multiple keywords
-For using multiple keywords, a space between the words is needed. For example: first second. The search engine displays 
-results based on one of multiple keywords. Results are ranked on on how many keywords are found. 
-The results that contains both keywords are high ranked. Results that contains one of the keywords, are lower ranked. 
+For using multiple keywords, a space between the words is needed. For example: `apple banana`. 
 
-When you want to get only results based on multiple keywords, you have to specify the keywords with the + character.
-For example: +first +second. It displays only results that contains the multiple keywords. The results will ranked on 
-amount of keywords that are found. You have also the option to filter on date. 
+###### Specific search
+You can specify different operators to perform a specific search:
+
+**apple banana**\n
+find rows that contain at least one of the two words.
+
+**+apple +juice**\n
+Find rows that contain both words (`apple` and `juice`)
+
+**+apple macintosh**\n
+Find rows that contain the word `apple`, but rank rows higher if they also contain `macintosh`.
+
+**+apple -macintosh**\n
+Find rows that contain the word `apple` but not `macintosh`.
+
+**+apple ~macintosh**\n
+Find rows that contain the word `apple`, but if the row also contains the word `macintosh`, 
+rate it lower than if row does not. This is `softer` than a search for '+apple -macintosh', 
+for which the presence of `macintosh` causes the row not to be returned at all.
+
+**+apple +(>turnover <strudel)**\n
+Find rows that contain the words `apple` and `turnover`, or `apple` and `strudel` (in any order), 
+but rank `apple turnover` higher than `apple strudel`.
+
+**apple**\n
+Find rows that contain words such as `apple`, `apples`, `applesauce` or `applet`.
+
+**"some words"**\n
+Find rows that contain the exact phrase `some words` (for example, rows that contain `some words of wisdom` but not 
+`some noise words`). Note that the " characters that enclose the phrase are operator characters that delimit the phrase.
+They are not the quotation marks that enclose the search string itself.\n
+
+###### Ranking on result
+The ranking of results depends on which operator are you using. 
+The ranking formula is as follow:
+
+TF-IDF is a numerical statistic that is intended to reflect how important a word is.
+
+IDF: the total number of websites divided by that number of websites that the search term appears in. 
+TF: amount that search term appears in text of website
+
+Formula is TF * IDF * IDF
 
 ###### Detail page
 When the results are displayed, there is an option to see the detailed page. On the displayed page, the full web page
@@ -46,9 +78,27 @@ content is displayed.'''),
 
     elif value == 3:  # Keyword search page
         return html.Div([
-            dcc.Markdown(''' 
-#### Keyword Search
-Lorum Ipsum dolor sit amet.'''),
+            dcc.Markdown('''
+#### Keyword Search 
+On the [**Keyword Search** page](/pages/keywordsearch), you are able to view the following sections:
+
+###### Select Keywords
+The select keywords bar allows you to select **active** keywords from the keywords table in the database. When adding 
+new keywords on the settings page, this list needs to be updated, please use the `Reload Keywords` button ot reload the 
+list of keywords. 
+
+###### Multiple Keywords
+When selecting multiple keywords, results are returned which match both of the keywords. When searching, for example, on 
+'HIVE' en 'Injection', the application returns all results with both of these keywords. 
+
+###### Start and end date
+The start and end date fields can be used to define the range of the scraped pages. When defining a range, only the 
+results scraped in this range are returned. When defining no date-range, all matching results are returned. 
+
+###### Detail page
+When the results are displayed, there is an option to see the detailed page. On the displayed page, the full web page
+content is displayed.
+'''),
         ])
 
     elif value == 4:  # URL settings
@@ -172,6 +222,36 @@ This section displays the base path of the image location, the images need to be
 the image directory.'''),
         ])
 
+    elif value == 8:  # User Guide
+        return html.Div([
+            dcc.Markdown(''' 
+#### User Guide
+In the [**User Guide** ](/pages/userguide), you are able to view help documentation about HIVE and you are able to 
+get to know the features of the application. Please read the User Guide at least one time before using the application 
+in a production environment.
+        '''),
+        ])
+
+    elif value == 9:  # Search Log
+        return html.Div([
+            dcc.Markdown(''' 
+#### Search Log
+In the [**Search Log** ](/pages/searchlog), you are able to view the following sections:
+
+###### Search Log Table
+The search log table shows all search requests that have been made using the honeycomb (interface). When searching for
+a specific query, the query including all parameters (start-date, end-date) are combined and stored in the database. 
+
+The timestamp of the search is stored as well.
+
+It is not possible to delete the search log (only an administrator can).
+
+###### Filter Rows
+The filter rows button can be used to filter rows in the search log. For example, when you are looking for a specific 
+search, you can use this button.
+    '''),
+        ])
+
     else:
         return html.Div([
             "This User Guide page does not exist yet. "
@@ -217,4 +297,4 @@ layout = html.Div([
         html.Div(id='tab-output'),
         className="userguide_output"
     )
-])
+], style={'overflow': 'auto'})
