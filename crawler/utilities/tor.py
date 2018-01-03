@@ -1,10 +1,12 @@
+import asyncio
 import socket
-import socks
-from utilities import log
+
 import aiohttp
 import async_timeout
-import asyncio
+import socks
 from aiosocks.connector import ProxyConnector, ProxyClientRequest
+
+from utilities import log
 
 
 def getaddrinfo(*args):

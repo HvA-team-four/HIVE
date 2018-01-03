@@ -4,11 +4,13 @@
 import dash_html_components as html
 from honeycomb import *
 
+# Creating a dataframe and filling it with one row: No data loaded.
 df = pd.DataFrame(columns=['Query',
                            'Date Searched'])
 
 df = df.append({'Query': 'No data loaded'}, ignore_index=True)
 
+# Defining the lay-out of this page.
 layout = html.Div([
     html.H3('Search Log',
             style={'text-align': 'center'}),

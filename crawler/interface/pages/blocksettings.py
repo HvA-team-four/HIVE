@@ -10,6 +10,9 @@ from honeycomb import *
 
 @db_session
 def load_statistics(statistic):
+    """This function takes a string as parameter and returns a certain value, which is then displayed in the statistics
+    bar on the content-block settings page.
+    """
     if statistic == 'total':
         return select(p for p in Block if p.active).count()
 
@@ -20,12 +23,14 @@ def load_statistics(statistic):
         return select(p for p in Block if p.type == 'Keyword' and p.active).count()
 
 
+# Creating a dataframe and filling it with one row: No data loaded.
 df = pd.DataFrame(columns=['Type',
                            'Value',
                            'Status'])
 
 df = df.append({'Type': 'No data loaded'}, ignore_index=True)
 
+# Defining the lay-out of this page.
 layout = html.Div([
     html.H3('Content Block Settings',
             style={'text-align': 'center'}),

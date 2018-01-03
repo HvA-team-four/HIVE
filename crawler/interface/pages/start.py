@@ -4,6 +4,8 @@
 import dash_html_components as html
 from utilities.config import *
 
+
+# Defining the lay-out of this page.
 layout = html.Div(style={'textAlign': 'center'},
                   children=[
                       html.Img(
@@ -42,6 +44,10 @@ layout = html.Div(style={'textAlign': 'center'},
                                     'marginRight': 'auto',
                                     'marginTop': 20,
                                     'fontStyle': 'italic'}),
+
+                      html.A('User Guide',
+                             href="/pages/userguide",
+                             className="userguide_button"),
 
                       html.Div([
                           html.Div('''This application is created by FOUR. on behalf of the Hogeschool van Amsterdam. 
