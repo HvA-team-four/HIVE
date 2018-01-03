@@ -96,4 +96,3 @@ This application has a EULA that needs your consent. Do you accept the EULA? (y/
                     echo "EULA refused. Exiting..."
                     exit 1
                 fi
-
