@@ -21,63 +21,40 @@ Do you want to continue? (y/n)
 "
 
 read input
-				# If the user agrees with the agreement, the script will start installing. 
-				# The user is able to abort the installation for 10 seconds after confirming, this
-				# 10 second period cannot be skipped.
-                if [ "$input" = y ] ; then
+
+# If the user agrees with the agreement, the script will start installing. 
+# The user is able to abort the installation for 10 seconds after confirming, this
+# 10 second period cannot be skipped.
+if [ "$input" = y ] ; then
+
+secs=$((10))
+while [ $secs -gt 0 ]; do
+	echo -ne "$secs\033[0K\rRemaining seconds before start: "
+	sleep 1
+	: $((secs--))
+done
+
+echo "
+Installing Python 3.6 - PIP - Packages
+"
+
+sudo add-apt-repository ppa:deadsnakes/ppa -y
+sudo apt-get update
+sudo apt-get install python3.6 -y
+sudo apt-get install python3.6-dev -y
+sudo apt-get install python3.6-venv -y
+
+wget https://bootstrap.pypa.io/get-pip.py
+sudo python3.6 get-pip.py
+rm get-pip.py
+
+pip3 install -r Requirements/requirements.txt
+
+echo "
+Installed: Python 3.6 - PIP - Packages
+"
 
 
-                echo "
-The script will start installing all prerequisites.
-				"
-			
-                secs=$((10))
-				while [ $secs -gt 0 ]; do
-					echo -ne "$secs\033[0K\rRemaining seconds before start: "
-					sleep 1
-					: $((secs--))
-				done
-
-
-
-				# Installation of packets           
-                 
-                # From here on, the script will start installing the needed packets on the system. 
-                # The script does not catch any errors, so the admin installing HIVE on the system has to 
-                # check whether the packets are installed correctly. 
-
-    #             # Installing PIP
-                wget https://bootstrap.pypa.io/get-pip.py
-				sudo python3.6 get-pip.py
-           
-    #             # Installing Python
-                sudo add-apt-repository ppa:deadsnakes/ppa -y
-				sudo apt-get update
-				sudo apt-get install python3.6 -y
-				sudo apt-get install python3.6-dev -y
-				sudo apt-get install python3.6-venv -y
-
-			
-			 pip3 install "requests"
-			 pip3 install "pymysql"
-			 pip3 install "bs4"
-			 pip3 install "pytest"
-			 pip3 install "pysocks"
-			 pip3 install "pony"
-			 pip3 install "dash"
-			 pip3 install "dash-renderer"
-			 pip3 install "dash-html-components"
-			 pip3 install "html5lib"
-			 pip3 install "flask"
-			 pip3 install "dash_table_experiments"
-			 pip3 install "plotly"
-			 pip3 install "pandas"
-			 pip3 install "aiohttp"
-			 pip3 install "aiodns"
-			 pip3 install "aiosocks==0.2.6"
-			 pip3 install "dash-core-components==0.13.0-rc5"
-			 pip3 install "cryptography"
-						
 # Installing database MySQL
 apt-get -y remove --purge mysql-server-5.5
 apt-get -y autoremove
@@ -140,7 +117,8 @@ sudo gpg --export A3C4F0F979CAA22CDBA8F512EE8CBC9E886DDD89 | apt-key add -
 sudo apt-get update -y
 
 sudo apt-get install tor deb.torproject.org-keyring -y
-
+echo "
+Cleaning up some files..."
 
 echo "
 ####\    ####\   ####\  ###\          ###\  ############|

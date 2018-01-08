@@ -5,10 +5,10 @@ from configparser import ConfigParser, NoOptionError, NoSectionError
 
 from os import path 
 
-from .log import * as log
+from .log import *
 
 # Setting variables
-CONFIGURATION_FILE_PATH = path.abspath(path.join(path.abspath(__file__), "..", "..", "..", "configuration.ini"))
+CONFIGURATION_FILE_PATH = path.abspath(path.join(path.abspath(__file__), "..", "..", "..", "..", "configuration.ini"))
 config = ConfigParser()
 config.read(CONFIGURATION_FILE_PATH)
 
@@ -24,7 +24,7 @@ def check_configuration():
     """This function checks whether the configuration file exists at the configuration file location. This function
     returns a boolean value.
     """
-    CONFIGURATION_FILE_PATH = path.abspath(path.join(path.abspath(__file__), "..", "..", "..", "configuration.ini"))
+    CONFIGURATION_FILE_PATH = path.abspath(path.join(path.abspath(__file__), "..", "..", "..", "..", "configuration.ini"))
 
     config = ConfigParser()
     return(config.read(CONFIGURATION_FILE_PATH))

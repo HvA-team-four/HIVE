@@ -17,46 +17,5 @@ Vagrant.configure("2") do |config|
         s .inline = "sudo sed -i '/tty/!s/mesg n/tty -s \\&\\& mesg n/' /root/.profile"
     end
 
-    # - install python3.6
-    config.vm.provision :shell do |sh|
-        sh.privileged = true # this means it runs as 'root'
-        sh.path = "tools/install_python.sh"
-    end
-
-    # - install circus
-    config.vm.provision :shell do |sh|
-        sh.privileged = true # this means it runs as 'root'
-        sh.path = "tools/install_circus.sh"
-    end
-
-    # - install PIP
-    config.vm.provision :shell do |sh|
-        sh.privileged = true # this means it runs as 'root'
-        sh.path = "tools/install_pip.sh"
-    end
-
-    # - install zeromq
-    config.vm.provision :shell do |sh|
-        sh.privileged = true # this means it runs as 'root'
-        sh.path = "tools/install_zeromq.sh"
-    end
-	
-	# - install TOR
-    config.vm.provision :shell do |sh|
-        sh.privileged = true # this means it runs as 'root'
-        sh.path = "tools/install_tor.sh"
-    end
-	
-	# - install packages
-    config.vm.provision :shell do |sh|
-        sh.privileged = true # this means it runs as 'root'
-        sh.path = "tools/install_packages.sh"
-    end
-
-	# - install mysql 5.6
-    config.vm.provision :shell do |sh|
-        sh.privileged = true # this means it runs as 'root'
-        sh.path = "tools/install_mysql-5.6.sh"
-    end
 
 end

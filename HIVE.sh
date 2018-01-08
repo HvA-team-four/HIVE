@@ -1,4 +1,6 @@
 #!/usr/bin/env bash
+# Name:     Boot script
+# Purpose:  This script can be used to boot HIVE as cmd application or daemon.
 
 params="$(getopt -o hv: -l help,daemon,stop --name "$0" -- "$@")"
 eval set -- "$params"
@@ -48,7 +50,7 @@ This application has a EULA that needs your consent. Do you accept the EULA? (y/
                 if [ "$input" = y ] ; then
                     echo "EULA agreed, booting up HIVE as daemon"
                     source /opt/HIVE/bin/activate
-                    circusd circus.ini
+                    circusd Source/circus.ini
                    exit 1
 
                 else
@@ -90,7 +92,7 @@ This application has a EULA that needs your consent. Do you accept the EULA? (y/
                 if [ "$input" = y ] ; then
                     echo "EULA agreed, booting up HIVE"
                     source /opt/HIVE/bin/activate
-                    circusd circus.ini
+                    circusd Source/circus.ini
 
                 else
                     echo "EULA refused. Exiting..."
