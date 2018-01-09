@@ -20,4 +20,4 @@ HIVE application is created by FOUR.
 * Run ```python3.6 crawler/main.py``` Just to see is everything is working correctly. 
 * Test
 
-![HIVE](https://hive.airsweeper.nl/branding/logo.png | width=250)
+<img src="https://hive.airsweeper.nl/branding/logo.png" width="250">
