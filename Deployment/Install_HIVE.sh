@@ -69,17 +69,13 @@ CREATE SCHEMA scotchbox;
 MY_QUERY
 echo "Database scotchbox created"
 
-python3.6 HIVE/crawler/utilities/models.py
-
-
-mysql -u root -proot <<MY_QUERY
-USE scotchbox;
-ALTER TABLE scotchbox.content ADD FULLTEXT (content);
-ALTER TABLE scotchbox.content ADD FULLTEXT (content);
-MY_QUERY
+# mysql -u root -proot <<MY_QUERY
+# USE scotchbox;
+# ALTER TABLE scotchbox.content ADD FULLTEXT (content);
+# ALTER TABLE scotchbox.content ADD FULLTEXT (content);
+# MY_QUERY
 
 echo "Full-Text Search enabled"
-
 
 # Install Circus
 sudo apt-get install libzmq-dev libevent-dev python-dev python-virtualenv -y

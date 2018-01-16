@@ -50,8 +50,8 @@ This application has a EULA that needs your consent. Do you accept the EULA? (y/
                 if [ "$input" = y ] ; then
                     echo "EULA agreed, booting up HIVE as daemon"
                     source /opt/HIVE/bin/activate
-                    circusd Source/circus.ini
-                   exit 1
+                    circusd --daemon Source/circus.ini
+             		exit 1
 
                 else
                     echo "EULA refused. Exiting..."
@@ -62,9 +62,9 @@ This application has a EULA that needs your consent. Do you accept the EULA? (y/
         -s|--stop)
             echo "Stopping HIVE deamon"
             source /opt/HIVE/bin/activate
-            circusctl kill honeycomb
-            circusctl kill ascout
-            circusctl kill bee
+            circusctl stop honeycomb
+            circusctl stop ascout
+            circusctl stop bee
             exit 1
          ;;
 

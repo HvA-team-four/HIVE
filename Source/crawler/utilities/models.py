@@ -71,3 +71,10 @@ class Block(db.Entity):
 
 sql_debug(True)
 db.generate_mapping(create_tables=True)
+
+
+if configuration_get("database", "fulltext") != "enabled":
+    with db_session:
+        db.execute("ALTER TABLE content ADD FULLTEXT (content)")
+        configuration_set("database", "fulltext", "enabled")
+        print("FullText Enabled")
