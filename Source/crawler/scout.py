@@ -15,11 +15,13 @@ def save_url(url):
     if not any(x for x in blocked_urls if x in url):
         result = select(p for p in Url if p.url == url).count()
         if result == 0:
-            url_object = Url(
-                url=url,
-                date_added=datetime.now()
-            )
-
+        	if ".onion" in url:
+	            url_object = Url(
+	                url=url,
+	                date_added=datetime.now()
+	            )
+	        else:
+	        	print("{} is blocked".format(url) )
     else:
         log.info("URL: {} is blocked".format(url))
 

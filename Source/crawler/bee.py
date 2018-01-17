@@ -5,7 +5,8 @@ from bs4 import BeautifulSoup
 
 from utilities.models import *
 from utilities.website import get_content_from_url
-#from utilities.tor import get_content_from_urls
+from utilities.tor import get_content_from_urls
+from utilities.tor import connect_to_tor
 from utilities import log
 
 
@@ -15,7 +16,7 @@ def get_urls():
     """The get_urls function fetches 16 urls from the database that need to be scraped by the bee.
     The Url which are set with a priority in the database will be retrieved first.
     """
-    return select(u for u in Url if u.date_scraped is None).order_by(desc(Url.priority_scrape))[:16]
+    return select(u for u in Url if u.date_scraped is None).order_by(desc(Url.priority_scrape))[:8]
 
 
 @db_session
@@ -123,6 +124,7 @@ def start_bee():
     while True:
         urls = get_urls()
         # update the url so different instances don't crawl the same url
+
         for url in urls:
             update_url(url)
 
@@ -133,10 +135,12 @@ def start_bee():
             commit()
             continue
 
+        connect_to_tor()
+  
         for url in urls:
             try:
                 content = get_content_from_url(url.url)
-
+                print("{} is now being beeed".format(url.url))
                 content_hashed = hash_content(content)
 
                 content_cleaned = clean_html(content)
